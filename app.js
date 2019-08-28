@@ -35,7 +35,7 @@ var con = mysql.createConnection({
   host: "localhost",
   port: "3306",
   user: "root",
-  password: "pvictor",
+  password: "123456",
   database: "db_matcha"
 });
 
@@ -46,9 +46,11 @@ con.connect(function(err) {
 });
 
 // Chargement de la page index.html
-app.get('/', function (req, res) {
+app.get('/', async function (req, res){
   if (req.session.login) {
     res.sendFile(__dirname + '/moncompte.html');
+ 
+    console.log(info_user);
     console.log(req.session);
   } else {
     res.sendFile(__dirname + '/index.html');
@@ -72,6 +74,8 @@ app.post('/', async function(req, res){
       console.log(val_verif);
       req.session.login = req.body.user_connect.name;
       console.log('login de session : ' + req.session.login);
+      const info_user = await recup_info(req.session.login);
+      console.log("info USER  = " + info_user);
       res.sendFile(__dirname + '/moncompte.html');
       console.log(req.session);
       console.log("connexion de l utilisqter");
@@ -85,6 +89,7 @@ app.post('/', async function(req, res){
     console.log("non connexion de l user");
   }
 });
+
 
 // POST dans creation
 app.post('/creation', async function(req, res) {
@@ -112,6 +117,20 @@ app.post('/creation', async function(req, res) {
    // res.redirect('/moncompte');
 });
 
+// Fonction pour recuperer les info utilisateur
+
+const recup_info = async function(info){
+  return new Promise((resolve, reject) =>{
+    console.log("les info recu dans recup info" + info);
+    let sql = "SELECT * FROM users WHERE login = ?";
+    con.query(sql, [info], function(err, result){
+      if(err) throw err;
+      console.log("result dans recupe info " + result);
+      resolve(JSON.stringify(result));
+    })
+  });
+}
+
 // Fonction pour connecter un utilisateur retourne 1 si user OK
 
 const user_connect = async function(info){
@@ -120,11 +139,14 @@ const user_connect = async function(info){
     let sql = "SELECT * FROM users WHERE login = ?";
     con.query(sql, [info.name], function(err, result){
       if(err) throw err;
-      if(result[0].password == info.mdp1)
-       { 
-        console.log('on est dans le 1');
-        resolve(1);
-       }
+      console.log(result);
+      if(result != ''){
+        if(result[0].password == info.mdp1)
+         { 
+          console.log('on est dans le 1');
+          resolve(1);
+         }
+      }
       else{
         console.log('on est dans le 2');
         resolve(0);
