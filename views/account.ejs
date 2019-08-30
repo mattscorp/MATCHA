@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <title>MATCHA</title>
+    <link href="styles.css" rel="stylesheet">
+    </head>
+ 
+    <body>
+    	<% include partials/nav %>
+        <h1>Infos de <%= info.login %></h1>
+        <h2>Email : <%= info.email %></h2>
+        <h2>Genre : <%= info.gender %></h2>
+        <h2>Orientation : <%= info.orientation %></h2>
+        <h2>Age : <%= info.age %></h2>
+        <h2>Bio : <%= info.bio %></h2>
+        <div>
+        	<img src=<%= profil_pic %> >
+        </div>
+    </body>
+</html>
