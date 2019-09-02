@@ -15,6 +15,18 @@ const transporter = nodemailer.createTransport({
   }
 });
 
+/*  CONEXION MAISON */
+
+  var con = mysql.createConnection({
+  host: "localhost",  
+  user: "paul",
+  password: "42Pourlavie!",
+  database: "matcha"
+});
+
+
+/* CONNECTION ECOLE */
+/*
 var con = mysql.createConnection({
   host: "localhost",
   port: "3306",
@@ -22,6 +34,7 @@ var con = mysql.createConnection({
   password: "pvictor",
   database: "db_matcha"
 });
+*/
 
 // Fonction pour connecter un utilisateur retourne 1 si user OK
 const user_connect = async function(info){
@@ -58,8 +71,8 @@ module.exports.connect_input_verif = connect_input_verif;
 const user_exist = async function(info){
   return new Promise((resolve, reject) => {
     let sql = "SELECT * FROM users WHERE email = ? OR login = ?";
-    let values = [[info.email, info.name]];
-    con.query(sql, [info.email, info.name], function (err, result) {  
+    let values = [[info.email, info.login]];
+    con.query(sql, [info.email, info.login], function (err, result) {  
       if (err) throw err;
       if (result == '')
           resolve('1');
@@ -71,9 +84,9 @@ const user_exist = async function(info){
 module.exports.user_exist = user_exist;
 
 // Fonction de vérification des input lors de la creation, renvoi 1 si tout est ok 0 sinon
-const input_verif = async function(info){
+const input_verif = async function(info) {
   return new Promise((resolve, reject) => {
-    let name = ent.encode(info.name);
+    let name = ent.encode(info.login);
     let email = ent.encode(info.email);
     let mdp1 = sha1(info.mdp1);
     let mdp2 = sha1(info.mdp2);
@@ -94,13 +107,12 @@ module.exports.input_verif = input_verif;
 
 // Fonction pour ajouter les info d un utilisateur une fois que ses dernieres on etaient verifiees
 function add_user(info) {
-	let uuid = uuidv4();
-	let sql = "INSERT INTO users (email, login, password, email_confirmation) VALUES ?";
+	let uuid = uuidv4();	
 	const mailOptions = {
 		from: 'matcha@matcha.com',
 		to: info.email,
 		subject: 'MATCHA - Confirme ton addresse mail!',
-		html: '<h1>Clique <a href="http://localhost:8080/confirm_email?uuid=' + uuid + '&login=' + info.name + ' ">ici</a> pour confirmer ton email.</h1>'
+		html: '<h1>Clique <a href="http://localhost:8080/confirm_email?uuid=' + uuid + '&login=' + info.login + ' ">ici</a> pour confirmer ton email.</h1>'
 	};
 	transporter.sendMail(mailOptions, function(error, info){
 		if (error) {
@@ -109,15 +121,15 @@ function add_user(info) {
 			console.log('Email sent: ' + info.response);
 }
 	});
-	console.log(info);
-	let values = [[info.email, info.name, info.mdp1, uuid]];
+  let sql = "INSERT INTO users (email, login, first_name, last_name, password, email_confirmation) VALUES ?";
+	let values = [[info.email, info.login, info.first_name, info.last_name, info.mdp1, uuid]];
 	con.query(sql, [values], function (err, result) {  
 	if (err) throw err;  
 });  
 }
 module.exports.add_user = add_user;
 
-// Fonction pour ajouter les info d un utilisateur une fois que ses dernieres on etaient verifiees
+// Fonction pour ajouter les infos d'un utilisateur lors de sa première connection
 function add_infos(info, login) {
   let sql = "UPDATE users SET bio = ?, age = ?, gender = ?, orientation = ? WHERE login = ?";
   let values = [info.bio, info.age, info.gender, info.orientation, login];
@@ -127,7 +139,17 @@ function add_infos(info, login) {
 }
 module.exports.add_infos = add_infos;
 
-// Ajout du path de l'image de profil
+// Fonction pour modifier les infos personnelles de l'utilisateur
+function modif_infos_perso(info, login) {
+  let sql = "UPDATE users SET login = ?, first_name = ?, last_name = ?, email = ?, age = ?, gender = ?, orientation = ?, bio = ? WHERE login = ?"; 
+  let values = [info.login, info.first_name, info.last_name, info.email, info.age, info.gender, info.orientation, info.bio, login];
+  con.query(sql, values, function (err, result) {  
+    if (err) throw err;  
+  });  
+}
+module.exports.modif_infos_perso = modif_infos_perso;
+
+// Ajout du path de l'image_1 et utilisation de celle-ci comme photo de profil
 function add_image(infos, login) {
 	let sql = "UPDATE users SET image_1 = ?, profile_picture = image_1 WHERE login = ?";
 	let values = ['/images/' + infos.filename, login];
@@ -137,12 +159,91 @@ function add_image(infos, login) {
 }
 module.exports.add_image = add_image;
 
+// Ajout d'une nouvelle photo de profil
+const add_new_image = async function(infos, login) {
+  const user = require('./connect.js');
+  const info_user = await user.recup_info(login);
+  const info_parse = await JSON.parse(info_user);
+  var num = '1';
+  if (info_parse[0].image_2 == null)
+    num = '2';
+  else if (info_parse[0].image_3 == null)
+    num = '3';
+  else if (info_parse[0].image_4 == null)
+    num = '4';
+  else if (info_parse[0].image_5 == null)
+    num = '5';
+  const sql_req = "UPDATE users SET image_" + num + " = ? WHERE login = ?";
+  let values = ['/images/' + infos.filename, login];
+  con.query(sql_req, values, function (err, result) {  
+    if (err) throw err;  
+  });  
+}
+module.exports.add_new_image = add_new_image;
+
+// Modification de la photo de profil
+const change_profile_picture = function(infos, login) {
+  var num = '1';
+  if (infos.profile_picture == 'Photo 1')
+    num = '1';
+  else if (infos.profile_picture == 'Photo 2')
+    num = '2';
+  else if (infos.profile_picture == 'Photo 3')
+    num = '3';
+  else if (infos.profile_picture == 'Photo 4')
+    num = '4';
+  else if (infos.profile_picture == 'Photo 5')
+    num = '5';
+  let sql = "UPDATE users SET profile_picture = image_" + num + " WHERE login = ?";
+  let values = [login];
+  con.query(sql, values, function (err, result) {  
+    if (err) throw err;  
+  });  
+}
+module.exports.change_profile_picture = change_profile_picture;
+
+// Suppression d'une image
+const delete_photo = async function(photo, login) {
+  const user = require('./connect.js');
+  let sql = "UPDATE users SET image_" + photo + " = null WHERE login = ?";
+  let values = [login];
+  con.query(sql, values, function (err, result) {  
+    if (err) throw err;  
+  });
+  const info_user = await user.recup_info(login);
+  const info_parse = await JSON.parse(info_user);
+  var new_pp = '0';
+  if (photo != '1' && info_parse[0].image_1 != null)
+    new_pp = 'Photo 1';
+  else if (photo != '2' && info_parse[0].image_2 != null)
+    new_pp = 'Photo 2';
+  else if (photo != '3' && info_parse[0].image_3 != null)
+    new_pp = 'Photo 3';
+  else if (photo != '4' && info_parse[0].image_4 != null)
+    new_pp = 'Photo 4';
+  else if (photo != '5' && info_parse[0].image_5 != null)
+    new_pp = 'Photo 5';
+  if (new_pp != '0')
+    await user.change_profile_picture({profile_picture: new_pp}, login);
+  else {
+    let sql1 = "UPDATE users SET profile_picture = null WHERE login = ?";
+    let values1 = [login];
+    con.query(sql1, values1, function (err, result) {  
+    if (err) throw err;  
+  });
+  }
+}
+module.exports.delete_photo = delete_photo;
+
 // Validation de l'addresse email user
 const validation_mail = async function(login, uuid) {
 	return new Promise((resolve, reject) => {
 		let sql = "SELECT email_confirmation FROM users WHERE login = ?";
 	  	con.query(sql, [login], function(err, result){
-	    	if(err) throw err;
+	    	if(err) 
+          throw err;
+        else if (!result[0].email_confirmation || result[0].email_confirmation == '' || result[0].email_confirmation == null)
+          resolve (0);
 	    	else if (result[0].email_confirmation == uuid) {
 	    		let sql2 = "UPDATE users SET email_confirmation = 1 WHERE login = ?";
 	    		con.query(sql2, [login], function(err, result) {
@@ -158,10 +259,10 @@ const validation_mail = async function(login, uuid) {
 module.exports.validation_mail = validation_mail;
 
 // Fonction pour recuperer les info utilisateur
-const recup_info = async function(info){
+const recup_info = async function(login){
  return new Promise((resolve, reject) =>{
    let sql = "SELECT * FROM users WHERE login = ?";
-   con.query(sql, [info], function(err, result){
+   con.query(sql, [login], function(err, result){
      if(err) throw err;
      resolve(JSON.stringify(result));
    })

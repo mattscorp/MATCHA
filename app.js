@@ -7,7 +7,7 @@ const ent = require('ent'); // Permet de bloquer les caractères HTML (sécurit�
 const bodyParser = require('body-parser'); // Permet de parser
 const mysql = require('mysql');
 const multer = require('multer'); // Pour l'upload de photos
-const upload = multer({dest: __dirname + '/uploads/images'});
+const upload = multer({dest: __dirname + '/public/images'});
 
 const user = require('./users/connect.js');
 app.set('view engine', 'ejs');
@@ -18,24 +18,21 @@ app.use(session({
   resave: true,
   saveUninitialized: false
 }));
-app.use(express.static('uploads'));
-
+app.use(express.static('public'));
 
 //Variable de connexion a la Database
 
-
 /*  CONEXION MAISON */
-/*
+
   var con = mysql.createConnection({
   host: "localhost",  
   user: "paul",
   password: "42Pourlavie!",
   database: "matcha"
 });
-*/
 
 /* CONNECTION ECOLE */
-
+/*
 var con = mysql.createConnection({
   host: "localhost",
   port: "3306",
@@ -43,7 +40,7 @@ var con = mysql.createConnection({
   password: "pvictor",
   database: "db_matcha"
 });
-
+*/
 
 //Connexion a la Database
 con.connect(function(err) {
@@ -56,15 +53,14 @@ app.get('/', async function (req, res) {
   if (req.session.login) {
     const info_user = await user.recup_info(req.session.login);
     const info_parse = JSON.parse(info_user);
-    if (info_parse[0].email_confirmation != 1) {
+    if (info_parse[0].email_confirmation == '' || info_parse[0].email_confirmation != 1) {
       res.render('confirm_your_email');
     } else if (info_parse[0].bio == null || info_parse[0].age == null || info_parse[0].gender == null || info_parse[0].orientation == null) {
       res.render('info_user', {info: info_parse[0]});
     } else if (info_parse[0].profile_picture == null) {
       res.render('profile_picture', {info:info_parse[0]});
     } else {
-      const pic_nb = info_parse[0].profile_picture;
-      res.render('account', {info: info_parse[0], profil_pic: pic_nb});
+      res.render('account', {info: info_parse[0]});
     }
   } else {
     res.sendFile(__dirname + '/index.html');
@@ -77,9 +73,15 @@ app.get('/confirm_email', async function(req, res) {
   res.redirect('/');
 })
 
+// Bouton de déconnection
+app.get('/disconnect', async function(req, res) {
+  req.session.login = '';
+  res.redirect('/');
+})
+
 // Chargement de la page creation.html
 app.get('/creation', function (req, res) {
-   res.sendFile(__dirname + '/creation.html');
+  res.render('create_account');
 });
 
 // POST  de la page index.html
@@ -97,7 +99,7 @@ app.post('/', async function(req, res){
   }
 });
 
-// POST dans creation
+// Ajout d'un nouvel utilisateur
 app.post('/creation', async function(req, res) {
   const test =  user.user_exist(req.body.user);
   const test2 = await test;
@@ -110,29 +112,51 @@ app.post('/creation', async function(req, res) {
     res.redirect('/creation');
 });
 
+// Ajout des informations supplémentaires sur l'utilisateur
 app.post('/info_user', async function(req, res) {
   const update_infos = await user.add_infos(req.body, req.session.login);
   res.redirect('/');
 });
 
-
-// app.post('/profile_picture', upload.single('photo'), async function(req, res) {
-//     if(req.file) {
-//       const add_image = await user.add_image(req.file, req.session.login);
-
-//       res.redirect('/');
-//     }
-//     else
-//       throw 'error';
-// });
-
+// Ajout d'une première photo (photo de profil)
 app.post('/profile_picture', upload.single('photo'), async function(req, res) {
-    if(req.file) {
-      const add_image = await user.add_image(req.file, req.session.login);
-      res.redirect('/');
-    }
-    else
-      throw 'error';
+  if(req.file) {
+    const add_image = await user.add_image(req.file, req.session.login);
+    res.redirect('/');
+  }
+  else
+    throw 'error';
+});
+
+// Ajout d'une nouvelle photo
+app.post('/add_new_image', upload.single('photo'), async function(req, res) {
+  if(req.file) {
+    const add_new_image = user.add_new_image(req.file, req.session.login);
+    res.redirect('/');
+  }
+  else
+    throw 'error';
+});
+
+// Modification de la profile picture
+app.post('/change_profile_picture', function(req, res) {
+  const change_profile_picture = user.change_profile_picture(req.body, req.session.login);
+  res.redirect('/');
+});
+
+// Modification des infos utilisateur
+app.post('/change_infos', async function(req, res) {
+  const info_user = await user.recup_info(req.session.login);
+  const info_parse = JSON.parse(info_user);
+  const modif_infos_perso = await user.modif_infos_perso(req.body, req.session.login);
+  req.session.login = req.body.login;
+  res.redirect('/');
+});
+
+// Suppression d'une image
+app.post('/delete_image', async function(req, res) {
+  const delete_photo = await user.delete_photo(req.body.photo, req.session.login);
+  res.redirect('/');
 });
 
 /*
