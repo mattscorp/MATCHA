@@ -89,6 +89,44 @@ app.get('/creation', function (req, res) {
   res.render('create_account', {mdp_strength: 'true', user_exist: 'true', email_exist: 'true', mdp_match: 'true', mdp_length: 'true', name: 'true', email: 'true'});
 });
 
+// Reset password
+app.get('/reset_password', function(req, res) {
+  res.render('reset_password', {email: 'true'});
+});
+
+// Reset password
+app.post('/reset_password', async function(req, res) {
+  const reset_password = await user.reset_password(req.body.email);
+  if (reset_password == 0)
+    res.render('reset_password', {email: 'false'});
+  else
+    res.redirect('/');
+})
+
+// Après avoir cliqué sur l'email de réinitialisation on vérifie l'uuid pour la redirection (sinon home)
+app.get('/new_password', async function(req, res) {
+  const password_recup = await user.password_recup(req.query.email, req.query.uuid);
+  if (password_recup == 0)
+    res.redirect('/');
+  else
+    res.render('new_password', {mdp_match: 'true', mdp_strength: 'true', email: req.query.email});
+})
+
+// Réinialisation du mdp : vérifie si identique, sécurisé, et effectue le changement
+app.post('/new_password', async function(req, res) {
+  if (req.body.mdp1 !== req.body.mdp2)
+    res.render('new_password', {mdp_match: 'false', mdp_strength: 'true', email: req.body.email});
+  else {
+    const mdp_strength = await user.mdp_strength(req.body);
+    if (mdp_strength == 0)
+      res.render('new_password', {mdp_match: 'true', mdp_strength: 'false', email: req.body.email});
+    else {
+      user.reset_password_new(req.body.email, req.body.mdp1);
+      res.redirect('/');
+    }
+  }
+})
+
 // Connection
 app.post('/connect', async function(req, res){
   const val_input = await user.connect_input_verif(req.body.user_connect);

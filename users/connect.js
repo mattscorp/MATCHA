@@ -147,6 +147,75 @@ const mdp_strength = async function(infos) {
 }
 module.exports.mdp_strength = mdp_strength;
 
+// Reset password
+const reset_password = async function(email) {
+  return new Promise((resolve, reject) => {
+    var uuid = uuidv4();
+    const mailOptions = {
+            from: 'matcha@matcha.com',
+            to: email,
+            subject: 'MATCHA - Réinitialisation du mot de passe',
+            html: '<h1>Clique <a href="http://localhost:8080/new_password?uuid=' + uuid + '&email=' + email + ' ">ici</a> pour réinitialiser ton mot de passe.</h1>'
+          };
+    let sql = "SELECT * FROM users WHERE email = ?";
+    let values = [email];
+    con.query(sql, values, function (err, result) {  
+      if (err) throw err;
+      else {
+        if (result != '') {
+          transporter.sendMail(mailOptions, function(error, info){
+            if (error) {
+              console.log(error);
+            } else {
+              console.log('Email sent: ' + info.response);
+              let sql2 = "UPDATE users SET recup_password = '" + uuid + "' WHERE email = ?"
+              con.query(sql2, values, function (err, result) {  
+                if (err) throw err;
+                else
+                  resolve(1);
+              });
+            }
+          });
+        }
+        else
+          resolve(0);
+      }
+    });
+  });
+}
+module.exports.reset_password = reset_password;
+
+// Reset du mdp : vérification que l'email et l'uuid correspondent bien avant de rediriger
+const password_recup = async function(email, uuid) {
+  return new Promise((resolve, reject) => {
+    let sql = "SELECT recup_password FROM users WHERE email = ?";
+    con.query(sql, [email], function (err, result) {  
+     if (err) throw err;
+     else {
+      if (result[0].recup_password == uuid)
+        resolve(1);
+      else
+        resolve(0);
+     }
+     resolve(0);
+    });
+  });
+}
+module.exports.password_recup = password_recup;
+
+// Change password after reset
+const reset_password_new = function(email, password) {
+  const saltRounds = 12;
+  bcrypt.hash(password, saltRounds, function (err, hash) {
+    let sql = "UPDATE users SET recup_password = null, password = ? WHERE email = ?"
+    let values = [hash, email];
+    con.query(sql, values, function (err, result) {
+      if (err) throw err;
+    })
+  });
+}
+module.exports.reset_password_new = reset_password_new;
+
 // Fonction pour ajouter les info d un utilisateur une fois que ses dernieres on etaient verifiees
 function add_user(info) {
 	let uuid = uuidv4();	
@@ -167,8 +236,8 @@ function add_user(info) {
   bcrypt.hash(info.mdp1, saltRounds, function (err,   hash) {
     if (err) throw err; 
     let sql = "INSERT INTO users (email, login, first_name, last_name, password, email_confirmation) VALUES ?";
-  	let values = [[info.email, info.login, info.first_name, info.last_name, hash, uuid]];
-  	con.query(sql, [values], function (err, result) {  
+  	let values = [info.email, info.login, info.first_name, info.last_name, hash, uuid];
+  	con.query(sql, values, function (err, result) {  
   	 if (err) throw err;  
     }); 
   });  
