@@ -2,20 +2,35 @@
 <html>
     <head>
         <meta charset="utf-8" />
-        <title>MATCHA</title>
-    <link href="styles.css" rel="stylesheet">
+        <title>Matcha- création</title>
+        <link href="/styles/styles.css" rel="stylesheet" type="text/css">
     </head>
  
     <body>
         <h1>Je crée mon compte</h1>
-<form method="post" >
-    <input type="text" name="user[first_name]" placeholder="Ton prénom"> <br>
-    <input type="text" name="user[last_name]" placeholder="Ton nom"> <br>
-    <input type="text" name="user[login]" placeholder="Ton pseudo"> <br>
-    <input type="email" name="user[email]"placeholder="Ton email"> <br>
-    <input type="password" name="user[mdp1]" placeholder="Ton mot de passe"> <br>
-    <input type="password" name="user[mdp2]" placeholder="Verifie ton mot de passe"> <br>
-    <input type="submit" value="Créer mon compte">
-</form>
+        <% if (user_exist == 'false') { %>
+            <p class="alert_message">Ce pseudo est déjà utilisé.</p>
+        <% } if (email_exist == 'false') { %>
+            <p class="alert_message">Cet email est déjà utilisé.</p>
+        <% } if (mdp_match == 'false') { %>
+            <p class="alert_message">Les mots de passes ne sont pas identiques.</p>
+        <% } if (mdp_length == 'false') { %>
+            <p class="alert_message">Ce mot de passe est trop long.</p>
+        <% } if (name == 'false') { %>
+            <p class="alert_message">Ce pseudo est trop long.</p>
+        <% } if (email == 'false') { %>
+            <p class="alert_message">Cet email est trop long.</p>
+        <% } if (mdp_strength == 'false') { %>
+            <p class="alert_message">Cet mot de passe n'est pas assez sécurisé : ton mot de passe doit comporter au moins 8 caractères, donc au moins un chiffre, une majuscule, une minuscule et un caractère spécial parmi ceux-ci : $@$!%*#?&.</p>
+        <% } %>%>
+        <form method="post" >
+            <input type="text" name="user[first_name]" placeholder="Ton prénom"> <br>
+            <input type="text" name="user[last_name]" placeholder="Ton nom"> <br>
+            <input type="text" name="user[login]" placeholder="Ton pseudo"> <br>
+            <input type="email" name="user[email]"placeholder="Ton email"> <br>
+            <input type="password" name="user[mdp1]" placeholder="Ton mot de passe"> <br>
+            <input type="password" name="user[mdp2]" placeholder="Verifie ton mot de passe"> <br>
+            <input type="submit" value="Créer mon compte">
+        </form>
     </body>
 </html>

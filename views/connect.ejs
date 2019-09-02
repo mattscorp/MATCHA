@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <title>Matcha - Connection</title>
+        <link href="/styles/styles.css" rel="stylesheet" type="text/css">
+    </head>
+ 
+    <body>
+        <h1>Bienvenu sur Matcha !</h1>
+        <% if (user == 'false') { %>
+            <p class="alert_message">Cet utilisateur n'existe pas. Vérifie ton pseudo ou inscris-toi.</p>
+        <% } else if (password == 'false') { %>
+            <p class="alert_message">Ce mot de passe est erronné.</p>
+        <% } %>
+        <form action="/connect" method="post">
+            <input type="text" name="user_connect[name]" placeholder="Ton Pseudo">
+            <input type="password" name="user_connect[mdp1]" placeholder="Ton Password">
+            <input type="submit" value="Se Connecter">
+        </form>
+        <p>Clique <a href="/creation">ICI</a> pour créer ton compte.</p>
+        <p>Clique <a href="/reset_password">ICI</a> si tu as oublié ton mot de passe.</p>
+    </body>
+</html>

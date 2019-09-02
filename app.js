@@ -63,7 +63,7 @@ app.get('/', async function (req, res) {
       res.render('account', {info: info_parse[0]});
     }
   } else {
-    res.sendFile(__dirname + '/index.html');
+    res.render('connect', {user: 'true', password: 'true'});
    }
 });
 
@@ -71,6 +71,11 @@ app.get('/', async function (req, res) {
 app.get('/confirm_email', async function(req, res) {
   const validation_mail = await user.validation_mail(req.query.login, req.query.uuid);
   res.redirect('/');
+})
+
+// Redirection vers le changement de mot de passe
+app.get('/change_password', async function(req, res) {
+  res.render('change_password', {login: req.session.login});
 })
 
 // Bouton de déconnection
@@ -81,35 +86,50 @@ app.get('/disconnect', async function(req, res) {
 
 // Chargement de la page creation.html
 app.get('/creation', function (req, res) {
-  res.render('create_account');
+  res.render('create_account', {mdp_strength: 'true', user_exist: 'true', email_exist: 'true', mdp_match: 'true', mdp_length: 'true', name: 'true', email: 'true'});
 });
 
-// POST  de la page index.html
-app.post('/', async function(req, res){
+// Connection
+app.post('/connect', async function(req, res){
   const val_input = await user.connect_input_verif(req.body.user_connect);
   if (val_input == 1) {
     const val_verif = await user.user_connect(req.body.user_connect);
-    if(val_verif === 1)
-    {
+    if(val_verif === 1) {
       req.session.login = req.body.user_connect.name;
-      const info_user = await user.recup_info(req.session.login);
-      const info_parse = JSON.parse(info_user);
-    } 
-    res.redirect('/');
-  }
+      res.redirect('/');
+    }    else if (val_verif == 2)
+      res.render('connect', {user: 'false', password: 'true'});
+    else if (val_verif == 3)
+      res.render('connect', {user: 'true', password: 'false'});
+  } else
+  res.render('connect', {user: 'true', password: 'true'});
 });
 
 // Ajout d'un nouvel utilisateur
 app.post('/creation', async function(req, res) {
-  const test =  user.user_exist(req.body.user);
-  const test2 = await test;
+  const test =  await user.user_exist(req.body.user);
   const input = await user.input_verif(req.body.user);
-  if(input > 0 && test2 == '1'){
+  const mdp_strength = await user.mdp_strength(req.body.user);
+  if (test == 2)
+    res.render('create_account', {mdp_strength: 'true', user_exist: 'false', email_exist: 'true', mdp_match: 'true', mdp_length: 'true', name: 'true', email: 'true'});
+  if (test == 0)
+    res.render('create_account', {mdp_strength: 'true', user_exist: 'true', email_exist: 'false', mdp_match: 'true', mdp_length: 'true', name: 'true', email: 'true'});
+  else if (input == 3)
+    res.render('create_account', {mdp_strength: 'true', user_exist: 'true', email_exist: 'true', mdp_match: 'false', mdp_length: 'true', name: 'true', email: 'true'});
+  else if (input == 0)
+    res.render('create_account', {mdp_strength: 'true', user_exist: 'true', email_exist: 'true', mdp_match: 'true', mdp_length: 'true', name: 'false', email: 'true'});
+  else if (input == 2)
+    res.render('create_account', {mdp_strength: 'true', user_exist: 'true', email_exist: 'true', mdp_match: 'true', mdp_length: 'false', name: 'true', email: 'true'});
+  else if (input == 4)
+    res.render('create_account', {mdp_strength: 'true', user_exist: 'true', email_exist: 'true', mdp_match: 'true', mdp_length: 'true', name: 'true', email: 'true'});
+  else if (mdp_strength == 0)
+    res.render('create_account', {mdp_strength: 'false', user_exist: 'true', email_exist: 'true', mdp_match: 'true', mdp_length: 'true', name: 'true', email: 'true'});
+  else if(input == 1 && test == '1') {
     user.add_user(req.body.user);
     res.redirect('/');
   }
   else
-    res.redirect('/creation');
+    res.render('create_account', {mdp_strength: 'true', user_exist: 'true', email_exist: 'true', mdp_match: 'true', mdp_length: 'true', name: 'true', email: 'true'});
 });
 
 // Ajout des informations supplémentaires sur l'utilisateur

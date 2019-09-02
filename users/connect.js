@@ -7,6 +7,7 @@ const mysql = require('mysql');
 const ent = require('ent'); // Permet de bloquer les caractères HTML (sécurité équivalente à htmlentities en PHP)
 const uuidv4 = require('uuid/v4');
 const nodemailer = require('nodemailer');
+const bcrypt = require('bcryptjs');
 const transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
@@ -43,13 +44,15 @@ const user_connect = async function(info){
     con.query(sql, [info.name], function(err, result){
       if(err) throw err;
       if(result != '') {
-        if (result[0].password == info.mdp1) { 
-          resolve(1);
-        } else {
-          resolve(0);
-        }
+        bcrypt.compare(info.mdp1, result[0].password, function (err, result) {
+          if (result == true) {
+            resolve(1);
+          } else {
+            resolve(3);
+          }
+        });
       } else {
-        resolve(0);
+        resolve(2);
       }
     })
   });
@@ -70,12 +73,21 @@ module.exports.connect_input_verif = connect_input_verif;
 // Fonction pour verifier si un utilisateur existe deja mail ou pseudo retourn 1 si l utilisateur n existe pas 0 sinon
 const user_exist = async function(info){
   return new Promise((resolve, reject) => {
-    let sql = "SELECT * FROM users WHERE email = ? OR login = ?";
-    let values = [[info.email, info.login]];
-    con.query(sql, [info.email, info.login], function (err, result) {  
+    let sql = "SELECT * FROM users WHERE email = ?";
+    let values = [info.email];
+    con.query(sql, values, function (err, result) {  
       if (err) throw err;
-      if (result == '')
+      if (result == '') {
+        let sql2 = "SELECT * FROM users WHERE login = ?";
+        let values2 = [info.login];
+        con.query(sql2, values2, function (err, result) {  
+          if (err) throw err;
+        if (result == '')
           resolve('1');
+        else
+          resolve('2');
+        })
+      }
       else 
         resolve('0');
     })
@@ -93,17 +105,47 @@ const input_verif = async function(info) {
 //ATTENTION le criptage dois se faire apres et surtout pense a bien enregistrer des mdp en cryopte dqns bdd
     if(!empty(name) && isset(name) && !empty(email) && isset(email) && !empty(mdp1) && isset(mdp1) && !empty(mdp2) && isset(mdp2))
     {
-      if (name.length > 50 || email.length > 255 || info.mdp1.length > 50)
-         resolve(0);
+      if (name.length > 50)
+        resolve(0)
+      else if (email.length > 255)
+        resolve(4)
+      else if (info.mdp1.length > 50)
+        resolve(2);
       if(info.mdp1 !== info.mdp2)
-        resolve(0);
+        resolve(3);
       resolve(1);
     }
     else
-      resolve(0);
+      resolve(5);
   });
 }
 module.exports.input_verif = input_verif;
+
+// Vérifie que le mot de passe est sécurisé (8 char, 1 chiffre, 1 min, 1 max, un char spécial)
+const mdp_strength = async function(infos) {
+  return new Promise((resolve, reject) => {
+    if (infos.mdp1.length < 8)
+      resolve(0);
+    else {
+      var matchedCase = new Array();
+      matchedCase.push("[$@$!%*#?&]"); // Special Charector
+      matchedCase.push("[A-Z]");      // Uppercase Alpabates
+      matchedCase.push("[0-9]");      // Numbers
+      matchedCase.push("[a-z]");     // Lowercase Alphabates
+      var ctr = 0;
+      for (var i = 0; i < matchedCase.length; i++) {
+          if (new RegExp(matchedCase[i]).test(infos.mdp1)) {
+              ctr++;
+          }
+      }
+      if (ctr < 4)
+        resolve(0);
+      else
+        resolve(1);
+    }
+  });
+}
+module.exports.mdp_strength = mdp_strength;
 
 // Fonction pour ajouter les info d un utilisateur une fois que ses dernieres on etaient verifiees
 function add_user(info) {
@@ -119,13 +161,17 @@ function add_user(info) {
 			console.log(error);
 		} else {
 			console.log('Email sent: ' + info.response);
-}
+    }
 	});
-  let sql = "INSERT INTO users (email, login, first_name, last_name, password, email_confirmation) VALUES ?";
-	let values = [[info.email, info.login, info.first_name, info.last_name, info.mdp1, uuid]];
-	con.query(sql, [values], function (err, result) {  
-	if (err) throw err;  
-});  
+  let saltRounds = 12;
+  bcrypt.hash(info.mdp1, saltRounds, function (err,   hash) {
+    if (err) throw err; 
+    let sql = "INSERT INTO users (email, login, first_name, last_name, password, email_confirmation) VALUES ?";
+  	let values = [[info.email, info.login, info.first_name, info.last_name, hash, uuid]];
+  	con.query(sql, [values], function (err, result) {  
+  	 if (err) throw err;  
+    }); 
+  });  
 }
 module.exports.add_user = add_user;
 

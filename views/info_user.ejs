@@ -11,7 +11,7 @@
         <h1>Infos de <%= info.login %></h1>
         <form action="info_user" method="post">
             <legend>Ton âge</legend>
-            <input required type="number" name="age">
+            <input required type="number" min = "18" max="120" name="age">
             <legend>Ta bio</legend>
             <input required type="text" name="bio">
             <legend>Ton genre</legend>

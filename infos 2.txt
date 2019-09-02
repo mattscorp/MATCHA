@@ -1,5 +1,0 @@
-rajout de ==>
-
- if(result != '')
-dans fonction user connect car si entre "pau" "pauk" = crash
-
