@@ -2,7 +2,6 @@
 
 const empty = require('is-empty');
 const isset = require('isset');
-const sha1 = require('sha1');
 const mysql = require('mysql');
 const ent = require('ent'); // Permet de bloquer les caractères HTML (sécurité équivalente à htmlentities en PHP)
 const uuidv4 = require('uuid/v4');
@@ -100,10 +99,8 @@ const input_verif = async function(info) {
   return new Promise((resolve, reject) => {
     let name = ent.encode(info.login);
     let email = ent.encode(info.email);
-    let mdp1 = sha1(info.mdp1);
-    let mdp2 = sha1(info.mdp2);
 //ATTENTION le criptage dois se faire apres et surtout pense a bien enregistrer des mdp en cryopte dqns bdd
-    if(!empty(name) && isset(name) && !empty(email) && isset(email) && !empty(mdp1) && isset(mdp1) && !empty(mdp2) && isset(mdp2))
+    if(!empty(name) && isset(name) && !empty(email) && isset(email) && !empty(info.mdp1) && isset(info.mdp1) && !empty(info.mdp2) && isset(info.mdp2))
     {
       if (name.length > 50)
         resolve(0)
@@ -236,9 +233,22 @@ function add_user(info) {
   bcrypt.hash(info.mdp1, saltRounds, function (err,   hash) {
     if (err) throw err; 
     let sql = "INSERT INTO users (email, login, first_name, last_name, password, email_confirmation) VALUES ?";
-  	let values = [info.email, info.login, info.first_name, info.last_name, hash, uuid];
-  	con.query(sql, values, function (err, result) {  
-  	 if (err) throw err;  
+  	let values = [[info.email, info.login, info.first_name, info.last_name, hash, uuid]];
+  	con.query(sql, [values], function (err, result) {  
+  	 if (err) throw err;
+     // Ajout d'une colonne à la table 'interests'
+     else {
+      let sql2 = "SELECT user_ID FROM users WHERE login = ?";
+      con.query(sql2, info.login, function(err, result) {
+        if (err) throw err;
+        else {
+          let sql3 = "ALTER TABLE interests ADD `" + result[0].user_ID + "` INT";
+          con.query(sql3, result[0].user_ID, function(err, result) {
+            if (err) throw err;
+          });
+        }
+      });
+     }
     }); 
   });  
 }
@@ -384,3 +394,15 @@ const recup_info = async function(login){
  });
 }
 module.exports.recup_info = recup_info;
+
+// Fonction pour recuperer les interests de l'utilisateur
+const recup_interests = async function(user_ID){
+ return new Promise((resolve, reject) =>{
+   let sql = "SELECT * FROM interests WHERE `" + user_ID + "` = 1";
+   con.query(sql, function(err, result){
+     if(err) throw err;
+     resolve(JSON.stringify(result));
+   })
+ });
+}
+module.exports.recup_interests = recup_interests;
