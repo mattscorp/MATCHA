@@ -68,3 +68,13 @@ const add_topic_user = function(topic, user_ID) {
   });
 }
 module.exports.add_topic_user = add_topic_user;
+
+const delete_interest = function(topic, user_ID) {
+  let sql = "UPDATE interests SET `" + user_ID + "` = null WHERE `topic` = ?";
+  let values = [topic];
+  con.query(sql, values, function(err, result) {
+    if (err)
+      throw err;
+  });
+}
+module.exports.delete_interest = delete_interest;

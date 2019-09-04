@@ -206,4 +206,12 @@ router.post('/new_topic', async function(req, res) {
 	res.redirect('/');
 });
 
+// Suppression d'un centre d'intérêt
+router.post('/delete_interest', async function(req, res) {
+	const info_user = await user.recup_info(req.session.login);
+    const info_parse = JSON.parse(info_user);
+	interests.delete_interest(req.body.topic, info_parse[0].user_ID);
+	res.redirect('/');
+})
+
 module.exports = router;

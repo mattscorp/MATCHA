@@ -54,7 +54,11 @@
         <div>
             <p>Tes centres d'intérêts :</p>
             <% interests.forEach(function(elem) { %>
-                <p>#<%= elem.topic %></p>
+                <form action="delete_interest" method="post">
+                    <p>#<%= elem.topic %></p>
+                    <input type="hidden" name="topic" value="<%= elem.topic %>">
+                    <input class="modify_button" type="image" src="/resources/delete.jpeg" title="submit">
+                </form>
             <% }); %>
             <form action="new_topic" method="post">
                 <input required type="text" name="new_topic">
