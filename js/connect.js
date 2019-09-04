@@ -7,6 +7,7 @@ const ent = require('ent'); // Permet de bloquer les caractères HTML (sécurit�
 const uuidv4 = require('uuid/v4');
 const nodemailer = require('nodemailer');
 const bcrypt = require('bcryptjs');
+//const geolocator = require('geolocator')();
 const transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
@@ -14,6 +15,13 @@ const transporter = nodemailer.createTransport({
     pass: 'MatchaTest42'
   }
 });
+// geolocator.config({
+//   language: "en",
+//   google: {
+//     version: "3",
+//     key: "YOUR-GOOGLE-API-KEY"
+// }
+// });
 
 /*  CONEXION MAISON */
 
@@ -35,6 +43,27 @@ var con = mysql.createConnection({
   database: "db_matcha"
 });
 */
+
+// Fonction pour géolocaliser via le navigateur
+// const geolocalize = async function() {
+//   var options = {
+//     enableHighAccuracy: true,
+//     timeout: 5000,
+//     maximumWait: 10000,     // max wait time for desired accuracy
+//     maximumAge: 0,          // disable cache
+//     desiredAccuracy: 30,    // meters
+//     fallbackToIP: true,     // fallback to IP if Geolocation fails or rejected
+//     addressLookup: true,    // requires Google API key if true
+//     timezone: true,         // requires Google API key if true
+//     map: "map-canvas",      // interactive map element id (or options object)
+//     staticMap: true         // get a static map image URL (boolean or options object)
+//   };
+//   geolocator.locate(options, function (err, location) {
+//     if (err) return console.log(err);
+//     console.log(location);
+//   });
+// }
+// module.exports.geolocalize = geolocalize;
 
 // Fonction pour connecter un utilisateur retourne 1 si user OK
 const user_connect = async function(info){
@@ -397,7 +426,7 @@ module.exports.recup_info = recup_info;
 
 // Fonction pour recuperer les interests de l'utilisateur
 const recup_interests = async function(user_ID){
- return new Promise((resolve, reject) =>{
+ return new Promise((resolve, reject) => {
    let sql = "SELECT * FROM interests WHERE `" + user_ID + "` = 1";
    con.query(sql, function(err, result){
      if(err) throw err;
@@ -406,3 +435,13 @@ const recup_interests = async function(user_ID){
  });
 }
 module.exports.recup_interests = recup_interests;
+
+// Ajout des coordonnées à la BDD
+const add_coordinates = async function(infos, login) {
+  let geoloc = infos.geoplugin_latitude + ';' + infos.geoplugin_longitude;
+  let sql = "UPDATE users SET localisation_auto = '" + geoloc + "' WHERE login = ?"
+  con.query(sql, [login], function(err, result) {
+    if (err) throw err;
+  });
+}
+module.exports.add_coordinates = add_coordinates;

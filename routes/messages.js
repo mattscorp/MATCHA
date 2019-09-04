@@ -9,7 +9,7 @@ const mysql = require('mysql');
 const multer = require('multer'); // Pour l'upload de photos
 const upload = multer({dest: __dirname + '/../public/images'});
 
-const user = require('../users/connect.js');
+const user = require('../js/connect.js');
 app.set('view engine', 'ejs');
 app.use(bodyParser.json()); // support json encoded bodies
 app.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies

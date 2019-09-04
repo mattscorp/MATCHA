@@ -2,6 +2,7 @@
 <html>
     <head>
         <meta charset="utf-8" />
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
         <title>Matcha - <%=info.first_name %></title>
         <link href="/styles/styles.css" rel="stylesheet" type="text/css">
     </head>
@@ -129,4 +130,13 @@
             <% } %>
         </div>
     </body>
+    <script type="text/javascript">
+        setInterval('load_geo()', 30000);
+        function load_geo() {
+            $.getJSON('http://www.geoplugin.net/json.gp?jsoncallback=?', function(data) {
+                $.post('geo', data, function(data) {
+                });
+            });
+        }
+    </script>
 </html>

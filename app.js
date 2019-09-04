@@ -9,7 +9,6 @@ const mysql = require('mysql');
 const multer = require('multer'); // Pour l'upload de photos
 const upload = multer({dest: __dirname + '/public/images'});
 
-const user = require('./users/connect.js');
 app.set('view engine', 'ejs');
 app.use(bodyParser.json()); // support json encoded bodies
 app.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
@@ -48,11 +47,14 @@ con.connect(function(err) {
   console.log("Connected!");
 });
 
-const user_router = require('./routes/user.js');
-app.use(user_router);
+const user = require('./routes/user.js');
+app.use(user);
 
-const user_messages = require('./routes/messages.js');
-app.use(user_messages);
+const messages = require('./routes/messages.js');
+app.use(messages);
+
+const swipe = require('./routes/swipe.js');
+app.use(swipe);
 
 /*
 // Chargement de la page chatroom.html
