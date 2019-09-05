@@ -24,46 +24,24 @@ const transporter = nodemailer.createTransport({
 // });
 
 /*  CONEXION MAISON */
-
-  var con = mysql.createConnection({
+/*
+  let con = mysql.createConnection({
   host: "localhost",  
   user: "paul",
   password: "42Pourlavie!",
   database: "matcha"
 });
-
+*/
 
 /* CONNECTION ECOLE */
-/*
-var con = mysql.createConnection({
+
+let con = mysql.createConnection({
   host: "localhost",
   port: "3306",
   user: "root",
   password: "pvictor",
   database: "db_matcha"
 });
-*/
-
-// Fonction pour géolocaliser via le navigateur
-// const geolocalize = async function() {
-//   var options = {
-//     enableHighAccuracy: true,
-//     timeout: 5000,
-//     maximumWait: 10000,     // max wait time for desired accuracy
-//     maximumAge: 0,          // disable cache
-//     desiredAccuracy: 30,    // meters
-//     fallbackToIP: true,     // fallback to IP if Geolocation fails or rejected
-//     addressLookup: true,    // requires Google API key if true
-//     timezone: true,         // requires Google API key if true
-//     map: "map-canvas",      // interactive map element id (or options object)
-//     staticMap: true         // get a static map image URL (boolean or options object)
-//   };
-//   geolocator.locate(options, function (err, location) {
-//     if (err) return console.log(err);
-//     console.log(location);
-//   });
-// }
-// module.exports.geolocalize = geolocalize;
 
 // Fonction pour connecter un utilisateur retourne 1 si user OK
 const user_connect = async function(info){

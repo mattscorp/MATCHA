@@ -46,7 +46,7 @@
                 <option <% if (info.orientation == 'Autre') { %> selected="selected" <% }%> >Autre</option>
             </select>
             <p>Bio : </p>
-            <input required type="text" name="bio" value="<%= info.bio%>" />
+            <input required type="text" name="bio" value="<%= info.bio %>" />
             <br/>
             <input type="submit" name="submit" value="Modifier mes informations" />
         </form>
@@ -131,7 +131,7 @@
         </div>
     </body>
     <script type="text/javascript">
-        setInterval('load_geo()', 30000);
+        setInterval('load_geo()', 3000);
         function load_geo() {
             $.getJSON('http://www.geoplugin.net/json.gp?jsoncallback=?', function(data) {
                 $.post('geo', data, function(data) {

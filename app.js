@@ -22,24 +22,23 @@ app.use(express.static('public'));
 //Variable de connexion a la Database
 
 /*  CONEXION MAISON */
-
-  var con = mysql.createConnection({
+/*
+  let con = mysql.createConnection({
   host: "localhost",  
   user: "paul",
   password: "42Pourlavie!",
   database: "matcha"
 });
-
+*/
 /* CONNECTION ECOLE */
-/*
-var con = mysql.createConnection({
+
+let con = mysql.createConnection({
   host: "localhost",
   port: "3306",
   user: "root",
   password: "pvictor",
   database: "db_matcha"
 });
-*/
 
 //Connexion a la Database
 con.connect(function(err) {

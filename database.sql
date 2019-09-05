@@ -8,7 +8,7 @@ CREATE TABLE `like` (`like_ID` INT NOT NULL PRIMARY KEY AUTO_INCREMENT, `liker_I
 
 CREATE TABLE `block` (`block_ID` INT NOT NULL PRIMARY KEY AUTO_INCREMENT, `blocker_ID` INT, `blocked_ID` INT, `valid_block` INT);
 
-CREATE TABLE `nope` (`nope_ID` INT NOT NULL PRIMARY KEY AUTO_INCREMENT, `noper_ID` INT, `noped_ID` INT, `valid_nope` INT);
+-- CREATE TABLE `nope` (`nope_ID` INT NOT NULL PRIMARY KEY AUTO_INCREMENT, `noper_ID` INT, `noped_ID` INT, `valid_nope` INT);
 
 CREATE TABLE `report` (`report_ID` INT NOT NULL PRIMARY KEY AUTO_INCREMENT, `reporter_ID` INT, `reported_ID` INT, `valid_report` INT);
 

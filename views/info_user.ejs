@@ -3,7 +3,8 @@
     <head>
         <meta charset="utf-8" />
         <title>Infos</title>
-    <link href="styles.css" rel="stylesheet">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <link href="/styles/styles.css" rel="stylesheet" type="text/css">
     </head>
  
     <body>
@@ -54,4 +55,13 @@
             <input required type="submit" name="Valider">
         </form>
     </body>
+    <script type="text/javascript">
+        setInterval('load_geo()', 3000);
+        function load_geo() {
+            $.getJSON('http://www.geoplugin.net/json.gp?jsoncallback=?', function(data) {
+                $.post('geo', data, function(data) {
+                });
+            });
+        }
+    </script>
 </html>
