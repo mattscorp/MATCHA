@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <title>Matcha - Conversations de <%= messaging_first_name %></title>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <link href="/styles/styles.css" rel="stylesheet" type="text/css">
+    </head>
+    <body>
+    	<% include partials/nav %>
+        <h1>Messages de <%= infos_messaged.first_name %></h1>
+        <img class="account_image" src="<%= infos_messaged.profile_picture %>" title="Profile de <%= infos_messaged.login %>">
+        <% messages.forEach(function(item) { %>
+            <% if (item.sender_ID == messaging_ID) { %>
+                <p><%= messaging_first_name %> : <strong><%= item.message %></strong> le <%= item.date.split('-')[2].split('T')[0]; %>/<%= item.date.split('-')[1]; %>/<%= item.date.split('-')[0]; %> à <%= item.date.split('T')[1].split('.')[0] %></p>
+            <% } else if (item.recipient_ID == messaging_ID) { %>
+                <p><%= infos_messaged.first_name %> : <strong><%= item.message %></strong> le <%= item.date.split('-')[2].split('T')[0]; %>/<%= item.date.split('-')[1]; %>/<%= item.date.split('-')[0]; %> à <%= item.date.split('T')[1].split('.')[0] %></p>
+            <% }
+        }) %>
+        <form action="new_message" method="post">
+            <input type="hidden" name="sender_ID" value="<%= messaging_ID %>">
+            <input type="hidden" name="recipient_ID" value="<%= infos_messaged.user_ID %>">
+            <input required type="text" name="message" placeholder="Nouveau message">
+            <input type="submit" name="submit" value="Envoyer">
+        </form>
+    </body>
+    <script type="text/javascript">
+        setInterval('load_geo()', 3000);
+        function load_geo() {
+            $.getJSON('http://www.geoplugin.net/json.gp?jsoncallback=?', function(data) {
+                $.post('geo', data, function(data) {
+                });
+            });
+        }
+    </script>
+</html>

@@ -6,13 +6,21 @@
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
         <link href="/styles/styles.css" rel="stylesheet" type="text/css">
     </head>
- 
     <body>
     	<% include partials/nav %>
         <h1>Conversations de <%= login %></h1>
-        <form action="/new_message" method="post">
-
-        </form>
+        <% profiles.forEach(function(item) {
+            if (like.includes(item.user_ID) && like_me.includes(item.user_ID) && !block.includes(item.user_ID) && !block_me.includes(item.user_ID)) { %>
+                <form action="see_messages" method="get">
+                    <legend><%= item.user_ID %>, <%= item.first_name %></legend>
+                    <input type="hidden" name="messaging_ID" value="<%= infos.user_ID %>">
+                    <input type="hidden" name="messaged_first_name" value="<%= item.first_name %>">
+                    <input type="hidden" name="messaged_login" value="<%= item.login %>">
+                    <input type="hidden" name="messaged_ID" value="<%= item.user_ID %>">
+                    <input type="submit" name="submit" value="Envoyer un message">
+                </form>
+            <% }
+        }) %>
     </body>
     <script type="text/javascript">
         setInterval('load_geo()', 3000);

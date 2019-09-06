@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+    <head>
+      <meta charset="utf-8" />
+      <title>Matcha - Stats de <%= infos.first_name %></title>
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+      <link href="/styles/styles.css" rel="stylesheet" type="text/css">
+    </head>
+ 
+    <body>
+    	<% include partials/nav %>
+        <h1>Tes statistiques</h1>
+        <p><%= seen_nb %> personnes ont vu ton profile</p>
+        <p><%= like_nb %> personnes ont liké ton profile</p>
+        <p>Ton score de popularité : <%= (like_nb / seen_nb * 100).toFixed(0)%>/100</p>
+        
+
+    </body>
+    <script type="text/javascript">
+        setInterval('load_geo()', 3000);
+        function load_geo() {
+            $.getJSON('http://www.geoplugin.net/json.gp?jsoncallback=?', function(data) {
+                $.post('geo', data, function(data) {
+                });
+            });
+        }
+        // Ouverture du popup quand l'utilisateur clique sur un profil
+        function myFunction(login) {
+            console.log(login);
+          var popup = document.getElementById(login);
+          popup.classList.toggle("show");
+        }
+    </script>
+</html>

@@ -11,7 +11,7 @@
     	<% include partials/nav %>
         <h1>Mes matchs</h1>
         <% profiles.forEach(function(item) {
-        	if (like.includes(item.user_ID) && like_me.includes(item.user_ID) && !block_me.includes(item.user_ID)) { %>
+        	if (like.includes(item.user_ID) && like_me.includes(item.user_ID) && !block_me.includes(item.user_ID) && !block.includes(item.user_ID)) { %>
         	<p><%= item.user_ID %>, <%= item.first_name %></p>
     	<%	}
     	}) %>

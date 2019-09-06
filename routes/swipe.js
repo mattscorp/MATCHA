@@ -10,6 +10,7 @@ const bodyParser = require('body-parser'); // Permet de parser
 const user = require('../js/connect.js');
 const interests = require('../js/interests.js');
 const swipe = require('../js/swipe.js');
+const match = require('../js/match.js');
 
 app.set('view engine', 'ejs');
 app.use(bodyParser.json()); // support json encoded bodies
@@ -28,6 +29,12 @@ router.get('/swipe', async function (req, res) {
 		res.redirect('/');
 	else {
     	let info_parse = JSON.parse(await user.recup_info(req.session.login));
+        // Profiles qui m'ont bloqué
+        let block_me_parse = JSON.parse(await match.block_me_info(info_parse[0].user_ID));
+        let block_me_profiles = [];
+        block_me_parse.forEach(function(item) {
+            block_me_profiles.push(item.blocker_ID);
+        });
     	let block_parse = JSON.parse(await swipe.block_info(info_parse[0].user_ID));
     	let like_parse = JSON.parse(await swipe.like_info(info_parse[0].user_ID));
         let profiles_parse = JSON.parse(await swipe.get_profiles(info_parse[0].user_ID));
@@ -44,7 +51,7 @@ router.get('/swipe', async function (req, res) {
     		// intervalle de score de popularité, 
     		// géolocalisation,
     		// tags 
-		res.render('swipe', {infos: info_parse[0], profiles: profiles_parse, previous_profiles: previous_profiles});
+		res.render('swipe', {infos: info_parse[0], block_me: block_me_profiles, profiles: profiles_parse, previous_profiles: previous_profiles});
 	}
 })
 

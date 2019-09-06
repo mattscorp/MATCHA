@@ -1,7 +1,3 @@
-'use strict'
-
-'use strict'
-
 const empty = require('is-empty');
 const isset = require('isset');
 const mysql = require('mysql');
@@ -20,28 +16,24 @@ const transporter = nodemailer.createTransport({
 const db_connect = require('../db_connection.js');
 let con = db_connect.con;
 
-// Renvoie la liste des profiles qui ont liké l'utilisateur
-const like_me_info = async function(user_ID) {
+const messages = async function(messaging_ID, messaged_ID) {
 	return new Promise((resolve, reject) => {
-		let sql = "SELECT `liker_ID` FROM `like` WHERE liked_ID = ? AND (`valid_like` = 1)";
-		con.query(sql, [user_ID], function(err, result) {
+		let sql = "SELECT * FROM `message` WHERE ((`sender_ID` = ? AND `recipient_ID` = ?) OR (`sender_ID` = ? AND `recipient_ID` = ?))";
+		con.query(sql, [messaging_ID, messaged_ID, messaged_ID, messaging_ID], function(err, result) {
 			if (err) throw err;
-			else
-				resolve(JSON.stringify(result));
+			resolve(JSON.stringify(result));
 		});
 	});
 }
-module.exports.like_me_info = like_me_info;
+module.exports.messages = messages;
 
-// Renvoie la liste des profiles qui ont bloqué l'utilisateur
-const block_me_info = async function(user_ID) {
+const new_message = async function(sender_ID, recipient_ID, message) {
 	return new Promise((resolve, reject) => {
-		let sql = "SELECT `blocker_ID` FROM `block` WHERE `blocked_ID` = ? AND `valid_block` = 1";
-		con.query(sql, [user_ID], function(err, result) {
+		let sql = "INSERT INTO `message` (`sender_ID`, `recipient_ID`, `message`) VALUES (?, ?, ?)";
+		con.query(sql, [sender_ID, recipient_ID, message], function(err, result) {
 			if (err) throw err;
-			else
-				resolve(JSON.stringify(result));
+			resolve(JSON.stringify(result));
 		});
 	});
 }
-module.exports.block_me_info = block_me_info;
+module.exports.new_message = new_message;

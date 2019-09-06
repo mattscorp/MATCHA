@@ -1,11 +1,9 @@
 .account_image {
-	max-height: auto;
 	max-width: 300px;
 }
 
 .modify_button {
 	transition: box-shadow .3s;
-	max-height: auto;
 	max-width: 40px;
 }
 
@@ -22,10 +20,10 @@
   position: relative;
   display: inline-block;
   cursor: pointer;
-  -webkit-user-select: none;
+/*  -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
-  user-select: none;
+  user-select: none;*/
 }
 
 .popup_div {

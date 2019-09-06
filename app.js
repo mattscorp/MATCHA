@@ -44,6 +44,8 @@ app.use(swipe);
 const match = require('./routes/match.js');
 app.use(match);
 
+const stats = require('./routes/stats.js');
+app.use(stats);
 /*
 // Chargement de la page chatroom.html
 app.get('/chatroom', function (req, res) {
