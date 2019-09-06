@@ -14,8 +14,8 @@
             <p class="alert_message">Ce mot de passe est erronné.</p>
         <% } %>
         <form action="/connect" method="post">
-            <input type="text" name="user_connect[name]" placeholder="Ton Pseudo">
-            <input type="password" name="user_connect[mdp1]" placeholder="Ton Password">
+            <input required type="text" name="user_connect[name]" placeholder="Ton Pseudo">
+            <input required type="password" name="user_connect[mdp1]" placeholder="Ton Password">
             <input type="submit" value="Se Connecter">
         </form>
         <p>Clique <a href="/creation">ICI</a> pour créer ton compte.</p>

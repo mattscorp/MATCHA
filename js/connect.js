@@ -7,7 +7,6 @@ const ent = require('ent'); // Permet de bloquer les caractères HTML (sécurit�
 const uuidv4 = require('uuid/v4');
 const nodemailer = require('nodemailer');
 const bcrypt = require('bcryptjs');
-//const geolocator = require('geolocator')();
 const transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
@@ -15,33 +14,10 @@ const transporter = nodemailer.createTransport({
     pass: 'MatchaTest42'
   }
 });
-// geolocator.config({
-//   language: "en",
-//   google: {
-//     version: "3",
-//     key: "YOUR-GOOGLE-API-KEY"
-// }
-// });
 
-/*  CONEXION MAISON */
-/*
-  let con = mysql.createConnection({
-  host: "localhost",  
-  user: "paul",
-  password: "42Pourlavie!",
-  database: "matcha"
-});
-*/
+const db_connect = require('../db_connection.js');
+let con = db_connect.con;
 
-/* CONNECTION ECOLE */
-
-let con = mysql.createConnection({
-  host: "localhost",
-  port: "3306",
-  user: "root",
-  password: "pvictor",
-  database: "db_matcha"
-});
 
 // Fonction pour connecter un utilisateur retourne 1 si user OK
 const user_connect = async function(info){
@@ -393,7 +369,7 @@ module.exports.validation_mail = validation_mail;
 // Fonction pour recuperer les info utilisateur
 const recup_info = async function(login){
  return new Promise((resolve, reject) =>{
-   let sql = "SELECT * FROM users WHERE login = ?";
+   let sql = "SELECT `user_ID`, `last_name`, `first_name`, `login`, `email`, `localisation_auto`, `localisation_manual`, `gender`, `orientation`, `age`, `bio`, `image_1`, `image_2`, `image_3`, `image_4`, `image_5`, `profile_picture`, `score`, `geo_consent`, `email_confirmation` FROM users WHERE login = ?";
    con.query(sql, [login], function(err, result){
      if(err) throw err;
      resolve(JSON.stringify(result));

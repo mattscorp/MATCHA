@@ -1,3 +1,5 @@
+'use strict'
+
 const express = require('express');
 var app = express();
 const session = require('express-session');
@@ -21,24 +23,8 @@ app.use(express.static('public'));
 
 //Variable de connexion a la Database
 
-/*  CONEXION MAISON */
-/*
-  let con = mysql.createConnection({
-  host: "localhost",  
-  user: "paul",
-  password: "42Pourlavie!",
-  database: "matcha"
-});
-*/
-/* CONNECTION ECOLE */
-
-let con = mysql.createConnection({
-  host: "localhost",
-  port: "3306",
-  user: "root",
-  password: "pvictor",
-  database: "db_matcha"
-});
+const db_connect = require('./db_connection.js');
+let con = db_connect.con;
 
 //Connexion a la Database
 con.connect(function(err) {
@@ -54,6 +40,9 @@ app.use(messages);
 
 const swipe = require('./routes/swipe.js');
 app.use(swipe);
+
+const match = require('./routes/match.js');
+app.use(match);
 
 /*
 // Chargement de la page chatroom.html

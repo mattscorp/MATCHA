@@ -1,13 +1,27 @@
+'use strict'
+
 var mysql = require('mysql');
 
-var con = mysql.createConnection({
+/*  CONEXION MAISON */
+
+  let con = mysql.createConnection({
+  host: "localhost",  
+  user: "paul",
+  password: "42Pourlavie!",
+  database: "matcha"
+});
+
+
+/* CONNECTION ECOLE */
+/*
+let con = mysql.createConnection({
   host: "localhost",
   port: "3306",
   user: "root",
-  password: "42Pourlavie!"
+  password: "pvictor",
+  database: "db_matcha"
 });
+*/
 
-con.connect(function(err) {
-  if (err) throw err;
-  console.log("Connected!");
-});
+
+module.exports.con = con;

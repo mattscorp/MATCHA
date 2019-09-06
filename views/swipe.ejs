@@ -1,64 +1,10 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <meta charset="utf-8" />
-        <title>Matcha - Parcourir les profils</title>
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-        <link href="/styles/styles.css" rel="stylesheet" type="text/css">
-        <style type="text/css">
-        /* Popup container - can be anything you want */
-            .popup {
-              position: relative;
-              display: inline-block;
-              cursor: pointer;
-              -webkit-user-select: none;
-              -moz-user-select: none;
-              -ms-user-select: none;
-              user-select: none;
-            }
-
-            /* The actual popup */
-            .popup .popup_div {
-              visibility: hidden;
-              width: 160px;
-              background-color: #555;
-              color: #fff;
-              text-align: center;
-              border-radius: 6px;
-              padding: 8px 0;
-              position: absolute;
-              z-index: 1;
-              margin: auto;
-            }
-
-            /* Popup arrow */
-            .popup .popup_div::after {
-              content: "";
-              position: absolute;
-              margin: auto;
-              border-width: 5px;
-              border-style: solid;
-              border-color: #555 transparent transparent transparent;
-            }
-
-            /* Toggle this class - hide and show the popup */
-            .popup .show {
-              visibility: visible;
-              -webkit-animation: fadeIn 1s;
-              animation: fadeIn 1s;
-            }
-
-            /* Add animation (fade in the popup) */
-            @-webkit-keyframes fadeIn {
-              from {opacity: 0;} 
-              to {opacity: 1;}
-            }
-
-            @keyframes fadeIn {
-              from {opacity: 0;}
-              to {opacity:1 ;}
-            }
-        </style>
+      <meta charset="utf-8" />
+      <title>Matcha - Parcourir les profils</title>
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+      <link href="/styles/styles.css" rel="stylesheet" type="text/css">
     </head>
  
     <body>
@@ -69,26 +15,29 @@
             if (!previous_profiles.includes(item.user_ID)) { 
                if ((infos.orientation == 'Femmes' && item.gender == 'Femme') || (infos.orientation == 'Autres' && item.gender == 'Autre') || (infos.orientation == 'Hommes' && item.gender == 'Homme')|| (infos.orientation == 'Bi') && (item.gender == 'Homme' || item.gender == 'Femme')) { %>
             <div>
-                <h2>Profile de <strong><%= item.first_name %></strong> (<%= item.login %>)</h2>
-                <p>Sexe : <%= item.gender %></p>
-                <div class="popup" onclick="myFunction('<%= item.login %>')">
-                    <img class="account_image" src="<%= item.profile_picture %>" title="Profile de <%= item.login %>">
-                    <span class="popup_div" id="<%= item.login %>">
-                        <p>Age : <%= item.age %> ans</p>
-                        <% if (item.image_1 != null) { %>
-                            <img class="account_image" src="<%= item.image_1 %>" title="Photo 1 de <%= item.login %>">
-                        <% } if (item.image_2 != null) { %>
-                            <img class="account_image" src="<%= item.image_2 %>" title="Photo 2 de <%= item.login %>">
-                        <% } if (item.image_3 != null) { %>
-                            <img class="account_image" src="<%= item.image_3 %>" title="Photo 3 de <%= item.login %>">
-                        <% } if (item.image_4 != null) { %>
-                            <img class="account_image" src="<%= item.image_4 %>" title="Photo 4 de <%= item.login %>">
-                        <% } if (item.image_5 != null) { %>
-                            <img class="account_image" src="<%= item.image_5 %>" title="Photo 5 de <%= item.login %>">
-                        <% } %>
-                    </span>
-                </div>
-
+              <div class="popup" onclick="myFunction('<%= item.login %>')">
+                <img class="account_image" src="<%= item.profile_picture %>" title="Profile de <%= item.login %>">
+                <span class="popup_div" id="<%= item.login %>">
+                  <p><strong><%= item.first_name %></strong> (<%= item.login %>)</p>
+                  <p><%= item.gender %>, <%= item.age %> ans</p>
+                  <% if (item.image_1 != null) { %>
+                    <img class="account_image" src="<%= item.image_1 %>" title="Photo 1 de <%= item.login %>">
+                  <% } if (item.image_2 != null) { %>
+                    <img class="account_image" src="<%= item.image_2 %>" title="Photo 2 de <%= item.login %>">
+                  <% } if (item.image_3 != null) { %>
+                    <img class="account_image" src="<%= item.image_3 %>" title="Photo 3 de <%= item.login %>">
+                  <% } if (item.image_4 != null) { %>
+                    <img class="account_image" src="<%= item.image_4 %>" title="Photo 4 de <%= item.login %>">
+                  <% } if (item.image_5 != null) { %>
+                    <img class="account_image" src="<%= item.image_5 %>" title="Photo 5 de <%= item.login %>">
+                  <% } %>
+                  <form action="like_profile" method="post">
+                    <input type="hidden" name="liked_ID" value="<%= item.user_ID %>">
+                    <input type="submit" name="submit" value="Like">
+                    <input type="submit" name="submit" value="Nope">
+                  </form>
+                </span>
+              </div>
             </div>
         <%      }
             }
@@ -103,25 +52,11 @@
                 });
             });
         }
-
-        // When the user clicks on <div>, open the popup
+        // Ouverture du popup quand l'utilisateur clique sur un profil
         function myFunction(login) {
             console.log(login);
           var popup = document.getElementById(login);
           popup.classList.toggle("show");
         }
-
-
-        // $(window).load(function () {
-        //     $(".trigger_popup_fricc").click(function(){
-        //        $('.hover_bkgr_fricc').show();
-        //     });
-        //     $('.hover_bkgr_fricc').click(function(){
-        //         $('.hover_bkgr_fricc').hide();
-        //     });
-        //     $('.popupCloseButton').click(function(){
-        //         $('.hover_bkgr_fricc').hide();
-        //     });
-        // });
     </script>
 </html>

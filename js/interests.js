@@ -12,26 +12,8 @@ const transporter = nodemailer.createTransport({
     pass: 'MatchaTest42'
   }
 });
-
-/*  CONEXION MAISON */
-/*
-  let con = mysql.createConnection({
-  host: "localhost",  
-  user: "paul",
-  password: "42Pourlavie!",
-  database: "matcha"
-});
-*/
-
-/* CONNECTION ECOLE */
-
-let con = mysql.createConnection({
-  host: "localhost",
-  port: "3306",
-  user: "root",
-  password: "pvictor",
-  database: "db_matcha"
-});
+const db_connect = require('../db_connection.js');
+let con = db_connect.con;
 
 
 const topic_exists = async function(topic) {
