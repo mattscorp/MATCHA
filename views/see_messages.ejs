@@ -10,13 +10,15 @@
     	<% include partials/nav %>
         <h1>Messages de <%= infos_messaged.first_name %></h1>
         <img class="account_image" src="<%= infos_messaged.profile_picture %>" title="Profile de <%= infos_messaged.login %>">
-        <% messages.forEach(function(item) { %>
-            <% if (item.sender_ID == messaging_ID) { %>
-                <p><%= messaging_first_name %> : <strong><%= item.message %></strong> le <%= item.date.split('-')[2].split('T')[0]; %>/<%= item.date.split('-')[1]; %>/<%= item.date.split('-')[0]; %> à <%= item.date.split('T')[1].split('.')[0] %></p>
-            <% } else if (item.recipient_ID == messaging_ID) { %>
-                <p><%= infos_messaged.first_name %> : <strong><%= item.message %></strong> le <%= item.date.split('-')[2].split('T')[0]; %>/<%= item.date.split('-')[1]; %>/<%= item.date.split('-')[0]; %> à <%= item.date.split('T')[1].split('.')[0] %></p>
-            <% }
-        }) %>
+        <div id="here">
+            <% messages.forEach(function(item) { %>
+                <% if (item.sender_ID == messaging_ID) { %>
+                    <p><%= messaging_first_name %> : <strong><%= item.message %></strong> le <%= item.date.split('-')[2].split('T')[0]; %>/<%= item.date.split('-')[1]; %>/<%= item.date.split('-')[0]; %> à <%= item.date.split('T')[1].split('.')[0] %></p>
+                <% } else if (item.recipient_ID == messaging_ID) { %>
+                    <p><%= infos_messaged.first_name %> : <strong><%= item.message %></strong> le <%= item.date.split('-')[2].split('T')[0]; %>/<%= item.date.split('-')[1]; %>/<%= item.date.split('-')[0]; %> à <%= item.date.split('T')[1].split('.')[0] %></p>
+                <% }
+            }) %>
+        </div>
         <form action="new_message" method="post">
             <input type="hidden" name="sender_ID" value="<%= messaging_ID %>">
             <input type="hidden" name="recipient_ID" value="<%= infos_messaged.user_ID %>">
@@ -31,6 +33,10 @@
                 $.post('geo', data, function(data) {
                 });
             });
+        }
+        setInterval('updateDiv()', 3000);
+        function updateDiv() { 
+            $( "#here" ).load(window.location.href + " #here" );
         }
     </script>
 </html>
