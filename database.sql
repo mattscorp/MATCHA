@@ -8,11 +8,11 @@ CREATE TABLE `like` (`like_ID` INT NOT NULL PRIMARY KEY AUTO_INCREMENT, `liker_I
 
 CREATE TABLE `block` (`block_ID` INT NOT NULL PRIMARY KEY AUTO_INCREMENT, `blocker_ID` INT, `blocked_ID` INT, `valid_block` INT);
 
--- CREATE TABLE `nope` (`nope_ID` INT NOT NULL PRIMARY KEY AUTO_INCREMENT, `noper_ID` INT, `noped_ID` INT, `valid_nope` INT);
+CREATE TABLE `notifications` (`notification_ID` INT NOT NULL PRIMARY KEY AUTO_INCREMENT, `notified_ID` INT, `notifier_ID` INT, `motive` TEXT, `valid_notification` INT, `date` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP);
 
 CREATE TABLE `report` (`report_ID` INT NOT NULL PRIMARY KEY AUTO_INCREMENT, `reporter_ID` INT, `reported_ID` INT, `valid_report` INT);
 
-CREATE TABLE `message` (`message_ID` INT NOT NULL PRIMARY KEY AUTO_INCREMENT, `sender_ID` INT, `recipient_ID` INT, `message` TEXT);
+CREATE TABLE `message` (`message_ID` INT NOT NULL PRIMARY KEY AUTO_INCREMENT, `sender_ID` INT, `recipient_ID` INT, `message` TEXT, `date` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP);
 
 CREATE TABLE `history` (`action_ID` INT NOT NULL PRIMARY KEY AUTO_INCREMENT, `from_ID` INT, `to_ID` INT, `action` VARCHAR(10), `date` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP);
 

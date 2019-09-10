@@ -12,7 +12,8 @@
         <h1>Propositions pour <%= infos.first_name %></h1>
         <p>Votre orientation : <%= infos.orientation %></p>
         <% profiles.forEach(function(item) { 
-            if (!previous_profiles.includes(item.user_ID) && block_me.includes(item.user_ID)) { 
+            console.log(item);
+            if (!previous_profiles.includes(item.user_ID) && !block_me.includes(item.user_ID)) {
                if ((infos.orientation == 'Femmes' && item.gender == 'Femme') || (infos.orientation == 'Autres' && item.gender == 'Autre') || (infos.orientation == 'Hommes' && item.gender == 'Homme')|| (infos.orientation == 'Bi') && (item.gender == 'Homme' || item.gender == 'Femme')) { %>
             <div>
               <div class="popup" onclick="myFunction('<%= item.login %>')">

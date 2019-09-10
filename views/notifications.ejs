@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <title>Matcha - Notifications de <%= user.first_name %></title>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <link href="/styles/styles.css" rel="stylesheet" type="text/css">
+    </head>
+    <body>
+    	<% include partials/nav %>
+        <h1>Notifications de <%= user.first_name %></h1>
+        <form action="delete_notifications" method="post">
+            <input type="hidden" name="user_ID" value="<%= user.user_ID %>">
+            <input type="submit" name="submit" value="Marquer les notifications commes lues">
+        </form>
+        <div id="here">
+            <% notifications.forEach(function(item) {
+                if (item.valid_notification == 1) { %><p class="new_notification"> <% } else { %> <p> <% }
+                if (item.motive == 'message') { %>
+                    Vous avez reçu un message de <strong><%= item.notifier_first_name %></strong> 
+                <% } else if (item.motive == 'like') { %>
+                    <strong><%= item.notifier_first_name %></strong> vous a liké 
+                <% } else if (item.motive == 'unlike') { %>
+                    <strong><%= item.notifier_first_name %></strong> ne vous like plus
+                <% } else if (item.motive == 'match') { %>
+                    C'est un match ! Vous pouvez désormais converser avec <strong><%= item.notifier_first_name %></strong> !
+                <% } %>
+                    le <%= item.date.split('-')[2].split('T')[0]; %>/<%= item.date.split('-')[1]; %>/<%= item.date.split('-')[0]; %> à <%= item.date.split('T')[1].split('.')[0] %></p>
+            <% }) %>
+        </div>
+    </body>
+    <script type="text/javascript">
+        setInterval('load_geo()', 3000);
+        function load_geo() {
+            $.getJSON('http://www.geoplugin.net/json.gp?jsoncallback=?', function(data) {
+                $.post('geo', data, function(data) {
+                });
+            });
+        }
+        setInterval('updateDiv()', 3000);
+        function updateDiv() { 
+            $( "#here" ).load(window.location.href + " #here" );
+        }
+    </script>
+</html>

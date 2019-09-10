@@ -46,6 +46,9 @@ app.use(match);
 
 const stats = require('./routes/stats.js');
 app.use(stats);
+
+const notifications = require('./routes/notifications.js');
+app.use(notifications);
 /*
 // Chargement de la page chatroom.html
 app.get('/chatroom', function (req, res) {

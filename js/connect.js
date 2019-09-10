@@ -381,8 +381,8 @@ module.exports.recup_info = recup_info;
 // Fonction pour recuperer les interests de l'utilisateur
 const recup_interests = async function(user_ID){
  return new Promise((resolve, reject) => {
-   let sql = "SELECT * FROM interests WHERE `" + user_ID + "` = 1";
-   con.query(sql, function(err, result){
+   let sql = "SELECT * FROM interests WHERE '" + user_ID + "' = ?";
+   con.query(sql, [user_ID], function(err, result){
      if(err) throw err;
      resolve(JSON.stringify(result));
    })

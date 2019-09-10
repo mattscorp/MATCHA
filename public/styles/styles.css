@@ -15,6 +15,10 @@
 	color: red;
 }
 
+.new_notification {
+  color: red;
+}
+
 /* Popup container - can be anything you want */
 .popup {
   position: relative;

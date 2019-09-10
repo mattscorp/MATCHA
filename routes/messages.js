@@ -4,7 +4,6 @@ const express = require('express');
 var app = express();
 const session = require('express-session');
 const server = require('http').createServer(app);
-const io = require('socket.io').listen(server);
 const ent = require('ent'); // Permet de bloquer les caractères HTML (sécurité équivalente à htmlentities en PHP)
 const bodyParser = require('body-parser'); // Permet de parser
 
