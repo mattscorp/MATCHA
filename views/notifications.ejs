@@ -7,14 +7,17 @@
         <link href="/styles/styles.css" rel="stylesheet" type="text/css">
     </head>
     <body>
-    	<% include partials/nav %>
+        <div id="0">
+        	<% include partials/nav %>
+        </div>
         <h1>Notifications de <%= user.first_name %></h1>
+        <p id="1">Tu as <%= new_notifications %> nouvelles notifications.</p>
         <form action="delete_notifications" method="post">
             <input type="hidden" name="user_ID" value="<%= user.user_ID %>">
             <input type="submit" name="submit" value="Marquer les notifications commes lues">
         </form>
-        <div id="here">
-            <% notifications.forEach(function(item) {
+        <div id="2">
+            <% notifications.reverse().forEach(function(item) {
                 if (item.valid_notification == 1) { %><p class="new_notification"> <% } else { %> <p> <% }
                 if (item.motive == 'message') { %>
                     Vous avez reçu un message de <strong><%= item.notifier_first_name %></strong> 
@@ -22,6 +25,8 @@
                     <strong><%= item.notifier_first_name %></strong> vous a liké 
                 <% } else if (item.motive == 'unlike') { %>
                     <strong><%= item.notifier_first_name %></strong> ne vous like plus
+                <% } else if (item.motive == 'visit') { %>
+                    <strong><%= item.notifier_first_name %></strong> a visité votre profile 
                 <% } else if (item.motive == 'match') { %>
                     C'est un match ! Vous pouvez désormais converser avec <strong><%= item.notifier_first_name %></strong> !
                 <% } %>
@@ -39,7 +44,9 @@
         }
         setInterval('updateDiv()', 3000);
         function updateDiv() { 
-            $( "#here" ).load(window.location.href + " #here" );
+            $( "#0" ).load(window.location.href + " #0" );
+            $( "#1" ).load(window.location.href + " #1" );
+            $( "#2" ).load(window.location.href + " #2" );
         }
     </script>
 </html>

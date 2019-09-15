@@ -27,16 +27,27 @@ app.use(express.static('./../public'));
 
 const router = express.Router();
 
-// Envoi d'un nouveau message
 router.get('/notifications', async function(req, res) {
 	if (!req.session.login || req.session.login == '')
         res.redirect('/');
     else {
         let info_parse = JSON.parse(await user.recup_info(req.session.login));
         // Ensemble des notifications de l'utilisateur
+        let new_notifications = await notifications.notifications_number(info_parse[0].user_ID);
         let notifications_parse = JSON.parse(await notifications.recup_notifications(info_parse[0].user_ID));
         res.render('notifications', {user: info_parse[0],
-                                    notifications: notifications_parse});
+                                    notifications: notifications_parse,
+                                    new_notifications: new_notifications});
+    }
+})
+
+router.post('/delete_notifications', async function(req, res) {
+    if (!req.session.login || req.session.login == '')
+        res.redirect('/');
+    else {
+        let backURL = req.header('Referer') || '/';
+        await notifications.delete_notifications(req.body.user_ID);
+        res.redirect(backURL);
     }
 })
 

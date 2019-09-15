@@ -8,7 +8,9 @@
     </head>
  
     <body>
-    	<% include partials/nav %>
+    	<div id="0">
+            <% include partials/nav %>
+        </div>
         <h1>Mes matchs</h1>
         <% profiles.forEach(function(item) {
         	if (like.includes(item.user_ID) && like_me.includes(item.user_ID) && !block_me.includes(item.user_ID) && !block.includes(item.user_ID)) { %>
@@ -34,4 +36,10 @@
     	<%	}
     	}) %>
     </body>
+    <script type="text/javascript">
+        setInterval('updateDiv()', 3000);
+        function updateDiv() { 
+            $( "#0" ).load(window.location.href + " #0" );
+        }
+    </script>
 </html>

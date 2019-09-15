@@ -11,6 +11,7 @@ const user = require('../js/connect.js');
 const interests = require('../js/interests.js');
 const swipe = require('../js/swipe.js');
 const match = require('../js/match.js');
+const notifications = require('../js/notifications.js');
 
 app.set('view engine', 'ejs');
 app.use(bodyParser.json()); // support json encoded bodies
@@ -51,7 +52,8 @@ router.get('/swipe', async function (req, res) {
     		// intervalle de score de popularité, 
     		// géolocalisation,
     		// tags 
-		res.render('swipe', {infos: info_parse[0], block_me: block_me_profiles, profiles: profiles_parse, previous_profiles: previous_profiles});
+        let new_notifications = await notifications.notifications_number(info_parse[0].user_ID);
+		res.render('swipe', {infos: info_parse[0], block_me: block_me_profiles, profiles: profiles_parse, previous_profiles: previous_profiles, new_notifications: new_notifications});
 	}
 })
 
@@ -61,9 +63,27 @@ router.post('/like_profile', async function(req, res) {
     else {
         let info_parse = JSON.parse(await user.recup_info(req.session.login));
         swipe.like_profile(info_parse, req.body.submit, req.body.liked_ID);
+        if (req.body.submit == 'Like') {
+            notifications.notification(info_parse[0], req.body.liked_ID, 'like');
+            if ((await swipe.like_reverse(info_parse, req.body.liked_ID)) === true) {
+                notifications.notification(info_parse[0], req.body.liked_ID, 'match');
+                swipe.add_match(info_parse, req.body.liked_ID);
+            }
+        }
         res.redirect('/swipe');
     }
 })
 
+router.post('/visit', async function(req, res) {
+    if (!req.session.login || req.session.login == '')
+        res.redirect('/');
+    else {
+        let info_parse = JSON.parse(await user.recup_info(req.session.login));
+        await swipe.add_visit(info_parse[0].user_ID, req.body.visited_ID, info_parse[0].first_name);
+        await notifications.notification(info_parse[0], req.body.visited_ID, 'visit');
+        console.log(req.body.visited_ID);
+        res.redirect('/swipe');
+    }
+})
 
 module.exports = router;

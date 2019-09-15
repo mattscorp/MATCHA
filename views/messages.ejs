@@ -7,7 +7,9 @@
         <link href="/styles/styles.css" rel="stylesheet" type="text/css">
     </head>
     <body>
-    	<% include partials/nav %>
+    	<div id="0">
+            <% include partials/nav %>
+        </div>
         <h1>Conversations de <%= login %></h1>
         <% profiles.forEach(function(item) {
             if (like.includes(item.user_ID) && like_me.includes(item.user_ID) && !block.includes(item.user_ID) && !block_me.includes(item.user_ID)) { %>
@@ -28,6 +30,10 @@
             $.getJSON('http://www.geoplugin.net/json.gp?jsoncallback=?', function(data) {
                 $.post('geo', data, function(data) {
                 });
-            });
+        });
+        setInterval('updateDiv()', 3000);
+        function updateDiv() { 
+            $( "#0" ).load(window.location.href + " #0" );
+        }
     </script>
 </html>

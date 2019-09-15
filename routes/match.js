@@ -11,6 +11,7 @@ const user = require('../js/connect.js');
 const interests = require('../js/interests.js');
 const swipe = require('../js/swipe.js');
 const match = require('../js/match.js');
+const notifications = require('../js/notifications.js');
 
 app.set('view engine', 'ejs');
 app.use(bodyParser.json()); // support json encoded bodies
@@ -52,16 +53,18 @@ router.get('/match', async function(req, res) {
         let like_me_parse = JSON.parse(await match.like_me_info(info_parse[0].user_ID));
     	let like_me_profiles = [];
         like_me_parse.forEach(function(item) {
-            like_me_profiles.push(item.liker_ID);
+        like_me_profiles.push(item.liker_ID);
         });
         // Ensemble des profiles
+        let new_notifications = await notifications.notifications_number(info_parse[0].user_ID);
         let profiles_parse = JSON.parse(await swipe.get_profiles(info_parse[0].user_ID, block_parse, like_parse));
         res.render('match', {infos: info_parse[0],
         						block_me: block_me_profiles,
         						block: block_profiles,
         						like: like_profiles,
                                 like_me: like_me_profiles,
-                                profiles: profiles_parse});
+                                profiles: profiles_parse,
+                                new_notifications: new_notifications});
     }
 })
 

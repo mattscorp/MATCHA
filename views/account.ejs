@@ -8,8 +8,9 @@
     </head>
  
     <body>
-    	<% include partials/nav %>
-
+        <div id="0">
+    	   <% include partials/nav %>
+        </div>
         <h1>Infos de <strong class="first_letter"><%= info.first_name %></strong></h1>
 
         <h2>Photo de profil</h2>
@@ -137,6 +138,10 @@
                 $.post('geo', data, function(data) {
                 });
             });
+        }
+        setInterval('updateDiv()', 3000);
+        function updateDiv() { 
+            $( "#0" ).load(window.location.href + " #0" );
         }
     </script>
 </html>

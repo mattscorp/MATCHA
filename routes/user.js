@@ -12,6 +12,7 @@ const upload = multer({dest: __dirname + '/../public/images'});
 
 const user = require('../js/connect.js');
 const interests = require('../js/interests.js');
+const notifications = require('../js/notifications.js');
 
 app.set('view engine', 'ejs');
 app.use(bodyParser.json()); // support json encoded bodies
@@ -40,7 +41,8 @@ router.get('/', async function (req, res) {
     } else {
     	const interests = await user.recup_interests(info_parse[0].user_ID);
     	const interests_parse = JSON.parse(interests);
-    	res.render('account', {info: info_parse[0], interests: interests_parse});
+    	let new_notifications = await notifications.notifications_number(info_parse[0].user_ID);
+    	res.render('account', {info: info_parse[0], interests: interests_parse, new_notifications: new_notifications});
     }
   } else {
     res.render('connect', {user: 'true', password: 'true'});

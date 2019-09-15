@@ -63,3 +63,44 @@ const like_profile = function(info_parse, submit, liked_ID) {
     });
 }
 module.exports.like_profile = like_profile;
+
+// Return true si l'autre profil me like  déjà, non sinon)
+const like_reverse = function(info_parse, liked_ID) {
+	return new Promise((resolve, reject) => {
+		let sql = "SELECT * FROM `like` WHERE `liker_ID` = ? AND `liked_ID` = ?";
+	    let values = [[liked_ID, info_parse[0].user_ID]];
+	    con.query(sql, [values], function(err, result) {
+	        if (err)
+	        	throw err;
+	        else if (result == '')
+	        	resolve(false);
+	        else
+	        	resolve(true);
+	    });
+	})
+}
+module.exports.like_reverse = like_reverse;
+
+// Ajoute un match dans la table des match
+const add_match = function(info_parse, liked_ID) {
+	let sql = "INSERT INTO `match` (`liker_ID`, `liked_ID`, `valid_match`) VALUES ?";
+    let values1 = [[info_parse[0].user_ID, liked_ID, 1]];
+    let values2 = [[liked_ID, info_parse[0].user_ID, 1]];
+    con.query(sql, [values1], function(err, result) {
+        if (err) throw err;
+    });
+    con.query(sql, [values2], function(err, result) {
+        if (err) throw err;
+    });
+}
+module.exports.add_match = add_match;
+
+// Ajoute à la table
+const add_visit = function(visitor_ID, visited_ID, history_first_name) {
+	let sql = "INSERT INTO `history` (`from_ID`, `to_ID`, `history_first_name`, `action`) VALUES ?";
+    let values1 = [[visitor_ID, visited_ID, history_first_name, 'visit']];
+    con.query(sql, [values1], function(err, result) {
+        if (err) throw err;
+    });
+}
+module.exports.add_visit = add_visit;

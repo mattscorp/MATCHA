@@ -7,7 +7,9 @@
         <link href="/styles/styles.css" rel="stylesheet" type="text/css">
     </head>
     <body>
-    	<% include partials/nav %>
+    	<div id="0">
+            <% include partials/nav %>
+        </div>
         <h1>Messages de <%= infos_messaged.first_name %></h1>
         <img class="account_image" src="<%= infos_messaged.profile_picture %>" title="Profile de <%= infos_messaged.login %>">
         <div id="here">
@@ -37,6 +39,9 @@
         setInterval('updateDiv()', 3000);
         function updateDiv() { 
             $( "#here" ).load(window.location.href + " #here" );
+        }
+        function updateDiv2() { 
+            $( "#0" ).load(window.location.href + " #0" );
         }
     </script>
 </html>

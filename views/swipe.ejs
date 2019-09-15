@@ -8,15 +8,16 @@
     </head>
  
     <body>
-    	<% include partials/nav %>
+        <div id="0">
+          <% include partials/nav %>
+        </div>
         <h1>Propositions pour <%= infos.first_name %></h1>
         <p>Votre orientation : <%= infos.orientation %></p>
         <% profiles.forEach(function(item) { 
-            console.log(item);
             if (!previous_profiles.includes(item.user_ID) && !block_me.includes(item.user_ID)) {
                if ((infos.orientation == 'Femmes' && item.gender == 'Femme') || (infos.orientation == 'Autres' && item.gender == 'Autre') || (infos.orientation == 'Hommes' && item.gender == 'Homme')|| (infos.orientation == 'Bi') && (item.gender == 'Homme' || item.gender == 'Femme')) { %>
             <div>
-              <div class="popup" onclick="myFunction('<%= item.login %>')">
+              <div class="popup" onclick="myFunction('<%= item.login %>', '<%= item.user_ID %>')">
                 <img class="account_image" src="<%= item.profile_picture %>" title="Profile de <%= item.login %>">
                 <span class="popup_div" id="<%= item.login %>">
                   <p><strong><%= item.first_name %></strong> (<%= item.login %>)</p>
@@ -53,10 +54,14 @@
             });
         }
         // Ouverture du popup quand l'utilisateur clique sur un profil
-        function myFunction(login) {
-            console.log(login);
+        function myFunction(login, visited_ID) {
           var popup = document.getElementById(login);
           popup.classList.toggle("show");
+          $.post('visit', {visited_ID: visited_ID});
+        }
+        setInterval('updateDiv()', 3000);
+        function updateDiv() { 
+            $( "#0" ).load(window.location.href + " #0" );
         }
     </script>
 </html>

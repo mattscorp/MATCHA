@@ -13,6 +13,7 @@ const swipe = require('../js/swipe.js');
 const match = require('../js/match.js');
 const stats = require('../js/stats.js');
 const messages = require('../js/messages.js');
+const notifications = require('../js/notifications.js');
 
 app.set('view engine', 'ejs');
 app.use(bodyParser.json()); // support json encoded bodies
@@ -32,6 +33,8 @@ router.post('/new_message', async function(req, res) {
         res.redirect('/');
     else {
     	let backURL = req.header('Referer') || '/';
+        let info_parse = JSON.parse(await user.recup_info(req.session.login));
+        notifications.notification(info_parse[0], req.body.recipient_ID, 'message')
 		await messages.new_message(req.body.sender_ID, req.body.recipient_ID, req.body.message);
 		res.redirect(backURL);
     }
@@ -48,10 +51,12 @@ router.get('/see_messages', async function(req, res) {
         let info_messaged_parse = JSON.parse(await user.recup_info(req.query.messaged_login));
         // Messages entre les deux
     	let messages_parse = JSON.parse(await messages.messages(req.query.messaging_ID, req.query.messaged_ID));
+        let new_notifications = await notifications.notifications_number(info_parse[0].user_ID);
     	res.render('see_messages', {messaging_first_name: info_parse[0].first_name,
 									messaging_ID: req.query.messaging_ID,
 									messages: messages_parse,
-									infos_messaged: info_messaged_parse[0]
+									infos_messaged: info_messaged_parse[0],
+                                    new_notifications: new_notifications
 									});
 	}
 })
@@ -87,6 +92,7 @@ router.get('/messages', async function (req, res) {
         like_me_parse.forEach(function(item) {
             like_me_profiles.push(item.liker_ID);
         });
+        let new_notifications = await notifications.notifications_number(info_parse[0].user_ID);
         // Tous les profiles
         let profiles_parse = JSON.parse(await swipe.get_profiles(info_parse[0].user_ID));
 		res.render('messages', {login: req.session.login,
@@ -95,7 +101,8 @@ router.get('/messages', async function (req, res) {
 								like_me: like_me_profiles,
 								block: block_profiles,
 								block_me: block_me_profiles,
-								profiles: profiles_parse
+								profiles: profiles_parse,
+                                new_notifications: new_notifications
 								});
 	}
 })

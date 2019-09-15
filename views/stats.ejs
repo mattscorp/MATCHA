@@ -8,12 +8,14 @@
     </head>
  
     <body>
-    	<% include partials/nav %>
-        <h1>Tes statistiques</h1>
-        <p><%= seen_nb %> personnes ont vu ton profile</p>
-        <p><%= like_nb %> personnes ont liké ton profile</p>
-        <p>Ton score de popularité : <%= (like_nb / seen_nb * 100).toFixed(0)%>/100</p>
-        
+    	<div id="0">
+          <% include partials/nav %>
+      </div>
+      <h1>Tes statistiques</h1>
+      <p><%= seen_nb %> personnes ont vu ton profile</p>
+      <p><%= like_nb %> personnes ont liké ton profile</p>
+      <p>Ton score de popularité : <%= (like_nb / seen_nb * 100).toFixed(0)%>/100</p>
+      
 
     </body>
     <script type="text/javascript">
@@ -29,6 +31,10 @@
             console.log(login);
           var popup = document.getElementById(login);
           popup.classList.toggle("show");
+        }
+        setInterval('updateDiv()', 3000);
+        function updateDiv() { 
+            $( "#0" ).load(window.location.href + " #0" );
         }
     </script>
 </html>
