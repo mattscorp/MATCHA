@@ -68,8 +68,8 @@ module.exports.like_profile = like_profile;
 const like_reverse = function(info_parse, liked_ID) {
 	return new Promise((resolve, reject) => {
 		let sql = "SELECT * FROM `like` WHERE `liker_ID` = ? AND `liked_ID` = ?";
-	    let values = [[liked_ID, info_parse[0].user_ID]];
-	    con.query(sql, [values], function(err, result) {
+	    let values = [liked_ID, info_parse[0].user_ID];
+	    con.query(sql, values, function(err, result) {
 	        if (err)
 	        	throw err;
 	        else if (result == '')

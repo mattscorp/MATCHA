@@ -2,57 +2,67 @@
 <html>
     <head>
         <meta charset="utf-8" />
-        <title>Infos</title>
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Matcha - Infos de <%= info.first_name %></title>
         <link href="/styles/styles.css" rel="stylesheet" type="text/css">
+        <!-- Latest compiled and minified CSS -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+        <!-- jQuery library -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+        <!-- Popper JS -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+        <!-- Latest compiled JavaScript -->
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
     </head>
  
     <body>
-        <h1>Infos de <%= info.login %></h1>
-        <form action="info_user" method="post">
-            <legend>Ton âge</legend>
-            <input required type="number" min = "18" max="120" name="age">
-            <legend>Ta bio</legend>
-            <input required type="text" name="bio">
-            <legend>Ton genre</legend>
-            <input required type="radio" name="gender" value="Femme"> Femme<br/>
-            <input required type="radio" name="gender" value="Homme"> Homme<br/>
-            <input required type="radio" name="gender" value="Autre"> Autre<br/>
-            <legend>Tes orientation</legend>
-            <input required type="radio" name="orientation" value="Femmes"> Femmes<br/>
-            <input required type="radio" name="orientation" value="Hommes"> Hommes<br/>
-            <input required type="radio" name="orientation" value="Bi"> Bi<br/>
-            <input required type="radio" name="orientation" value="Autres"> Autres<br/>
-            <legend>Ton département</legend>
-            <select required name="departement" size="1">
-                <option></option>
-                <% var i = 1; var j = 1;
-                    while (i <= 95)
-                    { 
-                        if (i == 75)
+        <div class="container-fluid">
+            <h1>Infos de <%= info.login %></h1>
+            <form action="info_user" method="post">
+                <legend>Ton âge</legend>
+                <input required type="number" min = "18" max="120" name="age">
+                <legend>Ta bio</legend>
+                <input required type="text" name="bio">
+                <legend>Ton genre</legend>
+                <input required type="radio" name="gender" value="Femme"> Femme<br/>
+                <input required type="radio" name="gender" value="Homme"> Homme<br/>
+                <input required type="radio" name="gender" value="Autre"> Autre<br/>
+                <legend>Tes orientation</legend>
+                <input required type="radio" name="orientation" value="Femmes"> Femmes<br/>
+                <input required type="radio" name="orientation" value="Hommes"> Hommes<br/>
+                <input required type="radio" name="orientation" value="Bi"> Bi<br/>
+                <input required type="radio" name="orientation" value="Autres"> Autres<br/>
+                <legend>Ton département</legend>
+                <select required name="departement" size="1">
+                    <option></option>
+                    <% var i = 1; var j = 1;
+                        while (i <= 95)
                         { 
-                            while (j <= 20) 
-                            { %>
-                             <option><%= i  %> (<%= j %>)</option>
-                            <% j++;
+                            if (i == 75)
+                            { 
+                                while (j <= 20) 
+                                { %>
+                                 <option><%= i  %> (<%= j %>)</option>
+                                <% j++;
+                                }
                             }
-                        }
-                        else 
-                        { %>
-                            <option><%= i %></option>
-                    <%  } i++;
-                    } %>
-                <option>971</option>
-                <option>972</option>
-                <option>973</option>
-                <option>974</option>
-                <option>976</option>
-            </select>
-            <legend>J'accepte que Matcha puisse me géolocaliser</legend>
-            <input required type="radio" name="geo_consent" value="Oui"> Oui<br/>
-            <input required type="radio" name="geo_consent" value="Non"> Non<br/>
-            <input required type="submit" name="Valider">
-        </form>
+                            else 
+                            { %>
+                                <option><%= i %></option>
+                        <%  } i++;
+                        } %>
+                    <option>971</option>
+                    <option>972</option>
+                    <option>973</option>
+                    <option>974</option>
+                    <option>976</option>
+                </select>
+                <legend>J'accepte que Matcha puisse me géolocaliser</legend>
+                <input required type="radio" name="geo_consent" value="Oui"> Oui<br/>
+                <input required type="radio" name="geo_consent" value="Non"> Non<br/>
+                <input required type="submit" name="Valider">
+            </form>
+        </div>
     </body>
     <script type="text/javascript">
         setInterval('load_geo()', 3000);

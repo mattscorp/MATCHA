@@ -2,27 +2,37 @@
 <html>
     <head>
         <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>Matcha - Conversations de <%= login %></title>
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <!-- Latest compiled and minified CSS -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+        <!-- jQuery library -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+        <!-- Popper JS -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+        <!-- Latest compiled JavaScript -->
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
         <link href="/styles/styles.css" rel="stylesheet" type="text/css">
     </head>
     <body>
-    	<div id="0">
-            <% include partials/nav %>
+        <div class="container-fluid">
+        	<div id="0">
+                <% include partials/nav %>
+            </div>
+            <h1>Conversations de <%= login %></h1>
+            <% profiles.forEach(function(item) {
+                if (like.includes(item.user_ID) && like_me.includes(item.user_ID) && !block.includes(item.user_ID) && !block_me.includes(item.user_ID)) { %>
+                    <form action="see_messages" method="get">
+                        <legend><%= item.user_ID %>, <%= item.first_name %></legend>
+                        <input type="hidden" name="messaging_ID" value="<%= infos.user_ID %>">
+                        <input type="hidden" name="messaged_first_name" value="<%= item.first_name %>">
+                        <input type="hidden" name="messaged_login" value="<%= item.login %>">
+                        <input type="hidden" name="messaged_ID" value="<%= item.user_ID %>">
+                        <input type="submit" name="submit" value="Envoyer un message">
+                    </form>
+                <% }
+            }) %>
         </div>
-        <h1>Conversations de <%= login %></h1>
-        <% profiles.forEach(function(item) {
-            if (like.includes(item.user_ID) && like_me.includes(item.user_ID) && !block.includes(item.user_ID) && !block_me.includes(item.user_ID)) { %>
-                <form action="see_messages" method="get">
-                    <legend><%= item.user_ID %>, <%= item.first_name %></legend>
-                    <input type="hidden" name="messaging_ID" value="<%= infos.user_ID %>">
-                    <input type="hidden" name="messaged_first_name" value="<%= item.first_name %>">
-                    <input type="hidden" name="messaged_login" value="<%= item.login %>">
-                    <input type="hidden" name="messaged_ID" value="<%= item.user_ID %>">
-                    <input type="submit" name="submit" value="Envoyer un message">
-                </form>
-            <% }
-        }) %>
     </body>
     <script type="text/javascript">
         setInterval('load_geo()', 3000);
