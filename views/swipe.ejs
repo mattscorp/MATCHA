@@ -26,35 +26,63 @@
           <% profiles.forEach(function(item) { 
               if (!previous_profiles.includes(item.user_ID) && !block_me.includes(item.user_ID)) {
                  if ((infos.orientation == 'Femmes' && item.gender == 'Femme') || (infos.orientation == 'Autres' && item.gender == 'Autre') || (infos.orientation == 'Hommes' && item.gender == 'Homme')|| (infos.orientation == 'Bi') && (item.gender == 'Homme' || item.gender == 'Femme')) { %>
-              <div class="card">
-                <div class="card-header"><%= item.first_name %></div>
-                <div class="popup" onclick="myFunction('<%= item.login %>', '<%= item.user_ID %>')">
-                  <img class="card-img-top" src="<%= item.profile_picture %>" title="Profile de <%= item.login %>">
-                  <span class="popup_div" id="<%= item.login %>">
-                    <p><strong><%= item.first_name %></strong></p>
-                    <p>Age : <%= item.age %> ans</p>
-                    <p>Genre : <%= item.gender %></p>
-                    <p>Intéressé par : <%= item.orientation %></p>
-                    <p>Bio : <%= item.bio %></p>
-                    <% if (item.image_1 != null) { %>
-                      <img class="account_image" src="<%= item.image_1 %>" title="Photo 1 de <%= item.login %>">
-                    <% } if (item.image_2 != null) { %>
-                      <img class="account_image" src="<%= item.image_2 %>" title="Photo 2 de <%= item.login %>">
-                    <% } if (item.image_3 != null) { %>
-                      <img class="account_image" src="<%= item.image_3 %>" title="Photo 3 de <%= item.login %>">
-                    <% } if (item.image_4 != null) { %>
-                      <img class="account_image" src="<%= item.image_4 %>" title="Photo 4 de <%= item.login %>">
-                    <% } if (item.image_5 != null) { %>
-                      <img class="account_image" src="<%= item.image_5 %>" title="Photo 5 de <%= item.login %>">
-                    <% } %>
-                    <form action="like_profile" method="post">
-                      <input type="hidden" name="liked_ID" value="<%= item.user_ID %>">
-                      <input type="submit" name="submit" value="Like">
-                      <input type="submit" name="submit" value="Nope">
-                    </form>
-                  </span>
+          <div class="card">
+            <div class="card-header"><%= item.first_name %></div>
+              <div class="popup">
+                <img class="card-img-top" src="<%= item.profile_picture %>" title="Profile de <%= item.login %>">
+                <!-- Button to Open the Modal -->
+                <button  onclick="myFunction('<%= item.login %>', '<%= item.user_ID %>')" type="button" class="btn btn-primary" data-toggle="modal" data-target="#<%= item.login %>">
+                  Voir plus
+                </button>
+
+                <!-- The Modal -->
+                <div class="modal fade" id="<%= item.login %>">
+                  <div class="modal-dialog">
+                    <div class="modal-content">
+
+                      <!-- Modal Header -->
+                      <div class="modal-header">
+                        <h4 class="modal-title"><%= item.first_name %></h4>
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                      </div>
+
+                      <!-- Modal body -->
+                      <div class="modal-body">
+                        <span id="<%= item.login %>">
+                          <p><strong><%= item.first_name %></strong></p>
+                          <p>Age : <%= item.age %> ans</p>
+                          <p>Genre : <%= item.gender %></p>
+                          <p>Intéressé par : <%= item.orientation %></p>
+                          <p>Bio : <%= item.bio %></p>
+                          <% if (item.image_1 != null) { %>
+                            <img class="account_image" src="<%= item.image_1 %>" title="Photo 1 de <%= item.login %>">
+                          <% } if (item.image_2 != null) { %>
+                            <img class="account_image" src="<%= item.image_2 %>" title="Photo 2 de <%= item.login %>">
+                          <% } if (item.image_3 != null) { %>
+                            <img class="account_image" src="<%= item.image_3 %>" title="Photo 3 de <%= item.login %>">
+                          <% } if (item.image_4 != null) { %>
+                            <img class="account_image" src="<%= item.image_4 %>" title="Photo 4 de <%= item.login %>">
+                          <% } if (item.image_5 != null) { %>
+                            <img class="account_image" src="<%= item.image_5 %>" title="Photo 5 de <%= item.login %>">
+                          <% } %>
+                          <form action="like_profile" method="post">
+                            <input type="hidden" name="liked_ID" value="<%= item.user_ID %>">
+                            <input type="submit" name="submit" value="Like">
+                            <input type="submit" name="submit" value="Nope">
+                          </form>
+                        </span>
+                      </div>
+
+                      <!-- Modal footer -->
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                      </div>
+
+                    </div>
+                  </div>
                 </div>
               </div>
+            </div>
           <%      }
               }
           }) %>
@@ -62,22 +90,31 @@
       </div>
     </body>
     <script type="text/javascript">
-        setInterval('load_geo()', 3000);
-        function load_geo() {
-            $.getJSON('http://www.geoplugin.net/json.gp?jsoncallback=?', function(data) {
-                $.post('geo', data, function(data) {
-                });
-            });
-        }
-        // Ouverture du popup quand l'utilisateur clique sur un profil
-        function myFunction(login, visited_ID) {
-          var popup = document.getElementById(login);
-          popup.classList.toggle("show");
-          $.post('visit', {visited_ID: visited_ID});
-        }
-        setInterval('updateDiv()', 3000);
-        function updateDiv() { 
-            $( "#0" ).load(window.location.href + " #0" );
-        }
+      //Filtre les profiles par texte
+      $(document).ready(function(){
+        $("#myInput").on("keyup", function() {
+          var value = $(this).val().toLowerCase();
+          $("#myDIV *").filter(function() {
+            $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+          });
+        });
+      });
+      // Géolocalisation
+      setInterval('load_geo()', 3000);
+      function load_geo() {
+          $.getJSON('http://www.geoplugin.net/json.gp?jsoncallback=?', function(data) {
+              $.post('geo', data, function(data) {
+              });
+          });
+      }
+      // Ajoute une notification lors des visites de profiles
+      function myFunction(login, visited_ID) {
+        $.post('visit', {visited_ID: visited_ID});
+      }
+      // Update de la div
+      setInterval('updateDiv()', 3000);
+      function updateDiv() { 
+          $( "#0" ).load(window.location.href + " #0" );
+      }
     </script>
 </html>

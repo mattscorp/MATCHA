@@ -381,8 +381,8 @@ module.exports.recup_info = recup_info;
 // Fonction pour recuperer les interests de l'utilisateur
 const recup_interests = async function(user_ID){
  return new Promise((resolve, reject) => {
-   let sql = "SELECT * FROM interests WHERE '" + user_ID + "' = ?";
-   con.query(sql, [user_ID], function(err, result){
+   let sql = "SELECT `topic` FROM interests WHERE `" + user_ID + "` = 1";
+   con.query(sql, function(err, result){
      if(err) throw err;
      resolve(JSON.stringify(result));
    })
@@ -393,7 +393,7 @@ module.exports.recup_interests = recup_interests;
 // Ajout des coordonnées à la BDD
 const add_coordinates = async function(infos, login) {
   let geoloc = infos.geoplugin_latitude + ';' + infos.geoplugin_longitude;
-  let sql = "UPDATE users SET localisation_auto = '" + geoloc + "' WHERE login = ?"
+  let sql = "UPDATE users SET localisation_auto = '" + geoloc + "' WHERE login = ?";
   con.query(sql, [login], function(err, result) {
     if (err) throw err;
   });

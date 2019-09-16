@@ -37,6 +37,19 @@ const like_info = async function(user_ID) {
 }
 module.exports.like_info = like_info;
 
+// Renvoie la liste des profiles qui ont été likés par l'utilisateur
+const like_only = async function(user_ID) {
+	return new Promise((resolve, reject) => {
+		let sql = "SELECT `liked_ID` FROM `like` WHERE liker_ID = ? AND (`valid_like` = 1)";
+		con.query(sql, [user_ID], function(err, result) {
+			if (err) throw err;
+			else
+				resolve(JSON.stringify(result));
+		});
+	});
+}
+module.exports.like_only = like_only;
+
 // Renvoie la liste des profiles à proposer à l'utilisateur
 const get_profiles = async function(user_ID) {
 	return new Promise((resolve, reject) => {

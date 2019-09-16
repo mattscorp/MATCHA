@@ -21,9 +21,9 @@
             <% include partials/nav %>
         </div>
         <h1>Tes statistiques</h1>
-        <p><%= seen_nb %> personnes ont vu ton profile</p>
-        <p><%= like_nb %> personnes ont liké ton profile</p>
-        <p>Ton score de popularité : <%= (like_nb / seen_nb * 100).toFixed(0)%>/100</p>
+        <p>Nombre de likes : <strong><%= seen_nb %></strong></p>
+        <p>Nombre de vues : <strong><%= like_nb %></strong></p>
+        <p>Ton score de popularité : <strong><% if (seen_nb != 0) { %><%= (like_nb / seen_nb * 100).toFixed(0)%><% } else { %>100<% } %>/100</strong></p>
       </div>
     </body>
     <script type="text/javascript">
