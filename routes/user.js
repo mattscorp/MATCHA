@@ -45,7 +45,7 @@ router.get('/', async function (req, res) {
     	res.render('account', {info: info_parse[0], interests: interests_parse, new_notifications: new_notifications});
     }
   } else {
-    res.render('connect', {user: 'true', password: 'true'});
+    res.render('connect', {user: 'true', password: 'true', creation: 'true'});
    }
 });
 
@@ -57,6 +57,10 @@ router.post('/geo', async function(req, res) {
 		user.add_coordinates(req.body, req.session.login);
 		res.redirect('/');
 	}
+})
+
+router.get('/connect', function(req, res) {
+	res.redirect('/');
 })
 
 // Confirmation de l'email
@@ -144,11 +148,11 @@ router.post('/connect', async function(req, res){
 			req.session.login = req.body.user_connect.name;
 			res.redirect('/');
 		} else if (val_verif == 2)
-			res.render('connect', {user: 'false', password: 'true'});
+			res.render('connect', {user: 'false', password: 'true', creation: 'true'});
 		else if (val_verif == 3)
-			res.render('connect', {user: 'true', password: 'false'});
+			res.render('connect', {user: 'true', password: 'false', creation: 'true'});
 		} else
-			res.render('connect', {user: 'true', password: 'true'});
+			res.render('connect', {user: 'true', password: 'true', creation: 'true'});
 	}
 });
 
@@ -176,8 +180,8 @@ router.post('/creation', async function(req, res) {
 			res.render('create_account', {mdp_strength: 'false', user_exist: 'true', email_exist: 'true', mdp_match: 'true', mdp_length: 'true', name: 'true', email: 'true'});
 		else if(input == 1 && test == '1') {
 			user.add_user(req.body.user);
-			res.redirect('/');
-			}
+			res.render('connect', {user: 'true', password: 'true', creation: 'false'});
+		}
 		else
 			res.render('create_account', {mdp_strength: 'true', user_exist: 'true', email_exist: 'true', mdp_match: 'true', mdp_length: 'true', name: 'true', email: 'true'});
 	}

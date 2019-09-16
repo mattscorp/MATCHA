@@ -23,7 +23,7 @@
             <p id="1">Tu as <%= new_notifications %> nouvelles notifications.</p>
             <form action="delete_notifications" method="post">
                 <input type="hidden" name="user_ID" value="<%= user.user_ID %>">
-                <input type="submit" name="submit" value="Marquer les notifications commes lues">
+                <input class="btn btn-dark" type="submit" name="submit" value="Marquer les notifications commes lues">
             </form>
             <div class="jumbotron" id="2">
                 <% notifications.reverse().forEach(function(item) {

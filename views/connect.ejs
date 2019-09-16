@@ -28,11 +28,16 @@
                     <button type="button" class="close" data-dismiss="alert">&times;</button>
                     Ce mot de passe est erronné.
                 </div>
+            <% } else if (creation == 'false') { %>
+                <div class="alert alert-success alert-dismissible fade show">
+                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                    Ton compte a bien été créé, tu peux désormais te connecter !
+                </div>
             <% } %>
             <form action="/connect" method="post">
                 <input required type="text" name="user_connect[name]" placeholder="Ton Pseudo">
                 <input required type="password" name="user_connect[mdp1]" placeholder="Ton Password">
-                <input type="submit" value="Se Connecter">
+                <input class="btn btn-dark" type="submit" value="Se Connecter">
             </form>
             <p>Clique <a class="text-primary" href="/creation">ICI</a> pour créer ton compte.</p>
             <p>Clique <a class="text-primary" href="/reset_password">ICI</a> si tu as oublié ton mot de passe.</p>

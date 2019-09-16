@@ -20,9 +20,12 @@
             <h1>Infos de <%= info.first_name %></h1>
             <form action="/profile_picture" method="post" enctype="multipart/form-data">
                 <legend>Upload une photo de profil</legend>
-                <input required type="file" accept="image/png, image/jpeg" name="photo">
-                <input type="submit" value="Ajouter">
+                <input class="btn btn-outline-dark" required type="file" accept="image/png, image/jpeg" name="photo">
+                <input class="btn btn-dark" type="submit" value="Ajouter">
             </form>
+            <div class="progress">
+                <div class="progress-bar bg-danger progress-bar-striped progress-bar-animated" style="width:80%">C'est presque fini...</div>
+          </div>
         </div>
     </body>
 </html>

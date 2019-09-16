@@ -20,30 +20,38 @@
         	<div id="0">
                 <% include partials/nav %>
             </div>
-            <h1>Mes matchs</h1>
-            <% profiles.forEach(function(item) {
-            	if (like.includes(item.user_ID) && like_me.includes(item.user_ID) && !block_me.includes(item.user_ID) && !block.includes(item.user_ID)) { %>
-            	<p><%= item.user_ID %>, <%= item.first_name %></p>
-        	<%	}
-        	}) %>
-            <h1>Profils que j'ai likés</h1>
-            <% profiles.forEach(function(item) {
-            	if (like.includes(item.user_ID) && !block_me.includes(item.user_ID)) { %>
-            	<p><%= item.user_ID %>, <%= item.first_name %></p>
-        	<%	}
-        	}) %>
-            <h1>Profils qui m'ont liké</h1>
-            <% profiles.forEach(function(item) {
-            	if (like_me.includes(item.user_ID) && !block_me.includes(item.user_ID)) { %>
-            	<p><%= item.user_ID %>, <%= item.first_name %></p>
-        	<%	}
-        	}) %>
-            <h1>Profils que j'ai bloqués</h1>
-            <% profiles.forEach(function(item) {
-            	if (block.includes(item.user_ID) && !block_me.includes(item.user_ID)) { %>
-            	<p><%= item.user_ID %>, <%= item.first_name %></p>
-        	<%	}
-        	}) %>
+            <button class="btn btn-dark btn-block" data-toggle="collapse" data-target="#match">Mes matchs</button>
+            <div id="match" class="collapse">
+                <% profiles.forEach(function(item) {
+                	if (like.includes(item.user_ID) && like_me.includes(item.user_ID) && !block_me.includes(item.user_ID) && !block.includes(item.user_ID)) { %>
+                	<p><%= item.user_ID %>, <%= item.first_name %></p>
+            	<%	}
+            	}) %>
+            </div>
+            <button class="btn btn-dark btn-block" data-toggle="collapse" data-target="#liker">Profils que j'ai likés</button>
+            <div id="liker" class="collapse">
+                <% profiles.forEach(function(item) {
+                	if (like.includes(item.user_ID) && !block_me.includes(item.user_ID)) { %>
+                	<p><%= item.user_ID %>, <%= item.first_name %></p>
+            	<%	}
+            	}) %>
+            </div>
+            <button class="btn btn-dark btn-block" data-toggle="collapse" data-target="#liked">Profils qui m'ont liké</button>
+            <div id="liked" class="collapse">
+                <% profiles.forEach(function(item) {
+                	if (like_me.includes(item.user_ID) && !block_me.includes(item.user_ID)) { %>
+                	<p><%= item.user_ID %>, <%= item.first_name %></p>
+            	<%	}
+            	}) %>
+            </div>
+            <button class="btn btn-dark btn-block" data-toggle="collapse" data-target="#blocked">Profils que j'ai bloqués</button>
+            <div id="blocked" class="collapse">
+                <% profiles.forEach(function(item) {
+                	if (block.includes(item.user_ID) && !block_me.includes(item.user_ID)) { %>
+                	<p><%= item.user_ID %>, <%= item.first_name %></p>
+            	<%	}
+            	}) %>
+            </div>
         </div>
     </body>
     <script type="text/javascript">

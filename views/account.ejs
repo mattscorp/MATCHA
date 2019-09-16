@@ -28,22 +28,22 @@
                 <img class="account_image" src=<%= info.profile_picture %> >
             </div>
             <form action="change_password" method="get">
-                <input type="submit" value="Changer mon mot de passe">
+                <input class="btn btn-dark" type="submit" value="Changer mon mot de passe">
             </form>
             <div class="row">
                 <div class="col-sm-8">
                     <form action="change_infos" method="post">
                         <h2>Informations personnelles</h2>
                         <p>Pseudo : </p>
-                        <input required type="text" name="login" value="<%= info.login%>" />
+                        <input required type="text" class="form-control" name="login" value="<%= info.login%>" />
                         <p>Prénom : </p>
-                        <input required type="text" name="first_name" value="<%= info.first_name%>" />
+                        <input required type="text" class="form-control" name="first_name" value="<%= info.first_name%>" />
                         <p>Nom : </p>
-                        <input required type="text" name="last_name" value="<%= info.last_name%>" />
+                        <input required type="text" class="form-control" name="last_name" value="<%= info.last_name%>" />
                         <p>Email : </p>
-                        <input required type="email" name="email" value="<%= info.email%>" />
+                        <input required type="email" class="form-control" name="email" value="<%= info.email%>" />
                         <p>Age : </p>
-                        <input required type="number" min="18" max="120" name="age" value="<%= info.age%>" />
+                        <input required type="number" class="form-control" min="18" max="120" name="age" value="<%= info.age%>" />
                 </div>
                 <div class="col-sm-4">
                         <h2>Informations de dating</h2>
@@ -61,11 +61,13 @@
                             <option <% if (info.orientation == 'Autres') { %> selected="selected" <% }%> >Autre</option>
                         </select>
                         <p>Bio : </p>
-                        <input required type="text" name="bio" value="<%= info.bio %>" />
+                        <input required class="form-control" type="text" name="bio" value="<%= info.bio %>" />
                         <br/>
-                        <input type="submit" name="submit" value="Modifier mes informations" />
-                    </form>
-                </div>
+                </div>             
+            </div>
+            <div>
+                    <input class="btn btn-dark btn-block" type="submit" name="submit" value="Modifier mes informations" />
+                </form>
             </div>
 
             <h2>Centres d'intérêts</h2>
@@ -80,7 +82,7 @@
                 <% }); %>
                 <form action="new_topic" method="post">
                     <input required type="text" name="new_topic">
-                    <input type="submit" name="submit" value="Ajouter un topic">
+                    <input class="btn btn-dark" type="submit" name="submit" value="Ajouter un topic">
                 </form>
             </div>
         
@@ -102,13 +104,13 @@
                             <option <% if (info.image_5 == info.profile_picture) { %> selected="selected" <% }%> >Photo 5</option>
                         <% } %>
                     </select>
-                    <input type="submit" value="Définir comme photo de profil">
+                    <input class="btn btn-dark" type="submit" value="Définir comme photo de profil">
                 </form>
                 <% if (info.image_1 == null || info.image_3 == null || info.image_3 == null || info.image_4 == null || info.image_5 == null) { %>
                     <p>Ajouter une photo :</p>
                     <form action="add_new_image" method="post" enctype="multipart/form-data">
-                        <input required type="file" accept="image/png, image/jpeg" name="photo">
-                        <input type="submit" value="Ajouter">
+                        <input class="btn btn-outline-dark" required type="file" accept="image/png, image/jpeg" name="photo">
+                        <input class="btn btn-dark" type="submit" value="Ajouter">
                     </form>
                 <% } if (info.image_1 != null) { %>
                 <p>Image 1 : </p>

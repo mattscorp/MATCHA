@@ -20,9 +20,9 @@
             <h1>Infos de <%= info.login %></h1>
             <form action="info_user" method="post">
                 <legend>Ton âge</legend>
-                <input required type="number" min = "18" max="120" name="age">
+                <input class="form-control" required type="number" min = "18" max="120" name="age">
                 <legend>Ta bio</legend>
-                <input required type="text" name="bio">
+                <input class="form-control" required type="text" name="bio">
                 <legend>Ton genre</legend>
                 <input required type="radio" name="gender" value="Femme"> Femme<br/>
                 <input required type="radio" name="gender" value="Homme"> Homme<br/>
@@ -33,7 +33,7 @@
                 <input required type="radio" name="orientation" value="Bi"> Bi<br/>
                 <input required type="radio" name="orientation" value="Autres"> Autres<br/>
                 <legend>Ton département</legend>
-                <select required name="departement" size="1">
+                <select class="form-control" required name="departement" size="1">
                     <option></option>
                     <% var i = 1; var j = 1;
                         while (i <= 95)
@@ -60,8 +60,11 @@
                 <legend>J'accepte que Matcha puisse me géolocaliser</legend>
                 <input required type="radio" name="geo_consent" value="Oui"> Oui<br/>
                 <input required type="radio" name="geo_consent" value="Non"> Non<br/>
-                <input required type="submit" name="Valider">
+                <input class="btn btn-dark" required type="submit" name="Valider">
             </form>
+            <div class="progress">
+                <div class="progress-bar bg-danger progress-bar-striped progress-bar-animated" style="width:60%">Encore un effort...</div>
+            </div>
         </div>
     </body>
     <script type="text/javascript">

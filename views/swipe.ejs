@@ -22,37 +22,43 @@
         </div>
         <h1>Propositions pour <%= infos.first_name %></h1>
         <p>Votre orientation : <%= infos.orientation %></p>
-        <% profiles.forEach(function(item) { 
-            if (!previous_profiles.includes(item.user_ID) && !block_me.includes(item.user_ID)) {
-               if ((infos.orientation == 'Femmes' && item.gender == 'Femme') || (infos.orientation == 'Autres' && item.gender == 'Autre') || (infos.orientation == 'Hommes' && item.gender == 'Homme')|| (infos.orientation == 'Bi') && (item.gender == 'Homme' || item.gender == 'Femme')) { %>
-            <div>
-              <div class="popup" onclick="myFunction('<%= item.login %>', '<%= item.user_ID %>')">
-                <img class="account_image" src="<%= item.profile_picture %>" title="Profile de <%= item.login %>">
-                <span class="popup_div" id="<%= item.login %>">
-                  <p><strong><%= item.first_name %></strong> (<%= item.login %>)</p>
-                  <p><%= item.gender %>, <%= item.age %> ans</p>
-                  <% if (item.image_1 != null) { %>
-                    <img class="account_image" src="<%= item.image_1 %>" title="Photo 1 de <%= item.login %>">
-                  <% } if (item.image_2 != null) { %>
-                    <img class="account_image" src="<%= item.image_2 %>" title="Photo 2 de <%= item.login %>">
-                  <% } if (item.image_3 != null) { %>
-                    <img class="account_image" src="<%= item.image_3 %>" title="Photo 3 de <%= item.login %>">
-                  <% } if (item.image_4 != null) { %>
-                    <img class="account_image" src="<%= item.image_4 %>" title="Photo 4 de <%= item.login %>">
-                  <% } if (item.image_5 != null) { %>
-                    <img class="account_image" src="<%= item.image_5 %>" title="Photo 5 de <%= item.login %>">
-                  <% } %>
-                  <form action="like_profile" method="post">
-                    <input type="hidden" name="liked_ID" value="<%= item.user_ID %>">
-                    <input type="submit" name="submit" value="Like">
-                    <input type="submit" name="submit" value="Nope">
-                  </form>
-                </span>
+        <div class="card-deck">
+          <% profiles.forEach(function(item) { 
+              if (!previous_profiles.includes(item.user_ID) && !block_me.includes(item.user_ID)) {
+                 if ((infos.orientation == 'Femmes' && item.gender == 'Femme') || (infos.orientation == 'Autres' && item.gender == 'Autre') || (infos.orientation == 'Hommes' && item.gender == 'Homme')|| (infos.orientation == 'Bi') && (item.gender == 'Homme' || item.gender == 'Femme')) { %>
+              <div class="card">
+                <div class="card-header"><%= item.first_name %></div>
+                <div class="popup" onclick="myFunction('<%= item.login %>', '<%= item.user_ID %>')">
+                  <img class="card-img-top" src="<%= item.profile_picture %>" title="Profile de <%= item.login %>">
+                  <span class="popup_div" id="<%= item.login %>">
+                    <p><strong><%= item.first_name %></strong></p>
+                    <p>Age : <%= item.age %> ans</p>
+                    <p>Genre : <%= item.gender %></p>
+                    <p>Intéressé par : <%= item.orientation %></p>
+                    <p>Bio : <%= item.bio %></p>
+                    <% if (item.image_1 != null) { %>
+                      <img class="account_image" src="<%= item.image_1 %>" title="Photo 1 de <%= item.login %>">
+                    <% } if (item.image_2 != null) { %>
+                      <img class="account_image" src="<%= item.image_2 %>" title="Photo 2 de <%= item.login %>">
+                    <% } if (item.image_3 != null) { %>
+                      <img class="account_image" src="<%= item.image_3 %>" title="Photo 3 de <%= item.login %>">
+                    <% } if (item.image_4 != null) { %>
+                      <img class="account_image" src="<%= item.image_4 %>" title="Photo 4 de <%= item.login %>">
+                    <% } if (item.image_5 != null) { %>
+                      <img class="account_image" src="<%= item.image_5 %>" title="Photo 5 de <%= item.login %>">
+                    <% } %>
+                    <form action="like_profile" method="post">
+                      <input type="hidden" name="liked_ID" value="<%= item.user_ID %>">
+                      <input type="submit" name="submit" value="Like">
+                      <input type="submit" name="submit" value="Nope">
+                    </form>
+                  </span>
+                </div>
               </div>
-            </div>
-        <%      }
-            }
-        }) %>
+          <%      }
+              }
+          }) %>
+        </div>
       </div>
     </body>
     <script type="text/javascript">

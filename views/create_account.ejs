@@ -55,14 +55,17 @@
                 </div>
             <% } %>%>
             <form method="post" >
-                <input required type="text" name="user[first_name]" placeholder="Ton prénom"> <br>
-                <input required type="text" name="user[last_name]" placeholder="Ton nom"> <br>
-                <input required type="text" name="user[login]" placeholder="Ton pseudo"> <br>
-                <input required type="email" name="user[email]"placeholder="Ton email"> <br>
-                <input required type="password" name="user[mdp1]" placeholder="Ton mot de passe"> <br>
-                <input required type="password" name="user[mdp2]" placeholder="Verifie ton mot de passe"> <br>
-                <input type="submit" value="Créer mon compte">
+                <input class="form-control" required type="text" name="user[first_name]" placeholder="Ton prénom"> <br>
+                <input class="form-control" required type="text" name="user[last_name]" placeholder="Ton nom"> <br>
+                <input class="form-control" required type="text" name="user[login]" placeholder="Ton pseudo"> <br>
+                <input class="form-control" required type="email" name="user[email]"placeholder="Ton email"> <br>
+                <input class="form-control" required type="password" name="user[mdp1]" placeholder="Ton mot de passe"> <br>
+                <input class="form-control" required type="password" name="user[mdp2]" placeholder="Verifie ton mot de passe"> <br>
+                <input class="btn btn-dark" type="submit" value="Créer mon compte">
             </form>
+            <div class="progress">
+                <div class="progress-bar bg-danger progress-bar-striped progress-bar-animated" style="width:40%">Promis, dans deux minutes c'est fini...</div>
+            </div>
         </div>
     </body>
 </html>
