@@ -1,6 +1,6 @@
 USE `matcha`;
 
-CREATE TABLE `users` (`user_ID` INT NOT NULL PRIMARY KEY AUTO_INCREMENT, `last_name` VARCHAR(255), `first_name` VARCHAR(255), `login` VARCHAR(20), `email` VARCHAR(255), `password` TEXT, `localisation_auto` TEXT, `localisation_manual` TEXT, `geo_consent` TEXT, `gender` VARCHAR(10), `orientation` VARCHAR(10), `age` INT, `bio` TEXT, `hashtag` TEXT, `score` INT, `image_1` TEXT, `image_2` TEXT, `image_3` TEXT, `image_4` TEXT, `image_5` TEXT, `profile_picture` TEXT, `email_confirmation` TEXT, `recup_password` TEXT);
+CREATE TABLE `users` (`user_ID` INT NOT NULL PRIMARY KEY AUTO_INCREMENT, `last_name` VARCHAR(255), `first_name` VARCHAR(255), `login` VARCHAR(20), `email` VARCHAR(255), `password` TEXT, `localisation_auto` TEXT, `localisation_manual` TEXT, `geo_consent` TEXT, `gender` VARCHAR(10), `orientation` VARCHAR(10), `age` INT, `bio` TEXT, `hashtag` TEXT, `nb_like` INT, `nb_nope` INT, `score` INT, `image_1` TEXT, `image_2` TEXT, `image_3` TEXT, `image_4` TEXT, `image_5` TEXT, `profile_picture` TEXT, `email_confirmation` TEXT, `recup_password` TEXT);
 
 CREATE TABLE `match` (`match_ID` INT NOT NULL PRIMARY KEY AUTO_INCREMENT, `liker_ID` INT, `liked_ID` INT, `valid_match` INT);
 

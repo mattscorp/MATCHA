@@ -63,15 +63,47 @@ const get_profiles = async function(user_ID) {
 }
 module.exports.get_profiles = get_profiles;
 
+// Renvoie la liste des profiles à proposer à l'utilisateur
+const get_profiles_research = async function(user_ID, age_min, age_max, score, orientation) {
+	return new Promise((resolve, reject) => {
+		let sql = "SELECT * FROM `users` WHERE `user_ID` != ? AND `age` >= ?  AND `age` <= ? AND (`score` >= ? OR `score` IS NULL) AND `gender` = ?";
+		let values = [user_ID, age_min, age_max, score, orientation];
+		if (orientation == 'all' || orientation == '') {
+			sql = "SELECT * FROM `users` WHERE `user_ID` != ? AND `age` >= ?  AND `age` <= ? AND (`score` >= ? OR `score` IS NULL)";
+			values = [user_ID, age_min, age_max, score];
+		}
+		con.query(sql, values, function(err, result) {
+			if (err) throw err;
+			else
+				console.log(JSON.stringify(result));
+				resolve(JSON.stringify(result));
+		})
+	})
+}
+module.exports.get_profiles_research = get_profiles_research;
+
 // Like ou unlike (-1) un profile proposé
 const like_profile = function(info_parse, submit, liked_ID) {
 	let sql = "INSERT INTO `like` (`liker_ID`, `liked_ID`, `valid_like`) VALUES ?";
+	let sql2 = "";
     let values = "";
-    if (submit == "Like")
+    let values2 = liked_ID;
+    if (submit == "Like") {
+    	sql2 = "UPDATE `users` SET `nb_like` = `nb_like` + 1 WHERE `user_ID` = ?";
         values = [[info_parse[0].user_ID, liked_ID, 1]];
-    else if (submit == "Nope")
+    }
+    else if (submit == "Nope") {
+    	sql2 = "UPDATE `users` SET `nb_nope` = `nb_nope` + 1 WHERE `user_ID` = ?";
         values = [[info_parse[0].user_ID, liked_ID, -1]];
+    }
     con.query(sql, [values], function(err, result) {
+        if (err) throw err;
+    });
+    con.query(sql2, [values2], function(err, result) {
+        if (err) throw err;
+    });
+    let sql3 = "UPDATE `users` SET `score` = `nb_like` / (`nb_nope` + `nb_like`) * 100  WHERE `user_ID` = ?";
+    con.query(sql3, [values2], function(err, result) {
         if (err) throw err;
     });
 }

@@ -64,13 +64,13 @@ router.get('/stats', async function(req, res) {
         });
         // Nombre de personnes qui ont vu mon profile
         let like_nb = like_me_profiles.length;
-        let seen_nb = like_me_profiles.length + like_me_not_profiles.length;
+        let nope_nb = like_me_not_profiles.length;
         // Ensemble des profiles
         let new_notifications = await notifications.notifications_number(info_parse[0].user_ID);
         let profiles_parse = JSON.parse(await swipe.get_profiles(info_parse[0].user_ID, block_parse, like_parse));
         res.render('stats', {infos: info_parse[0],
-                                seen_nb: seen_nb,
                                 like_nb: like_nb,
+                                nope_nb: nope_nb,
                                 new_notifications:new_notifications});
     }
 })
