@@ -53,6 +53,7 @@ router.get('/see_messages', async function(req, res) {
     	let messages_parse = JSON.parse(await messages.messages(req.query.messaging_ID, req.query.messaged_ID));
         let new_notifications = await notifications.notifications_number(info_parse[0].user_ID);
     	res.render('see_messages', {messaging_first_name: info_parse[0].first_name,
+                                    messaging_profile_picture: info_parse[0].profile_picture,
 									messaging_ID: req.query.messaging_ID,
 									messages: messages_parse,
 									infos_messaged: info_messaged_parse[0],

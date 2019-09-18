@@ -24,9 +24,19 @@
             <div class="jumbotron" id="here">
                 <% messages.forEach(function(item) { %>
                     <% if (item.sender_ID == messaging_ID) { %>
-                        <p><%= messaging_first_name %> : <kbd><%= item.message %></kbd> <small>le <%= item.date.split('-')[2].split('T')[0]; %>/<%= item.date.split('-')[1]; %>/<%= item.date.split('-')[0]; %> à <%= item.date.split('T')[1].split('.')[0] %></small></p>
+                        <div class="media bg-primary border p-3">
+                            <img src="<%= messaging_profile_picture %>" alt="Photo de <%= messaging_first_name %>" class="mr-3 mt-3 rounded-circle" style="width:60px;">
+                            <div class="media-body">
+                                <p><%= messaging_first_name %><small><i> le <%= item.date.split('-')[2].split('T')[0]; %>/<%= item.date.split('-')[1]; %>/<%= item.date.split('-')[0]; %> à <%= item.date.split('T')[1].split('.')[0] %></i></small> : <kbd><%= item.message %></kbd></p>
+                            </div>
+                        </div>
                     <% } else if (item.recipient_ID == messaging_ID) { %>
-                        <p><%= infos_messaged.first_name %> : <kbd><%= item.message %></kbd> <small>le <%= item.date.split('-')[2].split('T')[0]; %>/<%= item.date.split('-')[1]; %>/<%= item.date.split('-')[0]; %> à <%= item.date.split('T')[1].split('.')[0] %></small></p>
+                        <div class="media bg-info border p-3">
+                            <img src="<%= infos_messaged.profile_picture %>" alt="Photo de <%= infos_messaged.first_name %>" class="mr-3 mt-3 rounded-circle" style="width:60px;">
+                            <div class="media-body">
+                                <p><%= infos_messaged.first_name %><small><i> le <%= item.date.split('-')[2].split('T')[0]; %>/<%= item.date.split('-')[1]; %>/<%= item.date.split('-')[0]; %> à <%= item.date.split('T')[1].split('.')[0] %></i></small> : <kbd><%= item.message %></kbd></p>
+                            </div>
+                        </div>
                     <% }
                 }) %>
             </div>

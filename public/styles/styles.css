@@ -49,5 +49,7 @@ body {
   bottom: 0px;
   left: 50%;
   margin-left: -50px;
+  right: 50%;
+  margin-right: -50px;
 }
 

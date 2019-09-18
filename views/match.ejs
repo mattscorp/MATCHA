@@ -256,9 +256,9 @@
                   <% profiles.forEach(function(item) { 
                       if (like_me.includes(item.user_ID) && !block_me.includes(item.user_ID)) { %>
                     <div class="card carte mx-auto">
-                    <div class="card-header">
-                        <strong><%= item.first_name %></strong>
-                    </div>
+                        <div class="card-header">
+                            <strong><%= item.first_name %></strong>
+                        </div>
                       <div class="popup">
                         <img class="card-img-top carte_image" src="<%= item.profile_picture %>" title="Profile de <%= item.login %>">
                         <!-- Button to Open the Modal -->
