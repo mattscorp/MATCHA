@@ -115,16 +115,17 @@
                                         <span class="sr-only">Next</span>
                                       </a>
                                     </div>
-                                      <form class="mx-auto" action="like_profile" method="post">
+                                      <form class="mx-auto" action="unlike_block_report" method="post">
                                         <input type="hidden" name="liked_ID" value="<%= item.user_ID %>">
-                                        <input class="mx-auto" type="submit" name="submit" value="Like">
-                                        <input class="mx-auto" type="submit" name="submit" value="Nope">
+                                        <input class="mx-auto bg-danger" type="submit" name="submit" value="Unlike">
+                                        <input class="mx-auto bg-danger" type="submit" name="submit" value="Block">
+                                        <input class="mx-auto bg-danger" type="submit" name="submit" value="Report">
                                       </form>
                                   </div>
 
                                   <!-- Modal footer -->
                                   <div class="modal-footer mx-auto">
-                                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                                    <button type="button" class="btn btn-dark" data-dismiss="modal">Close</button>
                                   </div>
                                 </div>
                               </div>
@@ -230,16 +231,17 @@
                                     <span class="sr-only">Next</span>
                                   </a>
                                 </div>
-                                  <form class="mx-auto" action="like_profile" method="post">
-                                    <input type="hidden" name="liked_ID" value="<%= item.user_ID %>">
-                                    <input class="mx-auto" type="submit" name="submit" value="Like">
-                                    <input class="mx-auto" type="submit" name="submit" value="Nope">
+                                  <form class="mx-auto" action="unlike_block_report" method="post">
+                                      <input type="hidden" name="liked_ID" value="<%= item.user_ID %>">
+                                      <input class="mx-auto bg-danger" type="submit" name="submit" value="Unlike">
+                                      <input class="mx-auto bg-danger" type="submit" name="submit" value="Block">
+                                      <input class="mx-auto bg-danger" type="submit" name="submit" value="Report">
                                   </form>
                               </div>
 
                               <!-- Modal footer -->
                               <div class="modal-footer mx-auto">
-                                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                                <button type="button" class="btn btn-dark" data-dismiss="modal">Close</button>
                               </div>
                             </div>
                           </div>
@@ -345,16 +347,16 @@
                                     <span class="sr-only">Next</span>
                                   </a>
                                 </div>
-                                  <form class="mx-auto" action="like_profile" method="post">
+                                  <form class="mx-auto" action="unlike_block_report" method="post">
                                     <input type="hidden" name="liked_ID" value="<%= item.user_ID %>">
-                                    <input class="mx-auto" type="submit" name="submit" value="Like">
-                                    <input class="mx-auto" type="submit" name="submit" value="Nope">
+                                    <input class="mx-auto bg-danger" type="submit" name="submit" value="Block">
+                                    <input class="mx-auto bg-danger" type="submit" name="submit" value="Report">
                                   </form>
                               </div>
 
                               <!-- Modal footer -->
                               <div class="modal-footer mx-auto">
-                                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                                <button type="button" class="btn btn-dark" data-dismiss="modal">Close</button>
                               </div>
                             </div>
                           </div>
@@ -460,16 +462,16 @@
                                     <span class="sr-only">Next</span>
                                   </a>
                                 </div>
-                                  <form class="mx-auto" action="like_profile" method="post">
+                                  <form class="mx-auto" action="unlike_block_report" method="post">
                                     <input type="hidden" name="liked_ID" value="<%= item.user_ID %>">
-                                    <input class="mx-auto" type="submit" name="submit" value="Like">
-                                    <input class="mx-auto" type="submit" name="submit" value="Nope">
+                                    <input class="mx-auto bg-success" type="submit" name="submit" value="Unblock">
+                                    <input class="mx-auto bg-danger" type="submit" name="submit" value="Report">
                                   </form>
                               </div>
 
                               <!-- Modal footer -->
                               <div class="modal-footer mx-auto">
-                                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                                <button type="button" class="btn btn-dark" data-dismiss="modal">Close</button>
                               </div>
                             </div>
                           </div>

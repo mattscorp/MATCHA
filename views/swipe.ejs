@@ -143,14 +143,14 @@
                         </div>
                           <form class="mx-auto" action="like_profile" method="post">
                             <input type="hidden" name="liked_ID" value="<%= item.user_ID %>">
-                            <input class="mx-auto" type="submit" name="submit" value="Like">
-                            <input class="mx-auto" type="submit" name="submit" value="Nope">
+                            <input class="mx-auto bg-success" type="submit" name="submit" value="Like">
+                            <input class="mx-auto bg-danger" type="submit" name="submit" value="Nope">
                           </form>
                       </div>
 
                       <!-- Modal footer -->
                       <div class="modal-footer mx-auto">
-                        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-dark" data-dismiss="modal">Close</button>
                       </div>
                     </div>
                   </div>
