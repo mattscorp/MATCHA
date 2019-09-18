@@ -487,5 +487,9 @@
         function updateDiv() { 
             $( "#0" ).load(window.location.href + " #0" );
         }
+        // Ajoute une notification lors des visites de profiles
+      function myFunction(login, visited_ID) {
+        $.post('visit', {visited_ID: visited_ID});
+      }
     </script>
 </html>

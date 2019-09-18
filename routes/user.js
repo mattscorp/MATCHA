@@ -9,6 +9,7 @@ const bodyParser = require('body-parser'); // Permet de parser
 const mysql = require('mysql');
 const multer = require('multer'); // Pour l'upload de photos
 const upload = multer({dest: __dirname + '/../public/images'});
+const alert = require('alert-node');
 
 const user = require('../js/connect.js');
 const interests = require('../js/interests.js');
@@ -242,13 +243,26 @@ router.post('/change_profile_picture', function(req, res) {
 
 // Modification des infos utilisateur
 router.post('/change_infos', async function(req, res) {
-	if (req.session.login && req.session.login != '') {
-		var info_user = await user.recup_info(req.session.login);
-		var info_parse = JSON.parse(info_user);
-		var modif_infos_perso = await user.modif_infos_perso(req.body, req.session.login);
-		req.session.login = req.body.login;
+	if (!req.session.login || req.session.login == '')
+		res.redirect('/');
+	else {
+		let info_parse = JSON.parse(await user.recup_info(req.session.login));
+		if (info_parse[0].email == req.body.email && info_parse[0].login == req.body.login)
+			await user.modif_infos_perso(req.body, req.session.login);
+		else {
+			let same_email = await user.email_exist(req.body);
+			let same_login = await user.login_exist(req.body);
+			if (info_parse[0].email != req.body.email && same_email != '1')
+				alert('Cet email est déjà utilisé');
+			else if (info_parse[0].login != req.body.login && same_login != '1')
+				alert('Ce login est déjà utilisé');
+			else {
+				await user.modif_infos_perso(req.body, req.session.login);
+				req.session.login = req.body.login;
+			}
+		}
+		res.redirect('/');
 	}
-	res.redirect('/');
 });
 
 // Suppression d'une image

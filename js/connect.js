@@ -58,24 +58,64 @@ const user_exist = async function(info){
     let sql = "SELECT * FROM users WHERE email = ?";
     let values = [info.email];
     con.query(sql, values, function (err, result) {  
-      if (err) throw err;
-      if (result == '') {
+      if (err)
+        throw err;
+      else if (result == '') {
         let sql2 = "SELECT * FROM users WHERE login = ?";
         let values2 = [info.login];
         con.query(sql2, values2, function (err, result) {  
-          if (err) throw err;
+          if (err)
+            throw err;
         if (result == '')
           resolve('1');
-        else
+        else {
+          console.log('Je suis 2');
           resolve('2');
-        })
-      }
-      else 
+        }
+        });
+      } else {
+          console.log('Je suis 0');
+
         resolve('0');
+      }
     })
   });
 }
 module.exports.user_exist = user_exist;
+
+// Fonction pour verifier si un utilisateur existe deja mail ou pseudo retourn 1 si l utilisateur n existe pas 0 sinon
+const email_exist = async function(info){
+  return new Promise((resolve, reject) => {
+    let sql = "SELECT * FROM users WHERE email = ?";
+    let values = [info.email];
+    con.query(sql, values, function (err, result) {  
+      if (err)
+        throw err;
+      else if (result == '')
+        resolve('1');
+      else
+        resolve('0');
+    })
+  });
+}
+module.exports.email_exist = email_exist;
+
+// Fonction pour verifier si un utilisateur existe deja mail ou pseudo retourn 1 si l utilisateur n existe pas 0 sinon
+const login_exist = async function(info){
+  return new Promise((resolve, reject) => {
+    let sql = "SELECT * FROM users WHERE login = ?";
+    let values = [info.login];
+    con.query(sql, values, function (err, result) {  
+      if (err)
+        throw err;
+      else if (result == '')
+        resolve('1');
+      else
+        resolve('0');
+    })
+  });
+}
+module.exports.login_exist = login_exist;
 
 // Fonction de vérification des input lors de la creation, renvoi 1 si tout est ok 0 sinon
 const input_verif = async function(info) {
