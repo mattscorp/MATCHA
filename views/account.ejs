@@ -60,6 +60,11 @@
                             <option <% if (info.orientation == 'Bi') { %> selected="selected" <% }%> >Bi</option>
                             <option <% if (info.orientation == 'Autres') { %> selected="selected" <% }%> >Autre</option>
                         </select>
+                        <p>Geolocalisation : </p>
+                        <select name="geoloc" size="1">
+                            <option <% if (info.geo_consent == 'Oui') { %> selected="selected" <% }%> >Oui</option>
+                            <option <% if (info.geo_consent == 'Non') { %> selected="selected" <% }%> >Non</option>
+                        </select>
                         <p>Bio : </p>
                         <input required class="form-control" type="text" name="bio" value="<%= info.bio %>" />
                         <br/>

@@ -239,8 +239,8 @@ module.exports.add_user = add_user;
 
 // Fonction pour ajouter les infos d'un utilisateur lors de sa première connection
 function add_infos(info, login) {
-  let sql = "UPDATE users SET bio = ?, age = ?, gender = ?, orientation = ? WHERE login = ?";
-  let values = [info.bio, info.age, info.gender, info.orientation, login];
+  let sql = "UPDATE users SET bio = ?, age = ?, gender = ?, orientation = ?, geo_consent = ? WHERE login = ?";
+  let values = [info.bio, info.age, info.gender, info.orientation, info.geo_consent, login];
   con.query(sql, values, function (err, result) {  
   	if (err) throw err;  
   });  
@@ -249,8 +249,9 @@ module.exports.add_infos = add_infos;
 
 // Fonction pour modifier les infos personnelles de l'utilisateur
 function modif_infos_perso(info, login) {
-  let sql = "UPDATE users SET login = ?, first_name = ?, last_name = ?, email = ?, age = ?, gender = ?, orientation = ?, bio = ? WHERE login = ?"; 
-  let values = [info.login, info.first_name, info.last_name, info.email, info.age, info.gender, info.orientation, info.bio, login];
+  console.log(info);
+  let sql = "UPDATE users SET login = ?, first_name = ?, last_name = ?, email = ?, age = ?, gender = ?, orientation = ?, bio = ?, geo_consent = ? WHERE login = ?"; 
+  let values = [info.login, info.first_name, info.last_name, info.email, info.age, info.gender, info.orientation, info.bio, info.geoloc, login];
   con.query(sql, values, function (err, result) {  
     if (err) throw err;  
   });  
@@ -392,7 +393,7 @@ module.exports.recup_interests = recup_interests;
 
 // Ajout des coordonnées à la BDD
 const add_coordinates = async function(infos, login) {
-  let geoloc = infos.geoplugin_latitude + ';' + infos.geoplugin_longitude;
+  let geoloc = infos.geoplugin_latitude + ',' + infos.geoplugin_longitude;
   let sql = "UPDATE users SET localisation_auto = '" + geoloc + "' WHERE login = ?";
   con.query(sql, [login], function(err, result) {
     if (err) throw err;
