@@ -31,8 +31,7 @@ const router = express.Router();
 router.get('/', async function (req, res) {
   if (req.session.login && req.session.login != '') {
   	// const geolocalize = await user.geolocalize();
-  	const info_user = await user.recup_info(req.session.login);
-    const info_parse = JSON.parse(info_user);
+  	let info_parse = JSON.parse(await user.recup_info(req.session.login));
     if (info_parse[0].email_confirmation == '' || info_parse[0].email_confirmation != 1) {
      	res.render('confirm_your_email');
     } else if (info_parse[0].bio == null || info_parse[0].age == null || info_parse[0].gender == null || info_parse[0].orientation == null) {
@@ -85,8 +84,29 @@ router.get('/confirm_email', async function(req, res) {
 router.get('/change_password', async function(req, res) {
 	if (!req.session.login || req.session.login == '')
 		res.redirect('/');
-	else
-	 	res.render('change_password', {login: req.session.login});
+	else {
+		let info_parse = JSON.parse(await user.recup_info(req.session.login));
+		let new_notifications = await notifications.notifications_number(info_parse[0].user_ID);
+	 	res.render('change_password', {login: req.session.login, new_notifications: new_notifications, mdp_strength: 'true', same_pass: 'true', old_password: 'true', success: 'true'});
+	}
+})
+
+router.post('/change_password', async function(req, res) {
+	if (!req.session.login || req.session.login == '')
+		res.redirect('/');
+	else {
+		let info_parse = JSON.parse(await user.recup_info(req.session.login));
+		let new_notifications = await notifications.notifications_number(info_parse[0].user_ID);
+		if (req.body.mdp2 != req.body.mdp3)
+			res.render('change_password', {login: req.session.login, new_notifications: new_notifications, mdp_strength: 'true', same_pass: 'false', old_password: 'true', success: 'true'});
+		else if (await user.mdp_strength(req.body) == 0)
+			res.render('change_password', {login: req.session.login, new_notifications: new_notifications, mdp_strength: 'false', same_pass: 'true', old_password: 'true', success: 'true'});
+		else if (await user.user_connect(req.body) == 1) {
+				await user.reset_password_new(info_parse[0].email, req.body.mdp2);
+				res.render('change_password', {login: req.session.login, new_notifications: new_notifications, mdp_strength: 'true', same_pass: 'true', old_password: 'true', success: 'false'});
+		} else
+			res.render('change_password', {login: req.session.login, new_notifications: new_notifications, mdp_strength: 'true', same_pass: 'true', old_password: 'false', success: 'true'});
+	}
 })
 
 // Bouton de déconnection

@@ -69,15 +69,11 @@ const user_exist = async function(info){
         if (result == '')
           resolve('1');
         else {
-          console.log('Je suis 2');
           resolve('2');
         }
         });
-      } else {
-          console.log('Je suis 0');
-
+      } else
         resolve('0');
-      }
     })
   });
 }
@@ -144,7 +140,7 @@ module.exports.input_verif = input_verif;
 // Vérifie que le mot de passe est sécurisé (8 char, 1 chiffre, 1 min, 1 max, un char spécial)
 const mdp_strength = async function(infos) {
   return new Promise((resolve, reject) => {
-    if (infos.mdp1.length < 8)
+    if (infos.mdp2.length < 8)
       resolve(0);
     else {
       var matchedCase = new Array();
@@ -154,7 +150,7 @@ const mdp_strength = async function(infos) {
       matchedCase.push("[a-z]");     // Lowercase Alphabates
       var ctr = 0;
       for (var i = 0; i < matchedCase.length; i++) {
-          if (new RegExp(matchedCase[i]).test(infos.mdp1)) {
+          if (new RegExp(matchedCase[i]).test(infos.mdp2)) {
               ctr++;
           }
       }
@@ -289,7 +285,6 @@ module.exports.add_infos = add_infos;
 
 // Fonction pour modifier les infos personnelles de l'utilisateur
 function modif_infos_perso(info, login) {
-  console.log(info);
   let sql = "UPDATE users SET login = ?, first_name = ?, last_name = ?, email = ?, age = ?, gender = ?, orientation = ?, bio = ?, geo_consent = ? WHERE login = ?"; 
   let values = [info.login, info.first_name, info.last_name, info.email, info.age, info.gender, info.orientation, info.bio, info.geoloc, login];
   con.query(sql, values, function (err, result) {  
