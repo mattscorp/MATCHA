@@ -68,7 +68,7 @@
         </div>
     </body>
     <script type="text/javascript">
- if('<%= info.geo_consent %>' == 'Oui')
+        if('<%= info.geo_consent %>' == 'Oui')
         {
             var options = {
             enableHighAccuracy: true,
@@ -95,9 +95,12 @@
                     });
                 });
             }
-        setInterval('updateDiv()', 3000);
+       
+
+     setInterval('updateDiv()', 3000);
         function updateDiv() { 
             $( "#0" ).load(window.location.href + " #0" );
         }
     </script>
+
 </html>
