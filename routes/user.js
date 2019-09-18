@@ -59,6 +59,17 @@ router.post('/geo', async function(req, res) {
 	}
 })
 
+// Géolocalisation via navigateur si oui
+router.post('/geo_nav', async function(req, res) {
+	if (!req.session.login || req.session.login == '')
+		res.redirect('/');
+	else {
+		user.add_coordinates_nav(req.body, req.session.login);
+		res.redirect('/');
+	}
+})
+
+
 router.get('/connect', function(req, res) {
 	res.redirect('/');
 })
