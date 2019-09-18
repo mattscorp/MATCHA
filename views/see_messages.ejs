@@ -21,31 +21,31 @@
             </div>
             <h1>Messages de <%= infos_messaged.first_name %></h1>
             <img class="account_image" src="<%= infos_messaged.profile_picture %>" title="Profile de <%= infos_messaged.login %>">
-            <div class="jumbotron" id="here">
-                <% messages.forEach(function(item) { %>
+            <form action="new_message" method="post">
+                    <input type="hidden" name="sender_ID" value="<%= messaging_ID %>">
+                    <input type="hidden" name="recipient_ID" value="<%= infos_messaged.user_ID %>">
+                    <textarea required type="text" name="message" placeholder="Nouveau message"></textarea> 
+                    <input class="btn btn-dark" type="submit" name="submit" value="Envoyer">
+                </form>
+            <div id="here">
+                <% messages.reverse().forEach(function(item) { %>
                     <% if (item.sender_ID == messaging_ID) { %>
-                        <div class="media bg-primary border p-3">
-                            <img src="<%= messaging_profile_picture %>" alt="Photo de <%= messaging_first_name %>" class="mr-3 mt-3 rounded-circle" style="width:60px;">
+                        <div class="my-2 shadow-lg media bg-primary border p-3 col-sm-9 float-sm-right rounded">
+                            <img src="<%= messaging_profile_picture %>" alt="Photo de <%= messaging_first_name %>" class="mr-3 mt-3 rounded-circle border img_messages">
                             <div class="media-body">
-                                <p><%= messaging_first_name %><small><i> le <%= item.date.split('-')[2].split('T')[0]; %>/<%= item.date.split('-')[1]; %>/<%= item.date.split('-')[0]; %> à <%= item.date.split('T')[1].split('.')[0] %></i></small> : <kbd><%= item.message %></kbd></p>
+                                <p><kbd><%= item.message %></kbd></p><small><i>le <%= item.date.split('-')[2].split('T')[0]; %>/<%= item.date.split('-')[1]; %>/<%= item.date.split('-')[0]; %> à <%= item.date.split('T')[1].split('.')[0] %></i></small>
                             </div>
                         </div>
                     <% } else if (item.recipient_ID == messaging_ID) { %>
-                        <div class="media bg-info border p-3">
-                            <img src="<%= infos_messaged.profile_picture %>" alt="Photo de <%= infos_messaged.first_name %>" class="mr-3 mt-3 rounded-circle" style="width:60px;">
+                        <div class="media bg-info border p-3 col-sm-9 float-sm-left rounded">
+                            <img src="<%= infos_messaged.profile_picture %>" alt="Photo de <%= infos_messaged.first_name %>" class="mr-3 mt-3 rounded-circle border img_messages">
                             <div class="media-body">
-                                <p><%= infos_messaged.first_name %><small><i> le <%= item.date.split('-')[2].split('T')[0]; %>/<%= item.date.split('-')[1]; %>/<%= item.date.split('-')[0]; %> à <%= item.date.split('T')[1].split('.')[0] %></i></small> : <kbd><%= item.message %></kbd></p>
+                                <p><kbd><%= item.message %></kbd><small></p><i>le <%= item.date.split('-')[2].split('T')[0]; %>/<%= item.date.split('-')[1]; %>/<%= item.date.split('-')[0]; %> à <%= item.date.split('T')[1].split('.')[0] %></i></small>
                             </div>
                         </div>
                     <% }
                 }) %>
             </div>
-            <form action="new_message" method="post">
-                <input type="hidden" name="sender_ID" value="<%= messaging_ID %>">
-                <input type="hidden" name="recipient_ID" value="<%= infos_messaged.user_ID %>">
-                <input required type="text" name="message" placeholder="Nouveau message">
-                <input class="btn btn-dark" type="submit" name="submit" value="Envoyer">
-            </form>
         </div>
     </body>
     <script type="text/javascript">

@@ -1,5 +1,5 @@
 .account_image {
-	max-width: 300px;
+	max-width: 400px;
 }
 
 .modify_button {
@@ -35,6 +35,21 @@ body {
   text-align: center;
 }
 
+.container-fluid {
+  text-align: center;
+}
+
+.form-control {
+  text-align: center;
+}
+
+.div_center{
+  position:relative;
+  bottom: 0px;
+  left: 50%;
+  margin-left: -50px;
+}
+
 .carte {
   max-width: 400px;
   max-height: auto;
@@ -53,3 +68,7 @@ body {
   margin-right: -50px;
 }
 
+.img_messages {
+  width: 60px;
+  height: 60px;
+}

@@ -25,21 +25,23 @@
                 <input type="hidden" name="user_ID" value="<%= user.user_ID %>">
                 <input class="btn btn-dark" type="submit" name="submit" value="Marquer les notifications commes lues">
             </form>
-            <div class="jumbotron" id="2">
-                <% notifications.reverse().forEach(function(item) {
-                    if (item.valid_notification == 1) { %><p class="text-danger"> <% } else { %> <p> <% }
+            <div id="2">
+                <% notifications.reverse().forEach(function(item) { %>
+                <div class="my-2 shadow-lg media bg-primary border p-3 col-sm-9 rounded mx-auto">
+                    <% if (item.valid_notification == 1) { %><p class="text-danger text-center mx-auto"> <% } else { %> <p class="text-center mx-auto"> <% }
                     if (item.motive == 'message') { %>
-                        Vous avez reçu un message de <strong><%= item.notifier_first_name %></strong> 
+                        <a class="text-white" href="/messages">Vous avez reçu un message de <strong><%= item.notifier_first_name %></strong> 
                     <% } else if (item.motive == 'like') { %>
-                        <strong><%= item.notifier_first_name %></strong> vous a liké 
+                        <a class="text-white" href="/match"><strong><%= item.notifier_first_name %></strong> vous a liké 
                     <% } else if (item.motive == 'unlike') { %>
-                        <strong><%= item.notifier_first_name %></strong> ne vous like plus
+                        <a class="text-white" href="/match"><strong><%= item.notifier_first_name %></strong> ne vous like plus
                     <% } else if (item.motive == 'visit') { %>
-                        <strong><%= item.notifier_first_name %></strong> a visité votre profile 
+                        <a class="text-white" href="/match"><strong><%= item.notifier_first_name %></strong> a visité votre profile 
                     <% } else if (item.motive == 'match') { %>
-                        C'est un match ! Vous pouvez désormais converser avec <strong><%= item.notifier_first_name %></strong> !
+                        <a class="text-white" href="/match">C'est un match ! Vous pouvez désormais converser avec <strong><%= item.notifier_first_name %></strong> !
                     <% } %>
-                        <small>le <%= item.date.split('-')[2].split('T')[0]; %>/<%= item.date.split('-')[1]; %>/<%= item.date.split('-')[0]; %> à <%= item.date.split('T')[1].split('.')[0] %></small></p>
+                        <br/><small>le <%= item.date.split('-')[2].split('T')[0]; %>/<%= item.date.split('-')[1]; %>/<%= item.date.split('-')[0]; %> à <%= item.date.split('T')[1].split('.')[0] %></small></a></p>
+                </div>
                 <% }) %>
             </div>
         </div>

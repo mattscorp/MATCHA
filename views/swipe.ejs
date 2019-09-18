@@ -20,34 +20,36 @@
         <div id="0">
           <% include partials/nav %>
         </div>
-        <h1>Propositions pour <%= infos.first_name %></h1>
-        <p>Votre orientation : <%= infos.orientation %></p>
-        <form action="swipe" method="post">
-          <p>Age minimum</p>
-          <input type="number" name="age_min" min="18" max="119" value="<%= age_min %>">
-          <p>Age maximum</p>
-          <input type="number" name="age_max" min="19" max="120" value="<%= age_max %>">
-          <p>Sexe</p>
-          <select name="orientation" size="1">
-              <option></option>
-              <option <% if (orientation == 'Femme') { %> selected="selected" <% }%> >Femme</option>
-              <option <% if (orientation == 'Homme') { %> selected="selected" <% }%> >Homme</option>
-              <option <% if (orientation == 'Autre') { %> selected="selected" <% }%> >Autre</option>
-          </select>
-          <p>Score de popularité minimum</p>
-          <input type="number" name="score" min="0" max="100" value="<%= score %>">
-          <p>Distance maximum</p>
-          <select name="localisation" size="1">
-              <option></option>
-              <option <% if (localisation == '5 km') { %> selected="selected" <% }%> >5 km</option>
-              <option <% if (localisation == '10 km') { %> selected="selected" <% }%> >10 km</option>
-              <option <% if (localisation == '20 km') { %> selected="selected" <% }%> >20 km</option>
-              <option <% if (localisation == '50 km') { %> selected="selected" <% }%> >50 km</option>
-              <option <% if (localisation == '100 km') { %> selected="selected" <% }%> >100 km</option>
-          </select>
-          <input type="submit" name="submit" value="Rechercher">
-        </form>
-        <div class="card-deck">
+        <div class="border border-white rounded">
+          <h1>Propositions pour <%= infos.first_name %></h1>
+          <p>Votre orientation : <%= infos.orientation %></p>
+          <form action="swipe" method="post" class="mx-auto">
+            Age minimum
+            <input type="number" name="age_min" min="18" max="119" value="<%= age_min %>">
+            Age maximum
+            <input type="number" name="age_max" min="19" max="120" value="<%= age_max %>">
+            Sexe
+            <select name="orientation" size="1">
+                <option></option>
+                <option <% if (orientation == 'Femme') { %> selected="selected" <% }%> >Femme</option>
+                <option <% if (orientation == 'Homme') { %> selected="selected" <% }%> >Homme</option>
+                <option <% if (orientation == 'Autre') { %> selected="selected" <% }%> >Autre</option>
+            </select>
+            Score de popularité minimum
+            <input type="number" name="score" min="0" max="100" value="<%= score %>">
+            Distance maximum
+            <select name="localisation" size="1">
+                <option></option>
+                <option <% if (localisation == '5 km') { %> selected="selected" <% }%> >5 km</option>
+                <option <% if (localisation == '10 km') { %> selected="selected" <% }%> >10 km</option>
+                <option <% if (localisation == '20 km') { %> selected="selected" <% }%> >20 km</option>
+                <option <% if (localisation == '50 km') { %> selected="selected" <% }%> >50 km</option>
+                <option <% if (localisation == '100 km') { %> selected="selected" <% }%> >100 km</option>
+            </select>
+            <input type="submit" name="submit" value="Rechercher">
+          </form>
+        </div>
+        <div class="card-deck border border-white rounded">
           <% profiles.forEach(function(item) { 
               if (!previous_profiles.includes(item.user_ID) && !block_me.includes(item.user_ID)) {
                  if ((infos.orientation == 'Femmes' && item.gender == 'Femme') || (infos.orientation == 'Autres' && item.gender == 'Autre') || (infos.orientation == 'Hommes' && item.gender == 'Homme')|| (infos.orientation == 'Bi') && (item.gender == 'Homme' || item.gender == 'Femme')) { %>
