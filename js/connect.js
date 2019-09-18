@@ -400,3 +400,14 @@ const add_coordinates = async function(infos, login) {
   });
 }
 module.exports.add_coordinates = add_coordinates;
+
+
+// Ajout des coordonnées via navigateur à la BDD
+const add_coordinates_nav = async function(infos, login) {
+  let geoloc = infos.latitude + ',' + infos.longitude;
+  let sql = "UPDATE users SET localisation_manual = '" + geoloc + "' WHERE login = ?";
+  con.query(sql, [login], function(err, result) {
+    if (err) throw err;
+  });
+}
+module.exports.add_coordinates_nav = add_coordinates_nav;
