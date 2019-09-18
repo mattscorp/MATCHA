@@ -55,8 +55,8 @@ body {
   max-height: auto;
 }
 
-.carte_image {
-
+.card {
+  min-width:250px;
 }
 
 .carte_button {

@@ -27,14 +27,14 @@
             <form action="change_password" method="get">
                 <input class="btn btn-dark" type="submit" value="Changer mon mot de passe">
             </form>
-            <div class="border border-white rounded">
-                <h2>Photo de profil</h2>
-                <div>
-                    <img class="account_image rounded" src=<%= info.profile_picture %> >
-                </div>
-            </div>
             <div class="row">
-                <div class="col-sm-6 border border-white rounded">
+                <div class="col-sm-4 border border-white rounded">
+                    <h2>Photo de profil</h2>
+                    <div>
+                        <img class="account_image card-img-top rounded" src=<%= info.profile_picture %> >
+                    </div>
+                </div>
+                <div class="col-sm-4 border border-white rounded">
                     <form action="change_infos" method="post">
                         <h2>Informations personnelles</h2>
                         <p>Pseudo : </p>
@@ -48,7 +48,7 @@
                         <p>Age : </p>
                         <input required type="number" class="form-control" min="18" max="120" name="age" value="<%= info.age%>" />
                 </div>
-                <div class="col-sm-6 border border-white rounded">
+                <div class="col-sm-4 border border-white rounded">
                         <h2>Informations de dating</h2>
                         <p>Genre : </p>
                         <select name="gender" size="1">
@@ -128,7 +128,7 @@
                         <div class="card-header">  
                             <strong>Image 1</strong>
                         </div>
-                        <img class="card-img-top carte_image" src=<%= info.image_1 %> >
+                        <img class="card-img-top" src=<%= info.image_1 %> >
                         <div class="carte_button">
                             <form action="delete_image" method="post">
                                 <input type="hidden" name="photo" value="1">
