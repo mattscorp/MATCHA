@@ -20,18 +20,25 @@
                 <% include partials/nav %>
             </div>
             <h1>Conversations de <%= login %></h1>
-            <% profiles.forEach(function(item) {
-                if (like.includes(item.user_ID) && like_me.includes(item.user_ID) && !block.includes(item.user_ID) && !block_me.includes(item.user_ID)) { %>
-                    <form action="see_messages" method="get">
-                        <legend><%= item.user_ID %>, <%= item.first_name %></legend>
-                        <input type="hidden" name="messaging_ID" value="<%= infos.user_ID %>">
-                        <input type="hidden" name="messaged_first_name" value="<%= item.first_name %>">
-                        <input type="hidden" name="messaged_login" value="<%= item.login %>">
-                        <input type="hidden" name="messaged_ID" value="<%= item.user_ID %>">
-                        <input class="btn btn-dark" type="submit" name="submit" value="Envoyer un message">
-                    </form>
-                <% }
-            }) %>
+            <div class="card-deck">
+                <% profiles.forEach(function(item) {
+                    if (like.includes(item.user_ID) && like_me.includes(item.user_ID) && !block.includes(item.user_ID) && !block_me.includes(item.user_ID)) { %>
+                     <div class="card carte mx-auto">
+                        <div class="card-header">
+                            <strong><%= item.first_name %></strong>
+                        </div>
+                        <form action="see_messages" method="get">
+                            <legend><%= item.user_ID %>, <%= item.first_name %></legend>
+                            <input type="hidden" name="messaging_ID" value="<%= infos.user_ID %>">
+                            <input type="hidden" name="messaged_first_name" value="<%= item.first_name %>">
+                            <input type="hidden" name="messaged_login" value="<%= item.login %>">
+                            <input type="hidden" name="messaged_ID" value="<%= item.user_ID %>">
+                            <input class="btn btn-dark" type="submit" name="submit" value="Envoyer un message">
+                        </form>
+                    </div>
+                    <% }
+                }) %>
+            </div>
         </div>
     </body>
     <script type="text/javascript">

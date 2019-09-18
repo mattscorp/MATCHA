@@ -51,14 +51,16 @@
           <% profiles.forEach(function(item) { 
               if (!previous_profiles.includes(item.user_ID) && !block_me.includes(item.user_ID)) {
                  if ((infos.orientation == 'Femmes' && item.gender == 'Femme') || (infos.orientation == 'Autres' && item.gender == 'Autre') || (infos.orientation == 'Hommes' && item.gender == 'Homme')|| (infos.orientation == 'Bi') && (item.gender == 'Homme' || item.gender == 'Femme')) { %>
-          <div class="card">
-            <div class="card-header"><%= item.first_name %></div>
+          <div class="card carte mx-auto">
+            <div class="card-header"><strong><%= item.first_name %></strong></div>
               <div class="popup">
-                <img class="card-img-top" src="<%= item.profile_picture %>" title="Profile de <%= item.login %>">
+                <img class="card-img-top carte_image" src="<%= item.profile_picture %>" title="Profile de <%= item.login %>">
                 <!-- Button to Open the Modal -->
-                <button  onclick="myFunction('<%= item.login %>', '<%= item.user_ID %>')" type="button" class="btn btn-primary" data-toggle="modal" data-target="#<%= item.login %>">
-                  Voir plus
-                </button>
+                <div class="carte_button">
+                  <button  onclick="myFunction('<%= item.login %>', '<%= item.user_ID %>')" type="button" class="btn btn-primary" data-toggle="modal" data-target="#<%= item.login %>">
+                    Voir plus
+                  </button>
+                </div>
 
                 <!-- The Modal -->
                 <div class="modal fade" id="<%= item.login %>">

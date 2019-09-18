@@ -34,3 +34,20 @@ body {
   -o-background-size: cover;
   text-align: center;
 }
+
+.carte {
+  max-width: 400px;
+  max-height: auto;
+}
+
+.carte_image {
+
+}
+
+.carte_button {
+  position:absolute;
+  bottom: 0px;
+  left: 50%;
+  margin-left: -50px;
+}
+
