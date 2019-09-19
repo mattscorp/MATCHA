@@ -32,13 +32,15 @@
                     if (item.motive == 'message') { %>
                         <a class="text-white" href="/messages">Vous avez reçu un message de <strong><%= item.notifier_first_name %></strong> 
                     <% } else if (item.motive == 'like') { %>
-                        <a class="text-white" href="/match"><strong><%= item.notifier_first_name %></strong> vous a liké 
+                        <a class="text-white" href="/match"><strong><%= item.notifier_first_name %></strong> t'a liké 
                     <% } else if (item.motive == 'unlike') { %>
-                        <a class="text-white" href="/match"><strong><%= item.notifier_first_name %></strong> ne vous like plus
+                        <a class="text-white" href="/match"><strong><%= item.notifier_first_name %></strong> ne te like plus
                     <% } else if (item.motive == 'visit') { %>
-                        <a class="text-white" href="/match"><strong><%= item.notifier_first_name %></strong> a visité votre profile 
+                        <a class="text-white" href="/match"><strong><%= item.notifier_first_name %></strong> a visité ton profile 
                     <% } else if (item.motive == 'match') { %>
-                        <a class="text-white" href="/match">C'est un match ! Vous pouvez désormais converser avec <strong><%= item.notifier_first_name %></strong> !
+                        <a class="text-white" href="/match">C'est un match ! Tu peux désormais converser avec <strong><%= item.notifier_first_name %></strong> !
+                    <% } else if (item.motive == 'report') { %>
+                        <a class="text-danger" href="/messages"><strong><%= item.notifier_first_name %></strong> a signalé ton comportement comme étant inapproprié ! Ceci sera signalé à l'administrateur.<br/>Attention, si cela se reproduit, ton compte pourra être supprimé.
                     <% } %>
                         <br/><small>le <%= item.date.split('-')[2].split('T')[0]; %>/<%= item.date.split('-')[1]; %>/<%= item.date.split('-')[0]; %> à <%= item.date.split('T')[1].split('.')[0] %></small></a></p>
                 </div>

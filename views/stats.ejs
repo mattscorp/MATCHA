@@ -21,8 +21,8 @@
             <% include partials/nav %>
         </div>
         <h1>Tes statistiques</h1>
-        <p>Nombre de likes : <strong><%= like_nb %></strong></p>
-        <p>Ton score de popularité : <strong><% if (nope_nb != 0) { %><%= (like_nb / (like_nb + nope_nb) * 100).toFixed(0)%><% } else { %>100<% } %>/100</strong></p>
+        <h3 class="text-dark">Nombre de likes : <strong><%= like_nb %></strong></h3>
+        <h3 class="text-dark">Ton score de popularité : <strong><% if (nope_nb != 0) { %><%= (like_nb / (like_nb + nope_nb) * 100).toFixed(0)%><% } else { %>100<% } %>/100</strong></h3>
       </div>
     </body>
     <script type="text/javascript">

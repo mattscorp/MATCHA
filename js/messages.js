@@ -37,3 +37,20 @@ const new_message = async function(sender_ID, recipient_ID, message) {
 	});
 }
 module.exports.new_message = new_message;
+
+const report_email = function(reporter_ID, reported_ID) {
+		const mailOptions = {
+		from: 'matcha@matcha.com',
+		to: 'p.victor@outlook.fr',
+		subject: 'MATCHA - Report notification!',
+		html: '<h1>User ' + reporter_ID + ' has reported ' + reported_ID + ' for unappropriate messaging.<br/>Please review.</h1>'
+	};
+	transporter.sendMail(mailOptions, function(error, info){
+		if (error) {
+			console.log(error);
+		} else {
+			console.log('Report email has been sent: ' + info.response);
+    }
+	});
+}
+module.exports.report_email = report_email;

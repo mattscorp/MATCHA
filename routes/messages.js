@@ -40,6 +40,18 @@ router.post('/new_message', async function(req, res) {
     }
 })
 
+router.post('/report', async function(req, res) {
+    if (!req.session.login || req.session.login == '')
+        res.redirect('/');
+    else {
+        let backURL = req.header('Referer') || '/';
+        let info_parse = JSON.parse(await user.recup_info(req.session.login));
+        notifications.notification(info_parse[0], req.body.messaged_ID, 'report');
+        messages.report_email(info_parse[0].user_ID, req.body.messaged_ID);
+        res.redirect(backURL);
+    }
+})
+
 // Renvoie la conversation
 router.get('/see_messages', async function(req, res) {
 	if (!req.session.login || req.session.login == '')

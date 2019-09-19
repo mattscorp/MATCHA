@@ -27,7 +27,7 @@ const notification = async function(infos, liked_ID, motive){
 }
 module.exports.notification = notification;
 
-// Fonction pour ajouter une notification
+// Retourne les notification non lues pour pouvoir afficher leur nombre dans la navbar
 const notifications_number = async function(user_ID){
  return new Promise((resolve, reject) => {
    let sql = "SELECT `notification_ID` FROM `notifications` WHERE `notified_ID` = ? AND `valid_notification` = 1;";

@@ -19,8 +19,23 @@
         	<div id="0">
                 <% include partials/nav %>
             </div>
-            <h1>Messages de <%= infos_messaged.first_name %></h1>
-            <img class="account_image" src="<%= infos_messaged.profile_picture %>" title="Profile de <%= infos_messaged.login %>">
+            <div class="card-deck">
+                <div class="card carte mx-auto">
+                    <div class="card-header">
+                        <strong>Messages de <%= infos_messaged.first_name %></strong>
+                    </div>
+                    <div class="carte_image">
+                        <img class="card-img-top carte_image" src="<%= infos_messaged.profile_picture %>" title="Profile de <%= infos_messaged.login %>">
+                    </div>
+                    <div class="carte_button">
+                        <form action="report" method="post">
+                            <input type="hidden" name="messaging_ID" value="<%= messaging_ID %>">
+                            <input type="hidden" name="messaged_ID" value="<%= infos_messaged.user_ID %>">
+                            <input class="btn btn-danger" type="submit" name="submit" value="Signaler cet utilisateur">
+                        </form>
+                    </div>
+                </div>
+            </div>
             <form action="new_message" method="post">
                     <input type="hidden" name="sender_ID" value="<%= messaging_ID %>">
                     <input type="hidden" name="recipient_ID" value="<%= infos_messaged.user_ID %>">
