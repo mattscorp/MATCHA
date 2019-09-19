@@ -61,6 +61,21 @@ router.get('/see_messages', async function(req, res) {
         let info_parse = JSON.parse(await user.recup_info(req.session.login));
         // Infos de l'utilisateur
         let info_messaged_parse = JSON.parse(await user.recup_info(req.query.messaged_login));
+        // Profiles qui m'ont bloqué
+        let block_me_parse = JSON.parse(await match.block_me_info(info_parse[0].user_ID));
+        let block_me_profiles = [];
+        block_me_parse.forEach(function(item) {
+            block_me_profiles.push(item.blocker_ID);
+        });
+        // Profiles que j'ai bloqués
+        let block_parse = JSON.parse(await swipe.block_info(info_parse[0].user_ID));
+        let block_profiles = [];
+        block_parse.forEach(function(item) {
+            block_profiles.push(item.blocked_ID);
+        });
+        if (block_me_profiles.includes(info_messaged_parse[0].user_ID) || block_profiles.includes(info_messaged_parse[0].user_ID))
+            res.redirect('/messages');
+        else {
         // Messages entre les deux
     	let messages_parse = JSON.parse(await messages.messages(req.query.messaging_ID, req.query.messaged_ID));
         let new_notifications = await notifications.notifications_number(info_parse[0].user_ID);
@@ -71,6 +86,7 @@ router.get('/see_messages', async function(req, res) {
 									infos_messaged: info_messaged_parse[0],
                                     new_notifications: new_notifications
 									});
+        }
 	}
 })
 

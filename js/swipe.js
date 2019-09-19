@@ -75,7 +75,6 @@ const get_profiles_research = async function(user_ID, age_min, age_max, score, o
 		con.query(sql, values, function(err, result) {
 			if (err) throw err;
 			else
-				console.log(JSON.stringify(result));
 				resolve(JSON.stringify(result));
 		})
 	})

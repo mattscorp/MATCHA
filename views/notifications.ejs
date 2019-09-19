@@ -34,11 +34,15 @@
                     <% } else if (item.motive == 'like') { %>
                         <a class="text-white" href="/match"><strong><%= item.notifier_first_name %></strong> t'a liké 
                     <% } else if (item.motive == 'unlike') { %>
-                        <a class="text-white" href="/match"><strong><%= item.notifier_first_name %></strong> ne te like plus
+                        <a class="text-danger" href="/match"><strong><%= item.notifier_first_name %></strong> ne te like plus
                     <% } else if (item.motive == 'visit') { %>
                         <a class="text-white" href="/match"><strong><%= item.notifier_first_name %></strong> a visité ton profile 
                     <% } else if (item.motive == 'match') { %>
                         <a class="text-white" href="/match">C'est un match ! Tu peux désormais converser avec <strong><%= item.notifier_first_name %></strong> !
+                    <% } else if (item.motive == 'block') { %>
+                        <a class="text-danger" href="/match"><strong><%= item.notifier_first_name %></strong> t'a bloqué ! Tu ne peux plus accéder à son profil ou lui envoyer de messages.
+                    <% } else if (item.motive == 'unblock') { %>
+                        <a class="text-white" href="/match"><strong><%= item.notifier_first_name %></strong> t'a débloqué ! Tu peux de nouveau accéder à son profil ou lui envoyer de messages.
                     <% } else if (item.motive == 'report') { %>
                         <a class="text-danger" href="/messages"><strong><%= item.notifier_first_name %></strong> a signalé ton comportement comme étant inapproprié ! Ceci sera signalé à l'administrateur.<br/>Attention, si cela se reproduit, ton compte pourra être supprimé.
                     <% } %>

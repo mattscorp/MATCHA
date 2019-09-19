@@ -139,7 +139,7 @@
             <div id="liker" class="collapse">
                 <div class="card-deck">
                   <% profiles.forEach(function(item) { 
-                      if (like.includes(item.user_ID) && !block_me.includes(item.user_ID)) { %>
+                      if (like.includes(item.user_ID) && !block_me.includes(item.user_ID) && !block.includes(item.user_ID)) { %>
                     <div class="card carte mx-auto">
                     <div class="card-header">
                         <strong><%= item.first_name %></strong>
@@ -254,7 +254,7 @@
             <div id="liked" class="collapse">
                 <div class="card-deck">
                   <% profiles.forEach(function(item) { 
-                      if (like_me.includes(item.user_ID) && !block_me.includes(item.user_ID)) { %>
+                      if (like_me.includes(item.user_ID) && !block_me.includes(item.user_ID) && !block.includes(item.user_ID)) { %>
                     <div class="card carte mx-auto">
                         <div class="card-header">
                             <strong><%= item.first_name %></strong>

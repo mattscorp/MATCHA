@@ -45,3 +45,33 @@ const block_me_info = async function(user_ID) {
 	});
 }
 module.exports.block_me_info = block_me_info;
+
+// Unlike un profil
+const unlike = async function(unliker, unliked) {
+	let sql = "DELETE FROM `like` WHERE `liker_ID` = ? AND `liked_ID` = ?";
+	let values = [unliker, unliked];
+	con.query(sql, values, function(err, result) {
+		if (err) throw err;
+	});
+}
+module.exports.unlike = unlike;
+
+// Unlike un profil
+const unblock = async function(unliker, unliked) {
+	let sql = "DELETE FROM `block` WHERE `blocker_ID` = ? AND `blocked_ID` = ?";
+	let values = [unliker, unliked];
+	con.query(sql, values, function(err, result) {
+		if (err) throw err;
+	});
+}
+module.exports.unblock = unblock;
+
+// Unlike un profil
+const block = async function(unliker, unliked) {
+	let sql = "INSERT INTO `block` (`blocker_ID`, `blocked_ID`, `valid_block`) VALUES ?";
+	let values = [[unliker, unliked, 1]];
+	con.query(sql, [values], function(err, result) {
+		if (err) throw err;
+	});
+}
+module.exports.block = block;
