@@ -18,7 +18,8 @@ let con = mysql.createConnection({
   host: "localhost",
   port: "3306",
   user: "root",
-  password: "pvictor",
+  password: "123456",
+  //password: "pvictor",
   database: "db_matcha"
 });
 

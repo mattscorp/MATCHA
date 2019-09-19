@@ -74,7 +74,8 @@ router.post('/swipe', async function(req, res) {
         });
         let block_parse = JSON.parse(await swipe.block_info(info_parse[0].user_ID));
         let like_parse = JSON.parse(await swipe.like_info(info_parse[0].user_ID));
-        let profiles_parse = JSON.parse(await swipe.get_profiles_research(info_parse[0].user_ID, req.body.age_min, req.body.age_max, req.body.score, req.body.orientation));
+        console.log(req.body);
+        let profiles_parse = JSON.parse(await swipe.get_profiles_research(info_parse[0].user_ID, req.body.age_min, req.body.age_max, req.body.score, req.body.orientation, req.body.localisation, info_parse));
         let previous_profiles = [];
         block_parse.forEach(function(item) {
             previous_profiles.push(item.blocked_ID);
