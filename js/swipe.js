@@ -64,11 +64,7 @@ const get_profiles = async function(user_ID) {
 module.exports.get_profiles = get_profiles;
 
 
-function degrees_to_radians(degrees)
-{
-  var pi = Math.PI;
-  return degrees * (pi/180);
-}
+// Fonction qui permet de calculer la disstance entre deux coordonnees GPS
 
 function distance(lat1, lon1, lat2, lon2, unit) {
 	if ((lat1 == lat2) && (lon1 == lon2)) {
@@ -106,87 +102,71 @@ const get_profiles_research = async function(user_ID, age_min, age_max, score, o
 			if (err) throw err;
 			else
 		{
+	//		console.log('premier jet');
+	//		console.log(result);
+			let loc = localisation.split(" ");
+			if(loc[0] == '')
+			{
+				resolve(JSON.stringify(result));
+			}
+			loc[0] = parseInt(loc[0]);
+	//		console.log(loc[0]);
 			if(info_parse[0].localisation_manual != null)
 				{
-					console.log(result);
 					let coord_searcher = info_parse[0].localisation_manual.split(",")
-					console.log(coord_searcher);
-
 					var lon_searcher = coord_searcher[1];
-					console.log(lon_searcher);
-
 					var lat_searcher = coord_searcher[0];
-					console.log(lat_searcher);
-
-					console.log('la');
-/*
-					let coord_target = info_parse[0].localisation_manual.split(",")
-					console.log(coord_target);
-
-					let lon_target = coord_target[0];
-					console.log(lon_target);
-
-					let lat_target = coord_target[1];
-					console.log(lat_target);
-
-					let distance =*/
-
 				}
-				else //if(info_parse[0].localisation_auto != null)
+				else
 				{
-					console.log('ouuoula');
-
-
-					let coord_searcher = info_parse[0].localisation_auto.split(";")
+					let coord_searcher = info_parse[0].localisation_auto.split(",")
 					var lon_searcher = coord_searcher[1];
-
 					var lat_searcher = coord_searcher[0];
-
-					console.log('coord_searcher');
-					console.log(coord_searcher);
 				}
 				let i = 0;
 					while(result[i])
 					{
-						console.log(result[i]);
 						if(result[i].localisation_manual != null){
-							//console.log(result[i].localisation_manual);
-							//console.log('localisation_manual');
 							let coord_target = result[i].localisation_manual.split(",")
-							//console.log(coord_target);
 							let lon_target = coord_target[1];
-							//console.log(lon_target);
 							let lat_target = coord_target[0];
-							//console.log(lat_target);
 							let distance_between = distance(lat_searcher, lon_searcher, lat_target, lon_target, 'K');
-							console.log('distance_between man');
-							console.log(distance_between);
-						}
-						else //if (result[i].localisation_auto != null)
+					//		console.log('distance_between');
+					//		console.log(distance_between);
+					//		console.log('localisation');
+					//		console.log(loc[0]);
+							if(distance_between >= loc[0]){
+						//		console.log('NNNNNNOOOOOOOOOONNNNNNNN');
+								delete result[i];
+							}
+					}
+						else 
 						{
-							//console.log(result[i].localisation_auto);
-							//console.log('localisation_auto');
-							let coord_target = result[i].localisation_auto.split(";")
-							console.log('coord_target');
-							
-							console.log(coord_target);
-
+							let coord_target = result[i].localisation_auto.split(",")
 							let lon_target = coord_target[1];
-							//console.log(lon_target);
-
 							let lat_target = coord_target[0];
-							//console.log(lat_target);
-							console.log(lon_target + "   " + lat_target);
-							console.log(lon_searcher + "   " + lat_searcher);
 							let distance_between = distance(lat_searcher, lon_searcher, lat_target, lon_target, 'K');
-
-							console.log('distance_between auto');
-							console.log(distance_between);
-
+					//		console.log('distance_between');
+					//		console.log(distance_between);
+					//		console.log('localisation');
+					//		console.log(loc[0]);
+							if(distance_between >= loc[0]){
+						//		console.log('NNNNNNOOOOOOOOOONNNNNNNN');
+								delete result[i];
+							}
 						}
 						i++;
 					}
-			resolve(JSON.stringify(result));
+	//		console.log('apres /////////////////');
+	//		console.log(result);
+
+			var filtered = result.filter(function (el) {
+			  return el != null;
+			});
+	//		console.log('FILTREEE /////////////////');
+	//		console.log(filtered);
+
+			resolve(JSON.stringify(filtered));
 		}		
 		})
 	})

@@ -7,6 +7,8 @@ const ent = require('ent'); // Permet de bloquer les caractères HTML (sécurit�
 const uuidv4 = require('uuid/v4');
 const nodemailer = require('nodemailer');
 const bcrypt = require('bcryptjs');
+
+
 const transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
@@ -293,10 +295,42 @@ function modif_infos_perso(info, login) {
 }
 module.exports.modif_infos_perso = modif_infos_perso;
 
+
+
+/*
+
+            A FAIRE
+                    
+// image formats and magic numbers
+var magicTable = {
+    "\xff\xd8\xff":      "image/jpeg",
+    "\x89PNG\r\n\x1a\n": "image/png",
+  };
+
+
+function verif_img(info){
+  
+console.log(info);
+return(0);
+  /*if(){
+
+
+  return (1);
+  }
+  else
+    return(0);
+
+}
+module.exports.verif_img = verif_img;
+
+
+*/
+
+
 // Ajout du path de l'image_1 et utilisation de celle-ci comme photo de profil
 function add_image(infos, login) {
 	let sql = "UPDATE users SET image_1 = ?, profile_picture = image_1 WHERE login = ?";
-	let values = ['/images/' + infos.filename, login];
+	  let values = ['/images/' + infos.filename, login];
 	con.query(sql, values, function (err, result) {  
 		if (err) throw err;  
 	});  

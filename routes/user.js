@@ -231,12 +231,15 @@ router.post('/profile_picture', upload.single('photo'), async function(req, res)
 	if (!req.session.login || req.session.login == '')
 		res.redirect('/');
 	else {
-		if(req.file) {
+		if(req.file && req.file.zize > 0 /*&& user.verif_img(upload.single('photo')) == 1 */) {
 			var add_image = await user.add_image(req.file, req.session.login);
 			res.redirect('/');
 		}
 		else
-			throw 'error';
+		{
+			//throw 'error';
+			res.redirect('/');
+		}
 	}
 });
 
@@ -245,12 +248,14 @@ router.post('/add_new_image', upload.single('photo'), async function(req, res) {
 	if (!req.session.login || req.session.login == '')
 		res.redirect('/');
 	else {
-		if(req.file) {
+		if(req.file && req.file.zize > 0) {
 			var add_new_image = user.add_new_image(req.file, req.session.login);
 			res.redirect('/');
 			}
-		else
-			throw 'error';
+		else{
+			res.redirect('/')
+			//throw 'error';
+		}
 	}
 });
 
