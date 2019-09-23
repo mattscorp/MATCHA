@@ -251,8 +251,8 @@ router.post('/add_new_image', upload.single('photo'), async function(req, res) {
 		if(req.file && req.file.zize > 0) {
 			var add_new_image = user.add_new_image(req.file, req.session.login);
 			res.redirect('/');
-			}
-		else{
+		}
+		else {
 			res.redirect('/')
 			//throw 'error';
 		}

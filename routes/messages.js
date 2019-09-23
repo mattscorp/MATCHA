@@ -73,7 +73,19 @@ router.get('/see_messages', async function(req, res) {
         block_parse.forEach(function(item) {
             block_profiles.push(item.blocked_ID);
         });
-        if (block_me_profiles.includes(info_messaged_parse[0].user_ID) || block_profiles.includes(info_messaged_parse[0].user_ID))
+        // Profiles que j'ai likés
+        let like_parse = JSON.parse(await swipe.like_only(info_parse[0].user_ID));
+        let like_profiles = [];
+        like_parse.forEach(function(item) {
+            like_profiles.push(item.liked_ID);
+        });
+        // Profiles qui m'ont liké
+        let like_me_parse = JSON.parse(await match.like_me_info(info_parse[0].user_ID));
+        let like_me_profiles = [];
+        like_me_parse.forEach(function(item) {
+            like_me_profiles.push(item.liker_ID);
+        });
+        if (block_me_profiles.includes(info_messaged_parse[0].user_ID) || block_profiles.includes(info_messaged_parse[0].user_ID) || (!(like_profiles.includes(info_messaged_parse[0].user_ID) && like_me_profiles.includes(info_messaged_parse[0].user_ID))))
             res.redirect('/messages');
         else {
         // Messages entre les deux

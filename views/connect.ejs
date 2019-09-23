@@ -18,7 +18,7 @@
     <body>
         <div class="container-fluid">
             <h1 class="text-center">Bienvenu sur Matcha !</h1>
-            <div class="d-flex justify-content-center align-items-center">
+            <div class="d-flex justify-content-center align-items-center center_div">
                 <% if (user == 'false') { %>
                     <div class="alert alert-danger alert-dismissible fade show">
                         <button type="button" class="close" data-dismiss="alert">&times;</button>
@@ -35,15 +35,15 @@
                         Ton compte a bien été créé, tu peux désormais te connecter !
                     </div>
                 <% } %>
-                <div>
-                    <form action="/connect" method="post">
-                        <input required type="text" name="user_connect[name]" placeholder="Ton Pseudo">
-                        <input required type="password" name="user_connect[mdp1]" placeholder="Ton Password">
-                        <input class="btn btn-dark" type="submit" value="Se Connecter">
-                    </form>
-                    <p class="text-center">Clique <a class="text-danger" href="/creation">ICI</a> pour créer ton compte.</p>
-                    <p class="text-center">Clique <a class="text-danger" href="/reset_password">ICI</a> si tu as oublié ton mot de passe.</p>
-                </div>
+            </div>
+            <div>
+                <form action="/connect" method="post">
+                    <input required type="text" name="user_connect[name]" placeholder="Ton Pseudo">
+                    <input required type="password" name="user_connect[mdp1]" placeholder="Ton Password">
+                    <input class="btn btn-dark" type="submit" value="Se Connecter">
+                </form>
+                <p class="text-center">Clique <a class="text-danger" href="/creation">ICI</a> pour créer ton compte.</p>
+                <p class="text-center">Clique <a class="text-danger" href="/reset_password">ICI</a> si tu as oublié ton mot de passe.</p>
             </div>
         </div>
     </body>
