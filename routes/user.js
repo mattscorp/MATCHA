@@ -10,6 +10,9 @@ const mysql = require('mysql');
 const multer = require('multer'); // Pour l'upload de photos
 const upload = multer({dest: __dirname + '/../public/images'});
 const alert = require('alert-node');
+const fs = require('fs');
+const util = require('util');
+const readFile = util.promisify(fs.readFile);
 
 const user = require('../js/connect.js');
 const interests = require('../js/interests.js');
@@ -228,31 +231,65 @@ router.post('/info_user', async function(req, res) {
 
 // Ajout d'une première photo (photo de profil)
 router.post('/profile_picture', upload.single('photo'), async function(req, res) {
+
 	if (!req.session.login || req.session.login == '')
 		res.redirect('/');
 	else {
+<<<<<<< HEAD
 		if(req.file && req.file.size > 0 /*&& user.verif_img(upload.single('photo')) == 1 */) {
 			var add_image = await user.add_image(req.file, req.session.login);
 			res.redirect('/');
 		}
+=======
+		let file_data = await readFile("public/images/"+req.file.filename);
+		// console.log(file_data);
+		if (user.loadMime(file_data) == 1){
+
+			if(req.file && req.file.size > 0 /*&& user.verif_img(upload.single('photo')) == 1 */) {
+				var add_image = await user.add_image(req.file, req.session.login);
+				res.redirect('/');
+			}
+>>>>>>> 3dd56c2b5297245f8165483763e8c721beb89f1a
 		else
-		{
+			{
+			alert("Ton image est cassée");
+			res.redirect('/')
 			//throw 'error';
-			res.redirect('/');
+			}
 		}
 	}
 });
 
 // Ajout d'une nouvelle photo
 router.post('/add_new_image', upload.single('photo'), async function(req, res) {
+//console.log(req.file.filename);
+ 
 	if (!req.session.login || req.session.login == '')
 		res.redirect('/');
 	else {
+<<<<<<< HEAD
 		if(req.file && req.file.size > 0) {
 			var add_new_image = user.add_new_image(req.file, req.session.login);
 			res.redirect('/');
 		}
 		else {
+=======
+		let file_data = await readFile("public/images/"+req.file.filename);
+		// console.log(file_data);
+		if (user.loadMime(file_data) == 1){
+			if(req.file && req.file.size > 0) {
+				var add_new_image = user.add_new_image(req.file, req.session.login);
+				res.redirect('/');
+				}
+			else{
+				res.redirect('/')
+				//throw 'error';
+				}
+		}
+		else
+		{
+			alert("Ton image est cassée");
+>>>>>>> 3dd56c2b5297245f8165483763e8c721beb89f1a
 			res.redirect('/')
 			//throw 'error';
 		}

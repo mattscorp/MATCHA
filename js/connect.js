@@ -7,6 +7,7 @@ const ent = require('ent'); // Permet de bloquer les caractères HTML (sécurit�
 const uuidv4 = require('uuid/v4');
 const nodemailer = require('nodemailer');
 const bcrypt = require('bcryptjs');
+const FileReader = require('filereader');
 
 
 const transporter = nodemailer.createTransport({
@@ -295,36 +296,39 @@ function modif_infos_perso(info, login) {
 }
 module.exports.modif_infos_perso = modif_infos_perso;
 
+// Verification de l image
+function loadMime(file, callback) {
+ //     console.log("dans load mime");
+  //  console.log(file);
+    var mimes = [
+    {
+        mime: 'image/jpeg',
+        pattern: [0xFF, 0xD8, 0xFF],
+        mask: [0xFF, 0xFF, 0xFF],
+    },
+    {
+        mime: 'image/png',
+        pattern: [0x89, 0x50, 0x4E, 0x47],
+        mask: [0xFF, 0xFF, 0xFF, 0xFF],
+    }
+    ];
+    function check(file, mime) {
+  //    console.log('dans chech');
+        for (var i = 0, l = mime.mask.length; i < l; ++i) {
+  //        console.log((file[i] & mime.mask[i]) - mime.pattern[i]);
+            if ((file[i] & mime.mask[i]) - mime.pattern[i] !== 0) {
+                return false;
+            }
+        }
+        return true;
+    }
+            for (var i=0, l = mimes.length; i<l; ++i) {
+                if (check(file, mimes[i])) return(1);
+            }
+            return(0);
+        }
+module.exports.loadMime = loadMime;
 
-
-/*
-
-            A FAIRE
-                    
-// image formats and magic numbers
-var magicTable = {
-    "\xff\xd8\xff":      "image/jpeg",
-    "\x89PNG\r\n\x1a\n": "image/png",
-  };
-
-
-function verif_img(info){
-  
-console.log(info);
-return(0);
-  /*if(){
-
-
-  return (1);
-  }
-  else
-    return(0);
-
-}
-module.exports.verif_img = verif_img;
-
-
-*/
 
 
 // Ajout du path de l'image_1 et utilisation de celle-ci comme photo de profil
