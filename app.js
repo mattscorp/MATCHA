@@ -49,6 +49,10 @@ app.use(stats);
 
 const notifications = require('./routes/notifications.js');
 app.use(notifications);
+
+
+const grapping = require('./public/grapping.js');
+app.use(grapping);
 /*
 // Chargement de la page chatroom.html
 app.get('/chatroom', function (req, res) {
