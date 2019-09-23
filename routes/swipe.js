@@ -64,7 +64,6 @@ router.post('/swipe', async function(req, res) {
     if (!req.session.login || req.session.login == '')
         res.redirect('/');
     else {
-        console.log(req.body);
         let info_parse = JSON.parse(await user.recup_info(req.session.login));
         // Profiles qui m'ont bloqué
         let block_me_parse = JSON.parse(await match.block_me_info(info_parse[0].user_ID));
@@ -74,7 +73,6 @@ router.post('/swipe', async function(req, res) {
         });
         let block_parse = JSON.parse(await swipe.block_info(info_parse[0].user_ID));
         let like_parse = JSON.parse(await swipe.like_info(info_parse[0].user_ID));
-        console.log(req.body);
         let profiles_parse = JSON.parse(await swipe.get_profiles_research(info_parse[0].user_ID, req.body.age_min, req.body.age_max, req.body.score, req.body.orientation, req.body.localisation, info_parse));
         let previous_profiles = [];
         block_parse.forEach(function(item) {
@@ -122,7 +120,6 @@ router.post('/visit', async function(req, res) {
         let info_parse = JSON.parse(await user.recup_info(req.session.login));
         await swipe.add_visit(info_parse[0].user_ID, req.body.visited_ID, info_parse[0].first_name);
         await notifications.notification(info_parse[0], req.body.visited_ID, 'visit');
-        console.log(req.body.visited_ID);
         res.redirect('/swipe');
     }
 })

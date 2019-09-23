@@ -102,15 +102,12 @@ const get_profiles_research = async function(user_ID, age_min, age_max, score, o
 			if (err) throw err;
 			else
 		{
-	//		console.log('premier jet');
-	//		console.log(result);
 			let loc = localisation.split(" ");
 			if(loc[0] == '')
 			{
 				resolve(JSON.stringify(result));
 			}
 			loc[0] = parseInt(loc[0]);
-	//		console.log(loc[0]);
 			if(info_parse[0].localisation_manual != null)
 				{
 					let coord_searcher = info_parse[0].localisation_manual.split(",")
@@ -131,12 +128,7 @@ const get_profiles_research = async function(user_ID, age_min, age_max, score, o
 							let lon_target = coord_target[1];
 							let lat_target = coord_target[0];
 							let distance_between = distance(lat_searcher, lon_searcher, lat_target, lon_target, 'K');
-					//		console.log('distance_between');
-					//		console.log(distance_between);
-					//		console.log('localisation');
-					//		console.log(loc[0]);
 							if(distance_between >= loc[0]){
-						//		console.log('NNNNNNOOOOOOOOOONNNNNNNN');
 								delete result[i];
 							}
 					}
@@ -146,26 +138,15 @@ const get_profiles_research = async function(user_ID, age_min, age_max, score, o
 							let lon_target = coord_target[1];
 							let lat_target = coord_target[0];
 							let distance_between = distance(lat_searcher, lon_searcher, lat_target, lon_target, 'K');
-					//		console.log('distance_between');
-					//		console.log(distance_between);
-					//		console.log('localisation');
-					//		console.log(loc[0]);
 							if(distance_between >= loc[0]){
-						//		console.log('NNNNNNOOOOOOOOOONNNNNNNN');
 								delete result[i];
 							}
 						}
 						i++;
 					}
-	//		console.log('apres /////////////////');
-	//		console.log(result);
-
 			var filtered = result.filter(function (el) {
 			  return el != null;
 			});
-	//		console.log('FILTREEE /////////////////');
-	//		console.log(filtered);
-
 			resolve(JSON.stringify(filtered));
 		}		
 		})
