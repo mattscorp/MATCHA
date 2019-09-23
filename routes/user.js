@@ -235,12 +235,10 @@ router.post('/profile_picture', upload.single('photo'), async function(req, res)
 	if (!req.session.login || req.session.login == '')
 		res.redirect('/');
 	else {
-<<<<<<< HEAD
 		if(req.file && req.file.size > 0 /*&& user.verif_img(upload.single('photo')) == 1 */) {
 			var add_image = await user.add_image(req.file, req.session.login);
 			res.redirect('/');
 		}
-=======
 		let file_data = await readFile("public/images/"+req.file.filename);
 		// console.log(file_data);
 		if (user.loadMime(file_data) == 1){
@@ -249,7 +247,6 @@ router.post('/profile_picture', upload.single('photo'), async function(req, res)
 				var add_image = await user.add_image(req.file, req.session.login);
 				res.redirect('/');
 			}
->>>>>>> 3dd56c2b5297245f8165483763e8c721beb89f1a
 		else
 			{
 			alert("Ton image est cassée");
@@ -267,31 +264,29 @@ router.post('/add_new_image', upload.single('photo'), async function(req, res) {
 	if (!req.session.login || req.session.login == '')
 		res.redirect('/');
 	else {
-<<<<<<< HEAD
 		if(req.file && req.file.size > 0) {
 			var add_new_image = user.add_new_image(req.file, req.session.login);
 			res.redirect('/');
 		}
 		else {
-=======
-		let file_data = await readFile("public/images/"+req.file.filename);
-		// console.log(file_data);
-		if (user.loadMime(file_data) == 1){
-			if(req.file && req.file.size > 0) {
-				var add_new_image = user.add_new_image(req.file, req.session.login);
-				res.redirect('/');
-				}
-			else{
+			let file_data = await readFile("public/images/"+req.file.filename);
+			// console.log(file_data);
+			if (user.loadMime(file_data) == 1){
+				if(req.file && req.file.size > 0) {
+					var add_new_image = user.add_new_image(req.file, req.session.login);
+					res.redirect('/');
+					}
+				else {
+					res.redirect('/')
+					//throw 'error';
+					}
+			}
+			else
+			{
+				alert("Ton image est cassée");
 				res.redirect('/')
 				//throw 'error';
-				}
-		}
-		else
-		{
-			alert("Ton image est cassée");
->>>>>>> 3dd56c2b5297245f8165483763e8c721beb89f1a
-			res.redirect('/')
-			//throw 'error';
+			}
 		}
 	}
 });
