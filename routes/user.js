@@ -263,22 +263,22 @@ router.post('/add_new_image', upload.single('photo'), async function(req, res) {
 		let file_data = await readFile("public/images/"+req.file.filename);
 		// console.log(file_data);
 		if (user.loadMime(file_data) == 1){
-
-		if(req.file && req.file.size > 0) {
-			var add_new_image = user.add_new_image(req.file, req.session.login);
-			res.redirect('/');
-			}
-		else{
+			if(req.file && req.file.size > 0) {
+				var add_new_image = user.add_new_image(req.file, req.session.login);
+				res.redirect('/');
+				}
+			else{
+				res.redirect('/')
+				//throw 'error';
+				}
+		}
+		else
+		{
+			alert("Ton image est cassée");
 			res.redirect('/')
 			//throw 'error';
 		}
 	}
-}
-else{
-			alert("Ton image est cassée");
-			res.redirect('/')
-			//throw 'error';
-			}
 });
 
 // Modification de la profile picture
