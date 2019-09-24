@@ -47,6 +47,7 @@ router.get('/swipe', async function (req, res) {
             previous_profiles.push(item.liked_ID);
         });
         let new_notifications = await notifications.notifications_number(info_parse[0].user_ID);
+        let all_interests = JSON.parse(await interests.recup_all_interests_swipe());
 		res.render('swipe', {infos: info_parse[0],
                             block_me: block_me_profiles,
                             profiles: profiles_parse,
@@ -55,7 +56,9 @@ router.get('/swipe', async function (req, res) {
                             age_min: 18,
                             age_max: 120,
                             orientation: 'all',
-                            interest: '', 
+                            interest: '',
+                            departement: "Non",
+                            all_interests: all_interests,
                             score:0,
                             localisation:1000000});
 	}
@@ -83,6 +86,12 @@ router.post('/swipe', async function(req, res) {
             previous_profiles.push(item.liked_ID);
         });
         let new_notifications = await notifications.notifications_number(info_parse[0].user_ID);
+        let all_interests = JSON.parse(await interests.recup_all_interests_swipe());
+        let interest = "";
+        if (req.body.submit != 'Rechercher')
+            interest = req.body.submit.trim().split('#')[1];
+        else
+            interest = req.body.interest.trim();
         res.render('swipe', {infos: info_parse[0],
                             block_me: block_me_profiles,
                             profiles: profiles_parse,
@@ -91,8 +100,10 @@ router.post('/swipe', async function(req, res) {
                             age_min: (req.body.age_min == '') ? 18 : req.body.age_min,
                             age_max: (req.body.age_max == '') ? 120 : req.body.age_max,
                             orientation: (req.body.orientation == '') ? 'all' : req.body.orientation,
+                            all_interests: all_interests,
                             score: (req.body.score == '') ? 0 : req.body.score,
-                            interest: req.body.interest,
+                            interest: interest,
+                            departement: req.body.departement,
                             localisation:(req.body.localisation == '') ? 1000000 : req.body.localisation
                             });
     }

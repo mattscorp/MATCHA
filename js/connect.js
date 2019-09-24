@@ -264,7 +264,7 @@ function add_user(info) {
       con.query(sql2, info.login, function(err, result) {
         if (err) throw err;
         else {
-          let sql3 = "ALTER TABLE interests ADD `" + result[0].user_ID + "` INT";
+          let sql3 = "ALTER TABLE interests ADD `" + result[0].user_ID + "` INT NOT NULL";
           con.query(sql3, result[0].user_ID, function(err, result) {
             if (err) throw err;
           });
@@ -279,15 +279,15 @@ module.exports.add_user = add_user;
 //Fonction de verification des infos entrees lors de la premiere connection et lors d un changement sur profil
 function verif_add_infos(info){
   if(info.gender !== "Homme" && info.gender !== "Femme" && info.gender !== "Autre"){
-    console.log("Mauvais input tester : " + info.gender);
+    console.log("Mauvais input tester 1: " + info.gender);
     return(1);
   }
-  else if (info.orientation !== "Hommes" && info.orientation !== "Femmes" && info.orientation !== "Bi" && info.orientation != "Autre"){
-    console.log("Mauvais input tester : " + info.orientation);
+  else if (info.orientation !== "Hommes" && info.orientation !== "Femmes" && info.orientation !== "Bi" && info.orientation != "Autre") {
+    console.log("Mauvais input tester 2: " + info.orientation);
     return(2);
   }
-  else if (info.geo_consent !== "Oui" && info.geo_consent !== "Non"){
-    console.log("Mauvais input tester : " + info.geo_consent);
+  else if (info.geoloc !== "Oui" && info.gelolc !== "Non"){
+    console.log("Mauvais input tester 3: " + info.geoloc);
     return(3);
   }
   else{
@@ -298,8 +298,8 @@ function verif_add_infos(info){
 
 // Fonction pour ajouter les infos d'un utilisateur lors de sa première connection
 function add_infos(info, login) {
-  let sql = "UPDATE users SET bio = ?, age = ?, gender = ?, orientation = ?, geo_consent = ? WHERE login = ?";
-  let values = [info.bio, info.age, info.gender, info.orientation, info.geo_consent, login];
+  let sql = "UPDATE users SET bio = ?, age = ?, gender = ?, orientation = ?, departement = ?, geo_consent = ? WHERE login = ?";
+  let values = [info.bio, info.age, info.gender, info.orientation, info.departement, info.geo_consent, login];
   if(verif_add_infos(info) == 0){
     con.query(sql, values, function (err, result) {  
     	if (err) throw err;
@@ -312,15 +312,16 @@ module.exports.add_infos = add_infos;
 
 // Fonction pour modifier les infos personnelles de l'utilisateur
 function modif_infos_perso(info, login) {
-  let sql = "UPDATE users SET login = ?, first_name = ?, last_name = ?, email = ?, age = ?, gender = ?, orientation = ?, bio = ?, geo_consent = ? WHERE login = ?"; 
-  let values = [info.login, info.first_name, info.last_name, info.email, info.age, info.gender, info.orientation, info.bio, info.geoloc, login];
+  let sql = "UPDATE users SET login = ?, first_name = ?, last_name = ?, email = ?, age = ?, gender = ?, orientation = ?, bio = ?, `departement` = ?, geo_consent = ? WHERE login = ?"; 
+  let values = [info.login, info.first_name, info.last_name, info.email, info.age, info.gender, info.orientation, info.bio, info.departement, info.geoloc, login];
   if(verif_add_infos(info) == 0){
     con.query(sql, values, function (err, result) {  
       if (err) throw err;  
     });  
   }
-  else
+  else {
     console.log('User: ' + login + ' ESSAI DE POURRIR LA BDD');
+  }
 }
 module.exports.modif_infos_perso = modif_infos_perso;
 
@@ -467,7 +468,7 @@ module.exports.validation_mail = validation_mail;
 // Fonction pour recuperer les info utilisateur
 const recup_info = async function(login){
  return new Promise((resolve, reject) =>{
-   let sql = "SELECT `user_ID`, `last_name`, `first_name`, `login`, `email`, `localisation_auto`, `localisation_manual`, `gender`, `orientation`, `age`, `bio`, `image_1`, `image_2`, `image_3`, `image_4`, `image_5`, `profile_picture`, `score`, `geo_consent`, `email_confirmation` FROM users WHERE login = ?";
+   let sql = "SELECT `user_ID`, `last_name`, `first_name`, `login`, `email`, `localisation_auto`, `localisation_manual`, `gender`, `orientation`, `age`, `bio`, `image_1`, `image_2`, `image_3`, `image_4`, `image_5`, `profile_picture`, `score`, `geo_consent`, `departement`, `email_confirmation` FROM users WHERE login = ?";
    con.query(sql, [login], function(err, result){
      if(err) throw err;
      resolve(JSON.stringify(result));

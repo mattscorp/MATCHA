@@ -51,17 +51,43 @@
                 <div class="col-sm-4 border border-white rounded">
                         <h2>Informations de dating</h2>
                         <p>Genre : </p>
-                        <select name="gender" size="1">
+                        <select class="form-control"  name="gender" size="1">
                             <option <% if (info.gender == 'Femme') { %> selected="selected" <% }%> >Femme</option>
                             <option <% if (info.gender == 'Homme') { %> selected="selected" <% }%> >Homme</option>
                             <option <% if (info.gender == 'Autre') { %> selected="selected" <% }%> >Autre</option>
                         </select>
                         <p>Orientation : </p>
-                        <select name="orientation" size="1">
+                        <select class="form-control" name="orientation" size="1">
                             <option <% if (info.orientation == 'Femmes') { %> selected="selected" <% }%> >Femmes</option>
                             <option <% if (info.orientation == 'Hommes') { %> selected="selected" <% }%> >Hommes</option>
                             <option <% if (info.orientation == 'Bi') { %> selected="selected" <% }%> >Bi</option>
                             <option <% if (info.orientation == 'Autres') { %> selected="selected" <% }%> >Autre</option>
+                        </select>
+                        <p>Departement : </p>
+                        <select class="form-control" class="form-control" required name="departement" size="1">
+                            <option></option>
+                            <% var i = 1; var j = 1;
+                                while (i <= 95)
+                                { 
+                                    if (i == 75)
+                                    { 
+                                        while (j <= 20) 
+                                        { %>
+                                         <option <% if (info.departement.split(' ')[0] == i && info.departement.split('(')[1].split(')')[0] == j) { %> selected="selected" <% }%> ><%= i  %> (<%= j %>)</option>
+                                        <% j++;
+                                        }
+                                    }
+                                    else 
+                                    { %>
+                                        <option <% if (info.departement == i) { %> selected="selected" <% }%> ><%= i %></option>
+                                <%  } i++;
+                                } %>
+                            <option <% if (info.departement == 98) { %> selected="selected" <% }%> >98</option>
+                            <option <% if (info.departement == 971) { %> selected="selected" <% }%> >971</option>
+                            <option <% if (info.departement == 972) { %> selected="selected" <% }%> >972</option>
+                            <option <% if (info.departement == 973) { %> selected="selected" <% }%> >973</option>
+                            <option <% if (info.departement == 974) { %> selected="selected" <% }%> >974</option>
+                            <option <% if (info.departement == 976) { %> selected="selected" <% }%> >976</option>
                         </select>
                         <p>Geolocalisation : </p>
                         <select name="geoloc" size="1">
@@ -96,7 +122,7 @@
                     <% all_interests.forEach(function(elem) { %>
                         <form action="new_topic" method="post">
                             <input type="hidden" name="new_topic" value="<%= elem.topic %>">
-                            <input type="submit" name="submit" value="#<%= elem.topic %>">
+                            <input class="hashtag_submit" type="submit" name="submit" value="#<%= elem.topic %>">
                         </form>
                     <% }); %>
                 </p>

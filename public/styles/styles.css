@@ -35,6 +35,15 @@ body {
   text-align: center;
 }
 
+.hashtag_submit {
+  background-color: rgba(0,0,0,0.5);
+  border:none;
+}
+
+.hashtag_submit:hover {
+  background-color: rgba(0,0,0,0.75);
+}
+
 .container-fluid {
   text-align: center;
 }
