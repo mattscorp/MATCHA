@@ -12,6 +12,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
     <!-- Latest compiled JavaScript -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <!-- Eraser icon -->
+    <script src='https://kit.fontawesome.com/a076d05399.js'></script>
     <link href="/styles/styles.css" rel="stylesheet" type="text/css">
   </head>
  
@@ -23,43 +25,49 @@
         <div class="border border-white rounded">
           <h1>Propositions pour <%= infos.first_name %></h1>
           <p>Votre orientation : <%= infos.orientation %></p>
-          <form action="swipe" method="post" class="mx-auto">
-            Age minimum
-            <input type="number" name="age_min" min="18" max="119" value="<%= age_min %>">
-            Age maximum
-            <input type="number" name="age_max" min="19" max="120" value="<%= age_max %>">
-            Sexe
-            <select name="orientation" size="1">
+          <div class="recherche_swipe">
+            <form action="swipe" method="post" class="mx-auto">
+              Age minimum
+              <input class="btn btn-outline-dark btn-sm" type="number" name="age_min" min="18" max="119" value="<%= age_min %>">
+              Age maximum
+              <input class="btn btn-outline-dark btn-sm" type="number" name="age_max" min="19" max="120" value="<%= age_max %>">
+              Sexe
+              <select class="btn btn-outline-dark btn-sm" name="orientation" size="1">
+                  <option></option>
+                  <option <% if (orientation == 'Femme') { %> selected="selected" <% }%> >Femme</option>
+                  <option <% if (orientation == 'Homme') { %> selected="selected" <% }%> >Homme</option>
+                  <option <% if (orientation == 'Autre') { %> selected="selected" <% }%> >Autre</option>
+              </select>
+              <br/>
+              Score de popularité min
+              <input class="btn btn-outline-dark btn-sm" type="number" name="score" min="0" max="100" value="<%= score %>">
+              <br/>
+              Distance max
+              <select class="btn btn-outline-dark btn-sm" name="localisation" size="1">
                 <option></option>
-                <option <% if (orientation == 'Femme') { %> selected="selected" <% }%> >Femme</option>
-                <option <% if (orientation == 'Homme') { %> selected="selected" <% }%> >Homme</option>
-                <option <% if (orientation == 'Autre') { %> selected="selected" <% }%> >Autre</option>
-            </select>
-            Score de popularité minimum
-            <input type="number" name="score" min="0" max="100" value="<%= score %>">
-            Centre d'intérêt
-            <input type="text" name="interest" value="<%= interest %>">
-            Distance maximum
-            <select name="localisation" size="1">
-              <option></option>
-              <option <% if (localisation == '5 km') { %> selected="selected" <% }%> >5 km</option>
-              <option <% if (localisation == '10 km') { %> selected="selected" <% }%> >10 km</option>
-              <option <% if (localisation == '20 km') { %> selected="selected" <% }%> >20 km</option>
-              <option <% if (localisation == '50 km') { %> selected="selected" <% }%> >50 km</option>
-              <option <% if (localisation == '100 km') { %> selected="selected" <% }%> >100 km</option>
-            </select>
-            Dans mon département uniquement :
-            <select name="departement">
-              <option <% if (departement == 'Oui') { %> selected="selected" <% }%> >Oui</option>
-              <option <% if (departement == 'Non') { %> selected="selected" <% }%> >Non</option>
-            </select>
-            <input type="submit" name="submit" value="Rechercher">
-            <br/>
-            <% all_interests.forEach(function(item) { %>
-              <input class="hashtag_submit text-primary" type="submit" name="submit" value="#<%= item.topic %>">
-            <% }) %>
-            
-          </form>
+                <option <% if (localisation == '5 km') { %> selected="selected" <% }%> >5 km</option>
+                <option <% if (localisation == '10 km') { %> selected="selected" <% }%> >10 km</option>
+                <option <% if (localisation == '20 km') { %> selected="selected" <% }%> >20 km</option>
+                <option <% if (localisation == '50 km') { %> selected="selected" <% }%> >50 km</option>
+                <option <% if (localisation == '100 km') { %> selected="selected" <% }%> >100 km</option>
+              </select>
+              Dans mon département uniquement :
+              <select class="btn btn-outline-dark btn-sm" name="departement">
+                <option <% if (departement == 'Oui') { %> selected="selected" <% }%> >Oui</option>
+                <option <% if (departement == 'Non') { %> selected="selected" <% }%> >Non</option>
+              </select>
+              <br/>
+              Centre d'intérêt
+              <input class="btn btn-outline-dark btn-sm" type="text" name="interest" value="<%= interest %>">
+              <input class='fas fa-eraser' name="submit" type="submit" value="&#xf12d;" style='font-size:24px'>
+              <br/>
+              <% all_interests.forEach(function(item) { %>
+                <input class="hashtag_submit text-primary" type="submit" name="submit" value="#<%= item.topic %>">
+              <% }) %>
+              <br/>
+              <input class="btn btn-dark" type="submit" name="submit" value="Rechercher">
+            </form>
+          </div>
         </div>
         <div class="card-deck border border-white rounded">
           <% profiles.forEach(function(item) { 
@@ -76,7 +84,7 @@
               <img class="card-img-top carte_image" src="<%= item.profile_picture %>" title="Profile de <%= item.login %>">
               <!-- Button to Open the Modal -->
               <div class="carte_button">
-                <button  onclick="myFunction('<%= item.login %>', '<%= item.user_ID %>')" type="button" class="btn btn-primary" data-toggle="modal" data-target="#<%= item.login %>">
+                <button  onclick="myFunction('<%= item.login %>', '<%= item.user_ID %>')" type="button" class="btn btn-dark" data-toggle="modal" data-target="#<%= item.login %>">
                   Voir plus
                 </button>
               </div>

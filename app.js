@@ -52,8 +52,8 @@ app.use(notifications);
 const grapping = require('./public/grapping.js');
 app.use(grapping);
 
-app.use(function(req, res, next) {
- res.status(404).render('connect', {user: 'true', password: 'true', creation: 'true'});
+app.use(async function(req, res, next) {
+	res.status(404).render('error404');
 });
 
 

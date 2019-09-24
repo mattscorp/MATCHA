@@ -44,7 +44,6 @@ router.get('/', async function (req, res) {
     	let interests_parse = JSON.parse(await user.recup_interests(info_parse[0].user_ID));
     	let new_notifications = await notifications.notifications_number(info_parse[0].user_ID);
     	let all_interests_parse = JSON.parse(await interests.recup_all_interests(info_parse[0].user_ID));
-    	let all_interests_parse = JSON.parse(await interests.recup_all_interests(info_parse[0].user_ID));
     	res.render('account', {info: info_parse[0], interests: interests_parse, new_notifications: new_notifications, all_interests: all_interests_parse});
     }
   } else {
@@ -127,7 +126,7 @@ router.get('/creation', function (req, res) {
 	if (req.session.login && req.session.login != '')
 		res.redirect('/');
 	else 
-	 	res.render('create_account', {mdp_strength: 'true', user_exist: 'true', email_exist: 'true', mdp_match: 'true', mdp_length: 'true', name: 'true', email: 'true'});
+	 	res.render('create_account', {mdp_strength: 'true', user_exist: 'true', email_exist: 'true', mdp_match: 'true', mdp_length: 'true', name: 'true', email: 'true', login:'true'});
 });
 
 // Reset password
@@ -165,7 +164,7 @@ router.post('/new_password', async function(req, res) {
 	if (mdp_strength == 0)
 		res.render('new_password', {mdp_match: 'true', mdp_strength: 'false', email: req.body.email});
 	else {
-		user.reset_password_new(req.body.email, req.body.mdp1);
+		user.reset_password_new(req.body.email, ent.encode(req.body.mdp1));
 		res.redirect('/');
 		}
 	}
@@ -196,29 +195,32 @@ router.post('/creation', async function(req, res) {
 	if (req.session.login && req.session.login != '')
 		res.redirect('/');
 	else {
-		const test =  await user.user_exist(req.body.user);
-		const input = await user.input_verif(req.body.user);
-		const mdp_strength = await user.mdp_strength(req.body.user);
+		let test =  await user.user_exist(req.body.user);
+		let input = await user.input_verif(req.body.user);
+		let mdp_strength = await user.mdp_strength(req.body.user);
+		let user_special = await user.user_special(req.body.user.login);
 		if (test == 2)
-			res.render('create_account', {mdp_strength: 'true', user_exist: 'false', email_exist: 'true', mdp_match: 'true', mdp_length: 'true', name: 'true', email: 'true'});
+			res.render('create_account', {mdp_strength: 'true', user_exist: 'false', email_exist: 'true', mdp_match: 'true', mdp_length: 'true', name: 'true', email: 'true', login: 'true'});
 		if (test == 0)
-			res.render('create_account', {mdp_strength: 'true', user_exist: 'true', email_exist: 'false', mdp_match: 'true', mdp_length: 'true', name: 'true', email: 'true'});
+			res.render('create_account', {mdp_strength: 'true', user_exist: 'true', email_exist: 'false', mdp_match: 'true', mdp_length: 'true', name: 'true', email: 'true', login: 'true'});
 		else if (input == 3)
-			res.render('create_account', {mdp_strength: 'true', user_exist: 'true', email_exist: 'true', mdp_match: 'false', mdp_length: 'true', name: 'true', email: 'true'});
+			res.render('create_account', {mdp_strength: 'true', user_exist: 'true', email_exist: 'true', mdp_match: 'false', mdp_length: 'true', name: 'true', email: 'true', login: 'true'});
 		else if (input == 0)
-			res.render('create_account', {mdp_strength: 'true', user_exist: 'true', email_exist: 'true', mdp_match: 'true', mdp_length: 'true', name: 'false', email: 'true'});
+			res.render('create_account', {mdp_strength: 'true', user_exist: 'true', email_exist: 'true', mdp_match: 'true', mdp_length: 'true', name: 'false', email: 'true', login: 'true'});
 		else if (input == 2)
-			res.render('create_account', {mdp_strength: 'true', user_exist: 'true', email_exist: 'true', mdp_match: 'true', mdp_length: 'false', name: 'true', email: 'true'});
+			res.render('create_account', {mdp_strength: 'true', user_exist: 'true', email_exist: 'true', mdp_match: 'true', mdp_length: 'false', name: 'true', email: 'true', login: 'true'});
 		else if (input == 4)
-			res.render('create_account', {mdp_strength: 'true', user_exist: 'true', email_exist: 'true', mdp_match: 'true', mdp_length: 'true', name: 'true', email: 'true'});
+			res.render('create_account', {mdp_strength: 'true', user_exist: 'true', email_exist: 'true', mdp_match: 'true', mdp_length: 'true', name: 'true', email: 'true', login: 'true'});
 		else if (mdp_strength == 0)
-			res.render('create_account', {mdp_strength: 'false', user_exist: 'true', email_exist: 'true', mdp_match: 'true', mdp_length: 'true', name: 'true', email: 'true'});
+			res.render('create_account', {mdp_strength: 'false', user_exist: 'true', email_exist: 'true', mdp_match: 'true', mdp_length: 'true', name: 'true', email: 'true', login: 'true'});
+		else if (user_special == 0)
+			res.render('create_account', {mdp_strength: 'true', user_exist: 'true', email_exist: 'true', mdp_match: 'true', mdp_length: 'true', name: 'true', email: 'true', login: 'false'});
 		else if(input == 1 && test == '1') {
 			user.add_user(req.body.user);
 			res.render('connect', {user: 'true', password: 'true', creation: 'false'});
 		}
 		else
-			res.render('create_account', {mdp_strength: 'true', user_exist: 'true', email_exist: 'true', mdp_match: 'true', mdp_length: 'true', name: 'true', email: 'true'});
+			res.render('create_account', {mdp_strength: 'true', user_exist: 'true', email_exist: 'true', mdp_match: 'true', mdp_length: 'true', name: 'true', email: 'true', login: 'true'});
 	}
 });
 

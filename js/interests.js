@@ -138,7 +138,7 @@ module.exports.add_topic_user = add_topic_user;
 const delete_interest = function(topic, user_ID) {
   // On passe de 0 a 1 sur la table interests
   let sql = "UPDATE interests SET `" + user_ID + "` = 0 WHERE `topic` = ?";
-  let values = [[ent.encode(topic)];
+  let values = [ent.encode(topic)];
   con.query(sql, values, function(err, result) {
     if (err)
       throw err;

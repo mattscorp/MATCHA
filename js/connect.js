@@ -45,10 +45,28 @@ const user_connect = async function(info){
 }
 module.exports.user_connect = user_connect;
 
+// Fonction pour verifier qu'il n'y a pas de char speciaux 
+const user_special = async function(user) {
+  console.log(user);
+  return new Promise((resolve, reject) => {
+    let iChars = "~`!#$%^&*+=-[]\\';,/{}|\":<>?";
+    let count = 0;
+    for (var i = 0; i < user.length; i++) {
+      if (iChars.indexOf(user.charAt(i)) != -1)
+         count++;
+    }
+    if (count == 0)
+      resolve(1);
+    else
+      resolve(0);
+  });
+}
+module.exports.user_special = user_special;
+
 // Fonction pour verifier les donnees de connection 
-const connect_input_verif = async function(info){
-  return new Promise((resolve, reject) =>{
-    if(!empty(ent.encode(info.name)) && isset(ent.encode(info.name)) && !empty(ent.encode(info.mdp1)) && isset(ent.encode(info.mdp1)) )
+const connect_input_verif = async function(info) {
+  return new Promise((resolve, reject) => {
+    if(!empty(ent.encode(info.name)) && isset(ent.encode(info.name)) && !empty(ent.encode(info.mdp1)) && isset(ent.encode(info.mdp1)))
       resolve(1);
     else
       resolve(0);
@@ -60,7 +78,7 @@ module.exports.connect_input_verif = connect_input_verif;
 const user_exist = async function(info){
   return new Promise((resolve, reject) => {
     let sql = "SELECT * FROM users WHERE email = ?";
-    let values = [ent.encode(info.email)];
+    let values = [info.email];
     con.query(sql, values, function (err, result) {  
       if (err)
         throw err;
@@ -87,7 +105,7 @@ module.exports.user_exist = user_exist;
 const email_exist = async function(info){
   return new Promise((resolve, reject) => {
     let sql = "SELECT * FROM users WHERE email = ?";
-    let values = [ent.encode(info.email)];
+    let values = [info.email];
     con.query(sql, values, function (err, result) {  
       if (err)
         throw err;
@@ -121,7 +139,7 @@ module.exports.login_exist = login_exist;
 const input_verif = async function(info) {
   return new Promise((resolve, reject) => {
     let name = ent.encode(info.login);
-    let email = ent.encode(info.email);
+    let email = info.email;
 //ATTENTION le criptage dois se faire apres et surtout pense a bien enregistrer des mdp en cryopte dqns bdd
     if(!empty(name) && isset(name) && !empty(email) && isset(email) && !empty(info.mdp1) && isset(info.mdp1) && !empty(info.mdp2) && isset(info.mdp2))
     {
@@ -178,7 +196,7 @@ const reset_password = async function(email) {
             html: '<h1>Clique <a href="http://localhost:8080/new_password?uuid=' + uuid + '&email=' + email + ' ">ici</a> pour réinitialiser ton mot de passe.</h1>'
           };
     let sql = "SELECT * FROM users WHERE email = ?";
-    let values = [ent.encode(email)];
+    let values = [email];
     con.query(sql, values, function (err, result) {  
       if (err) throw err;
       else {
@@ -209,7 +227,7 @@ module.exports.reset_password = reset_password;
 const password_recup = async function(email, uuid) {
   return new Promise((resolve, reject) => {
     let sql = "SELECT recup_password FROM users WHERE email = ?";
-    con.query(sql, [ent.encode(email)], function (err, result) {  
+    con.query(sql, [email], function (err, result) {  
      if (err) throw err;
      else {
       if (result[0].recup_password == uuid)
@@ -228,7 +246,7 @@ const reset_password_new = function(email, password) {
   const saltRounds = 12;
   bcrypt.hash(password, saltRounds, function (err, hash) {
     let sql = "UPDATE users SET recup_password = null, password = ? WHERE email = ?"
-    let values = [hash, ent.encode(email)];
+    let values = [hash, email];
     con.query(sql, values, function (err, result) {
       if (err) throw err;
     })
@@ -287,8 +305,8 @@ function verif_add_infos(info){
     console.log("Mauvais input tester 2: " + info.orientation);
     return(2);
   }
-  else if (info.geoloc !== "Oui" && info.gelolc !== "Non"){
-    console.log("Mauvais input tester 3: " + info.geoloc);
+  else if (info.geo_consent !== "Oui" && info.geo_consent !== "Non"){
+    console.log("Mauvais input tester 3: " + info.geo_consent);
     return(3);
   }
   else{
@@ -299,12 +317,22 @@ function verif_add_infos(info){
 
 // Fonction pour ajouter les infos d'un utilisateur lors de sa première connection
 function add_infos(info, login) {
-  let sql = "UPDATE users SET bio = ?, age = ?, gender = ?, orientation = ?, departement = ?, geo_consent = ? WHERE login = ?";
-  let values = [ent.encode(info.bio), ent.encode(info.age), ent.encode(info.gender), ent.encode(info.orientation), ent.encode(info.departement), ent.encode(info.geo_consent), ent.encode(login)];
-  if(verif_add_infos(info) == 0){
-    con.query(sql, values, function (err, result) {  
-    	if (err) throw err;
-    });
+  let iChars = "~`=[]\\{}|<>";
+  let count = 0;
+  for (var i = 0; i < info.bio.length; i++) {
+    if (iChars.indexOf(info.bio.charAt(i)) != -1)
+       count++;
+  }
+  if (count == 0) {
+    let sql = "UPDATE users SET bio = ?, age = ?, gender = ?, orientation = ?, departement = ?, geo_consent = ? WHERE login = ?";
+    let values = [info.bio, ent.encode(info.age), ent.encode(info.gender), ent.encode(info.orientation), ent.encode(info.departement), ent.encode(info.geo_consent), ent.encode(login)];
+    if(verif_add_infos(info) == 0){
+      con.query(sql, values, function (err, result) {  
+      	if (err) throw err;
+      });
+    }
+    else
+      console.log('User: ' + login + ' ESSAI DE POURRIR LA BDD');
   }
   else
     console.log('User: ' + login + ' ESSAI DE POURRIR LA BDD');
@@ -313,16 +341,25 @@ module.exports.add_infos = add_infos;
 
 // Fonction pour modifier les infos personnelles de l'utilisateur
 function modif_infos_perso(info, login) {
-  let sql = "UPDATE users SET login = ?, first_name = ?, last_name = ?, email = ?, age = ?, gender = ?, orientation = ?, bio = ?, `departement` = ?, geo_consent = ? WHERE login = ?"; 
-  let values = [ent.encode(info.login), ent.encode(info.first_name), ent.encode(info.last_name), ent.encode(info.email), ent.encode(info.age), ent.encode(info.gender), ent.encode(info.orientation), ent.encode(info.bio), ent.encode(info.departement), ent.encode(info.geoloc), ent.encode(login)];
-  if(verif_add_infos(info) == 0){
-    con.query(sql, values, function (err, result) {  
-      if (err) throw err;  
-    });  
+  let iChars = "~`=[]\\{}|<>";
+  let count = 0;
+  for (var i = 0; i < info.bio.length; i++) {
+    if (iChars.indexOf(info.bio.charAt(i)) != -1)
+       count++;
   }
-  else {
+  if (count == 0) {
+    let sql = "UPDATE users SET login = ?, first_name = ?, last_name = ?, email = ?, age = ?, gender = ?, orientation = ?, bio = ?, `departement` = ?, geo_consent = ? WHERE login = ?"; 
+    let values = [ent.encode(info.login), ent.encode(info.first_name), ent.encode(info.last_name), info.email, ent.encode(info.age), ent.encode(info.gender), ent.encode(info.orientation), info.bio, ent.encode(info.departement), ent.encode(info.geo_consent), ent.encode(login)];
+    if(verif_add_infos(info) == 0) {
+      con.query(sql, values, function (err, result) {  
+        if (err) throw err;  
+      });  
+    }
+    else
+      console.log('User: ' + login + ' ESSAI DE POURRIR LA BDD');
+  }
+  else
     console.log('User: ' + login + ' ESSAI DE POURRIR LA BDD');
-  }
 }
 module.exports.modif_infos_perso = modif_infos_perso;
 
@@ -473,7 +510,7 @@ module.exports.validation_mail = validation_mail;
 // Fonction pour recuperer les info utilisateur
 const recup_info = async function(login){
  return new Promise((resolve, reject) =>{
-   let sql = "SELECT `user_ID`, `last_name`, `first_name`, `login`, `email`, `localisation_auto`, `localisation_manual`, `gender`, `orientation`, `age`, `bio`, `image_1`, `image_2`, `image_3`, `image_4`, `image_5`, `profile_picture`, `score`, `geo_consent`, `departement`, `email_confirmation` FROM users WHERE login = ?";
+   let sql = "SELECT `user_ID`, `last_name`, `first_name`, `login`, `hashtag`, `email`, `localisation_auto`, `localisation_manual`, `gender`, `orientation`, `age`, `bio`, `image_1`, `image_2`, `image_3`, `image_4`, `image_5`, `profile_picture`, `score`, `geo_consent`, `departement`, `email_confirmation` FROM users WHERE login = ?";
    con.query(sql, [ent.encode(login)], function(err, result){
      if(err) throw err;
      resolve(JSON.stringify(result));

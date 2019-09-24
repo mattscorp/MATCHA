@@ -48,9 +48,46 @@ router.get('/swipe', async function (req, res) {
         });
         let new_notifications = await notifications.notifications_number(info_parse[0].user_ID);
         let all_interests = JSON.parse(await interests.recup_all_interests_swipe());
+        let filtered = [];
+        profiles_parse.forEach(function(item) {
+            if (item.email_confirmation == '1' &&  item.departement !== '' && item.departement !== '0' && item.profile_picture !== null) {
+                let score_algo = 0;
+                let i = 0;
+                // Calcul de la distance : -1 par km de distance
+
+
+                // Score de popularité : difference des deux scores / 10
+                if (item.score != null && info_parse[0].score != null) {
+                    if (item.score > info_parse[0].score)
+                        score_algo -= (item.score - info_parse[0].score) / 10;
+                    else
+                        score_algo -= (info_parse[0].score - item.score) / 10;
+                }
+                // Nombre de centres d'interet : on compte les centres d'interets communs, a chacun (n) on fait score += n (suite de fibonacci)
+                if (item.hashtag != '' && item.hashtag != null) {
+                    let interests_calc = item.hashtag.split(',');
+                    if (info_parse[0].hashtag != '' && info_parse[0].hashtag != null) {
+                        let interests_user = info_parse[0].hashtag.split(',');
+                        i = 0;
+                        interests_user.forEach(function(item) {
+                            if (interests_calc.includes(item)) {
+                                i++;
+                                score_algo += i;
+                            }
+                        });
+                    }
+                }
+                item.score_algo = score_algo;
+                filtered.push(item);
+                console.log('login : ' + item.login + ' score : ' + item.score_algo);
+            }
+        });
+        filtered.sort(function (a, b) {
+          return b.score_algo - a.score_algo;
+        });
 		res.render('swipe', {infos: info_parse[0],
                             block_me: block_me_profiles,
-                            profiles: profiles_parse,
+                            profiles: filtered,
                             previous_profiles: previous_profiles,
                             new_notifications: new_notifications,
                             age_min: 18,
@@ -88,13 +125,21 @@ router.post('/swipe', async function(req, res) {
         let new_notifications = await notifications.notifications_number(info_parse[0].user_ID);
         let all_interests = JSON.parse(await interests.recup_all_interests_swipe());
         let interest = "";
-        if (req.body.submit != 'Rechercher')
+        let filtered = [];
+        profiles_parse.forEach(function(item) {
+            if (item.email_confirmation == '1' &&  item.departement !== '' && item.departement !== '0' && item.profile_picture !== null) {
+                filtered.push(item);
+            }
+        });
+        if (req.body.submit == "&#xf12d;")
+            interest = "";
+        else if (req.body.submit != 'Rechercher')
             interest = req.body.submit.trim().split('#')[1];
         else
             interest = req.body.interest.trim();
         res.render('swipe', {infos: info_parse[0],
                             block_me: block_me_profiles,
-                            profiles: profiles_parse,
+                            profiles: filtered,
                             previous_profiles: previous_profiles,
                             new_notifications: new_notifications,
                             age_min: (req.body.age_min == '') ? 18 : req.body.age_min,

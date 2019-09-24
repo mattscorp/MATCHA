@@ -51,7 +51,7 @@
                 <div class="col-sm-4 border border-white rounded">
                         <h2>Informations de dating</h2>
                         <p>Genre : </p>
-                        <select class="form-control"  name="gender" size="1">
+                        <select class="form-control "  name="gender" size="1">
                             <option <% if (info.gender == 'Femme') { %> selected="selected" <% }%> >Femme</option>
                             <option <% if (info.gender == 'Homme') { %> selected="selected" <% }%> >Homme</option>
                             <option <% if (info.gender == 'Autre') { %> selected="selected" <% }%> >Autre</option>
@@ -90,7 +90,7 @@
                             <option <% if (info.departement == 976) { %> selected="selected" <% }%> >976</option>
                         </select>
                         <p>Geolocalisation : </p>
-                        <select name="geoloc" size="1">
+                        <select name="geo_consent" size="1">
                             <option <% if (info.geo_consent == 'Oui') { %> selected="selected" <% }%> >Oui</option>
                             <option <% if (info.geo_consent == 'Non') { %> selected="selected" <% }%> >Non</option>
                         </select>
