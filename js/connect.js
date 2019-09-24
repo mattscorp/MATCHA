@@ -26,10 +26,11 @@ let con = db_connect.con;
 const user_connect = async function(info){
   return new Promise((resolve, reject ) => {
     let sql = "SELECT * FROM users WHERE login = ?";
-    con.query(sql, [info.name], function(err, result){
+
+    con.query(sql, [ent.encode(info.name)], function(err, result){
       if(err) throw err;
       if(result != '') {
-        bcrypt.compare(info.mdp1, result[0].password, function (err, result) {
+        bcrypt.compare(ent.encode(info.mdp1), result[0].password, function (err, result) {
           if (result == true) {
             resolve(1);
           } else {
@@ -59,13 +60,13 @@ module.exports.connect_input_verif = connect_input_verif;
 const user_exist = async function(info){
   return new Promise((resolve, reject) => {
     let sql = "SELECT * FROM users WHERE email = ?";
-    let values = [info.email];
+    let values = [ent.encode(info.email)];
     con.query(sql, values, function (err, result) {  
       if (err)
         throw err;
       else if (result == '') {
         let sql2 = "SELECT * FROM users WHERE login = ?";
-        let values2 = [info.login];
+        let values2 = [ent.encode(info.login)];
         con.query(sql2, values2, function (err, result) {  
           if (err)
             throw err;
@@ -86,7 +87,7 @@ module.exports.user_exist = user_exist;
 const email_exist = async function(info){
   return new Promise((resolve, reject) => {
     let sql = "SELECT * FROM users WHERE email = ?";
-    let values = [info.email];
+    let values = [ent.encode(info.email)];
     con.query(sql, values, function (err, result) {  
       if (err)
         throw err;
@@ -103,7 +104,7 @@ module.exports.email_exist = email_exist;
 const login_exist = async function(info){
   return new Promise((resolve, reject) => {
     let sql = "SELECT * FROM users WHERE login = ?";
-    let values = [info.login];
+    let values = [ent.encode(info.login)];
     con.query(sql, values, function (err, result) {  
       if (err)
         throw err;
@@ -177,7 +178,7 @@ const reset_password = async function(email) {
             html: '<h1>Clique <a href="http://localhost:8080/new_password?uuid=' + uuid + '&email=' + email + ' ">ici</a> pour réinitialiser ton mot de passe.</h1>'
           };
     let sql = "SELECT * FROM users WHERE email = ?";
-    let values = [email];
+    let values = [ent.encode(email)];
     con.query(sql, values, function (err, result) {  
       if (err) throw err;
       else {
@@ -208,7 +209,7 @@ module.exports.reset_password = reset_password;
 const password_recup = async function(email, uuid) {
   return new Promise((resolve, reject) => {
     let sql = "SELECT recup_password FROM users WHERE email = ?";
-    con.query(sql, [email], function (err, result) {  
+    con.query(sql, [ent.encode(email)], function (err, result) {  
      if (err) throw err;
      else {
       if (result[0].recup_password == uuid)
@@ -227,7 +228,7 @@ const reset_password_new = function(email, password) {
   const saltRounds = 12;
   bcrypt.hash(password, saltRounds, function (err, hash) {
     let sql = "UPDATE users SET recup_password = null, password = ? WHERE email = ?"
-    let values = [hash, email];
+    let values = [hash, ent.encode(email)];
     con.query(sql, values, function (err, result) {
       if (err) throw err;
     })
@@ -252,7 +253,7 @@ function add_user(info) {
     }
 	});
   let saltRounds = 12;
-  bcrypt.hash(info.mdp1, saltRounds, function (err,   hash) {
+    bcrypt.hash(ent.encode(info.mdp1), saltRounds, function (err,   hash) {
     if (err) throw err; 
     let sql = "INSERT INTO users (email, login, first_name, last_name, password, email_confirmation) VALUES ?";
   	let values = [[info.email, info.login, info.first_name, info.last_name, hash, uuid]];
@@ -261,7 +262,7 @@ function add_user(info) {
      // Ajout d'une colonne à la table 'interests'
      else {
       let sql2 = "SELECT user_ID FROM users WHERE login = ?";
-      con.query(sql2, info.login, function(err, result) {
+      con.query(sql2, ent.encode(info.login), function(err, result) {
         if (err) throw err;
         else {
           let sql3 = "ALTER TABLE interests ADD `" + result[0].user_ID + "` INT";
@@ -299,7 +300,7 @@ function verif_add_infos(info){
 // Fonction pour ajouter les infos d'un utilisateur lors de sa première connection
 function add_infos(info, login) {
   let sql = "UPDATE users SET bio = ?, age = ?, gender = ?, orientation = ?, geo_consent = ? WHERE login = ?";
-  let values = [info.bio, info.age, info.gender, info.orientation, info.geo_consent, login];
+  let values = [ent.encode(info.bio), ent.encode(info.age), ent.encode(info.gender), ent.encode(info.orientation), ent.encode(info.geo_consent), ent.encode(login)];
   if(verif_add_infos(info) == 0){
     con.query(sql, values, function (err, result) {  
     	if (err) throw err;
@@ -313,7 +314,7 @@ module.exports.add_infos = add_infos;
 // Fonction pour modifier les infos personnelles de l'utilisateur
 function modif_infos_perso(info, login) {
   let sql = "UPDATE users SET login = ?, first_name = ?, last_name = ?, email = ?, age = ?, gender = ?, orientation = ?, bio = ?, geo_consent = ? WHERE login = ?"; 
-  let values = [info.login, info.first_name, info.last_name, info.email, info.age, info.gender, info.orientation, info.bio, info.geoloc, login];
+  let values = [ent.encode(info.login), ent.encode(info.first_name), ent.encode(info.last_name), ent.encode(info.email), ent.encode(info.age), ent.encode(info.gender), ent.encode(info.orientation), ent.encode(info.bio), ent.encode(info.geoloc), ent.encode(login)];
   if(verif_add_infos(info) == 0){
     con.query(sql, values, function (err, result) {  
       if (err) throw err;  
@@ -400,11 +401,15 @@ const change_profile_picture = function(infos, login) {
     num = '4';
   else if (infos.profile_picture == 'Photo 5')
     num = '5';
-  let sql = "UPDATE users SET profile_picture = image_" + num + " WHERE login = ?";
-  let values = [login];
-  con.query(sql, values, function (err, result) {  
-    if (err) throw err;  
-  });  
+  if(num >= 1 && num <= 5){
+    let sql = "UPDATE users SET profile_picture = image_" + num + " WHERE login = ?";
+    let values = [ent.encode(login)];
+    con.query(sql, values, function (err, result) {  
+      if (err) throw err;  
+    });
+  }
+  else
+  console.log('User: ' + login + ' ESSAI DE POURRIR LA BDD AVEC UN MAUVAIS CHIFFRE DE PHOTO'); 
 }
 module.exports.change_profile_picture = change_profile_picture;
 
@@ -412,11 +417,11 @@ module.exports.change_profile_picture = change_profile_picture;
 const delete_photo = async function(photo, login) {
   const user = require('./connect.js');
   let sql = "UPDATE users SET image_" + photo + " = null WHERE login = ?";
-  let values = [login];
+  let values = [ent.encode(login)];
   con.query(sql, values, function (err, result) {  
     if (err) throw err;  
   });
-  const info_user = await user.recup_info(login);
+  const info_user = await user.recup_info(ent.encode(login));
   const info_parse = await JSON.parse(info_user);
   var new_pp = '0';
   if (photo != '1' && info_parse[0].image_1 != null)
@@ -433,7 +438,7 @@ const delete_photo = async function(photo, login) {
     await user.change_profile_picture({profile_picture: new_pp}, login);
   else {
     let sql1 = "UPDATE users SET profile_picture = null WHERE login = ?";
-    let values1 = [login];
+    let values1 = [ent.encode(login)];
     con.query(sql1, values1, function (err, result) {  
     if (err) throw err;  
   });
@@ -445,14 +450,14 @@ module.exports.delete_photo = delete_photo;
 const validation_mail = async function(login, uuid) {
 	return new Promise((resolve, reject) => {
 		let sql = "SELECT email_confirmation FROM users WHERE login = ?";
-	  	con.query(sql, [login], function(err, result){
+	  	con.query(sql, [ent.encode(login)], function(err, result){
 	    	if(err) 
           throw err;
         else if (!result[0].email_confirmation || result[0].email_confirmation == '' || result[0].email_confirmation == null)
           resolve (0);
 	    	else if (result[0].email_confirmation == uuid) {
 	    		let sql2 = "UPDATE users SET email_confirmation = 1 WHERE login = ?";
-	    		con.query(sql2, [login], function(err, result) {
+	    		con.query(sql2, [ent.encode(login)], function(err, result) {
 	    			if(err) throw err;
 	    		})
 	    		resolve(1);
@@ -468,7 +473,7 @@ module.exports.validation_mail = validation_mail;
 const recup_info = async function(login){
  return new Promise((resolve, reject) =>{
    let sql = "SELECT `user_ID`, `last_name`, `first_name`, `login`, `email`, `localisation_auto`, `localisation_manual`, `gender`, `orientation`, `age`, `bio`, `image_1`, `image_2`, `image_3`, `image_4`, `image_5`, `profile_picture`, `score`, `geo_consent`, `email_confirmation` FROM users WHERE login = ?";
-   con.query(sql, [login], function(err, result){
+   con.query(sql, [ent.encode(login)], function(err, result){
      if(err) throw err;
      resolve(JSON.stringify(result));
    })
@@ -492,7 +497,7 @@ module.exports.recup_interests = recup_interests;
 const add_coordinates = async function(infos, login) {
   let geoloc = infos.geoplugin_latitude + ',' + infos.geoplugin_longitude;
   let sql = "UPDATE users SET localisation_auto = '" + geoloc + "' WHERE login = ?";
-  con.query(sql, [login], function(err, result) {
+  con.query(sql, [ent.encode(login)], function(err, result) {
     if (err) throw err;
   });
 }
@@ -503,7 +508,7 @@ module.exports.add_coordinates = add_coordinates;
 const add_coordinates_nav = async function(infos, login) {
   let geoloc = infos.latitude + ',' + infos.longitude;
   let sql = "UPDATE users SET localisation_manual = '" + geoloc + "' WHERE login = ?";
-  con.query(sql, [login], function(err, result) {
+  con.query(sql, [ent.encode(login)], function(err, result) {
     if (err) throw err;
   });
 }
