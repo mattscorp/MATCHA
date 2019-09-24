@@ -31,6 +31,21 @@ const topic_exists = async function(topic) {
 }
 module.exports.topic_exists = topic_exists;
 
+const recup_all_interests = async function(user_ID) {
+  return new Promise((resolve, reject) => {
+    let sql = "SELECT `topic` FROM `interests` WHERE `" + user_ID + "` != 1 LIMIT 20";
+    con.query(sql, function (err, result) {
+      if (err)
+        throw err;
+      else {
+        resolve(JSON.stringify(result));
+        console.log(JSON.stringify(result));
+      }
+    });
+  })
+}
+module.exports.recup_all_interests = recup_all_interests;
+
 const add_topic = function(topic) {
   let sql = "INSERT INTO interests (topic) VALUES ?";
   let values = [[topic]];

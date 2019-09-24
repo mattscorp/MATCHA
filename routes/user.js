@@ -33,8 +33,8 @@ const router = express.Router();
 // Chargement de la page index.html
 router.get('/', async function (req, res) {
   if (req.session.login && req.session.login != '') {
-  	// const geolocalize = await user.geolocalize();
   	let info_parse = JSON.parse(await user.recup_info(req.session.login));
+  	// const geolocalize = await user.geolocalize();
     if (info_parse[0].email_confirmation == '' || info_parse[0].email_confirmation != 1) {
      	res.render('confirm_your_email');
     } else if (info_parse[0].bio == null || info_parse[0].age == null || info_parse[0].gender == null || info_parse[0].orientation == null) {
@@ -42,10 +42,13 @@ router.get('/', async function (req, res) {
     } else if (info_parse[0].profile_picture == null) {
     	res.render('profile_picture', {info:info_parse[0]});
     } else {
-    	const interests = await user.recup_interests(info_parse[0].user_ID);
-    	const interests_parse = JSON.parse(interests);
+    	const my_interests = await user.recup_interests(info_parse[0].user_ID);
+    	const interests_parse = JSON.parse(my_interests);
     	let new_notifications = await notifications.notifications_number(info_parse[0].user_ID);
-    	res.render('account', {info: info_parse[0], interests: interests_parse, new_notifications: new_notifications});
+    	const all_interests = await interests.recup_all_interests(info_parse[0].user_ID);
+    	const all_interests_parse = JSON.parse(all_interests);
+    	console.log(all_interests);
+    	res.render('account', {info: info_parse[0], interests: interests_parse, new_notifications: new_notifications, all_interests: all_interests_parse});
     }
   } else {
     res.render('connect', {user: 'true', password: 'true', creation: 'true'});
@@ -235,24 +238,21 @@ router.post('/profile_picture', upload.single('photo'), async function(req, res)
 	if (!req.session.login || req.session.login == '')
 		res.redirect('/');
 	else {
-		if(req.file && req.file.size > 0 /*&& user.verif_img(upload.single('photo')) == 1 */) {
-			var add_image = await user.add_image(req.file, req.session.login);
-			res.redirect('/');
-		}
-		let file_data = await readFile("public/images/"+req.file.filename);
-		// console.log(file_data);
-		if (user.loadMime(file_data) == 1){
-
-			if(req.file && req.file.size > 0 /*&& user.verif_img(upload.single('photo')) == 1 */) {
-				var add_image = await user.add_image(req.file, req.session.login);
-				res.redirect('/');
+		if(req.file && req.file.size > 0) {
+			let file_data = await readFile("public/images/"+req.file.filename);
+			if (user.loadMime(file_data) == 1) {
+				if(req.file && req.file.size > 0 /*&& user.verif_img(upload.single('photo')) == 1 */) {
+					var add_image = await user.add_image(req.file, req.session.login);
+					res.redirect('/');
+				}
+			} else {
+				alert("Ton image est cassée");
+				res.redirect('/')
+				//throw 'error';
 			}
-		else
-			{
+		} else {
 			alert("Ton image est cassée");
-			res.redirect('/')
-			//throw 'error';
-			}
+			res.redirect('/');
 		}
 	}
 });
@@ -265,28 +265,20 @@ router.post('/add_new_image', upload.single('photo'), async function(req, res) {
 		res.redirect('/');
 	else {
 		if(req.file && req.file.size > 0) {
-			var add_new_image = user.add_new_image(req.file, req.session.login);
-			res.redirect('/');
-		}
-		else {
 			let file_data = await readFile("public/images/"+req.file.filename);
-			// console.log(file_data);
 			if (user.loadMime(file_data) == 1){
-				if(req.file && req.file.size > 0) {
-					var add_new_image = user.add_new_image(req.file, req.session.login);
-					res.redirect('/');
-					}
-				else {
-					res.redirect('/')
-					//throw 'error';
-					}
+				var add_new_image = user.add_new_image(req.file, req.session.login);
+				res.redirect('/');
 			}
-			else
-			{
+			else {
 				alert("Ton image est cassée");
 				res.redirect('/')
 				//throw 'error';
 			}
+		}
+		else {
+			alert("Ton image est cassée");
+			res.redirect('/');
 		}
 	}
 });

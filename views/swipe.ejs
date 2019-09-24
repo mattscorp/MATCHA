@@ -37,6 +37,8 @@
             </select>
             Score de popularité minimum
             <input type="number" name="score" min="0" max="100" value="<%= score %>">
+            Centre d'intérêt
+            <input type="text" name="interest" value="<%= interest %>">
             Distance maximum
             <select name="localisation" size="1">
                 <option></option>
@@ -52,7 +54,9 @@
         <div class="card-deck border border-white rounded">
           <% profiles.forEach(function(item) { 
               if (!previous_profiles.includes(item.user_ID) && !block_me.includes(item.user_ID)) {
-                 if ((infos.orientation == 'Femmes' && item.gender == 'Femme') || (infos.orientation == 'Autres' && item.gender == 'Autre') || (infos.orientation == 'Hommes' && item.gender == 'Homme')|| (infos.orientation == 'Bi') && (item.gender == 'Homme' || item.gender == 'Femme')) { %>
+                if ((infos.orientation == 'Femmes' && item.gender == 'Femme') || (infos.orientation == 'Autres' && item.gender == 'Autre') || (infos.orientation == 'Hommes' && item.gender == 'Homme')|| (infos.orientation == 'Bi') && (item.gender == 'Homme' || item.gender == 'Femme')) {
+                let tab = item.hashtag.split(',');
+                  if (interest == '' || interest == null || ((item.hashtag != '' && item.hahtag != 'null' && tab.includes(interest)))) { %>
           <div class="card carte mx-auto m-2">
             <div class="card-header">
               <strong><%= item.first_name %></strong>
@@ -85,6 +89,7 @@
                         <p class="mx-auto">Intéressé par : <%= item.orientation %></p>
                         <p class="mx-auto">Bio : <%= item.bio %></p>
                         <p class="mx-auto">Score de popularité : <% if (item.score == null) { %>Too Fresh<% } else { %><%= item.score %>/100<% } %></p>
+                        <p class="mx-auto">Centres d'intérêt : <% item.hashtag.split(',').forEach(function(elem) { %>#<%= elem %> <% }) %></p>
                        
                       <div id="demo" class="carousel slide mx-auto" data-ride="carousel">
                         <!-- Indicators -->
@@ -159,7 +164,8 @@
               </div>
             </div>
           </div>
-          <%      }
+          <%      } 
+                }
               }
           }) %>
         </div>

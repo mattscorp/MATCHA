@@ -55,6 +55,7 @@ router.get('/swipe', async function (req, res) {
                             age_min: 18,
                             age_max: 120,
                             orientation: 'all',
+                            interest: '', 
                             score:0,
                             localisation:1000000});
 	}
@@ -91,6 +92,7 @@ router.post('/swipe', async function(req, res) {
                             age_max: (req.body.age_max == '') ? 120 : req.body.age_max,
                             orientation: (req.body.orientation == '') ? 'all' : req.body.orientation,
                             score: (req.body.score == '') ? 0 : req.body.score,
+                            interest: req.body.interest,
                             localisation:(req.body.localisation == '') ? 1000000 : req.body.localisation
                             });
     }

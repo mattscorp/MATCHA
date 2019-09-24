@@ -298,8 +298,6 @@ module.exports.modif_infos_perso = modif_infos_perso;
 
 // Verification de l image
 function loadMime(file, callback) {
- //     console.log("dans load mime");
-  //  console.log(file);
     var mimes = [
     {
         mime: 'image/jpeg',
@@ -313,9 +311,7 @@ function loadMime(file, callback) {
     }
     ];
     function check(file, mime) {
-  //    console.log('dans chech');
         for (var i = 0, l = mime.mask.length; i < l; ++i) {
-  //        console.log((file[i] & mime.mask[i]) - mime.pattern[i]);
             if ((file[i] & mime.mask[i]) - mime.pattern[i] !== 0) {
                 return false;
             }
