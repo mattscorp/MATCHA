@@ -73,9 +73,12 @@
           <% profiles.forEach(function(item) { 
               if (!previous_profiles.includes(item.user_ID) && !block_me.includes(item.user_ID)) {
                 if (((infos.orientation == 'Femmes' && item.gender == 'Femme') || (infos.orientation == 'Autres' && item.gender == 'Autre') || (infos.orientation == 'Hommes' && item.gender == 'Homme')|| (infos.orientation == 'Bi') && (item.gender == 'Homme' || item.gender == 'Femme')) && ((item.orientation == 'Femmes' && infos.gender == 'Femme') || (item.orientation == 'Autres' && infos.gender == 'Autre') || (item.orientation == 'Hommes' && infos.gender == 'Homme')|| (item.orientation == 'Bi') && (infos.gender == 'Homme' || infos.gender == 'Femme'))) {
-                let tab = item.hashtag.split(',');
-                  if (interest == '' || interest == null || ((item.hashtag != '' && item.hahtag != 'null' && tab.includes(interest)))) {
-                    if (departement == "Non" || item.departement == infos.departement) { %>
+                let tab = [];
+                if (item.hashtag != '' && item.hashtag != null && item.hashtag != 'NULL') {
+                  tab = item.hashtag.split(',');
+                }
+                    if (interest == '' || interest == null || ((item.hashtag != '' && item.hahtag != 'null' && tab.includes(interest)))) {
+                      if (departement == "Non" || item.departement == infos.departement) { %>
           <div class="card carte mx-auto m-2">
             <div class="card-header">
               <strong><%= item.first_name %></strong>
@@ -109,8 +112,9 @@
                         <p class="mx-auto">Bio : <%= item.bio %></p>
                         <p class="mx-auto">Score de popularité : <% if (item.score == null) { %>Too Fresh<% } else { %><%= item.score %>/100<% } %></p>
                         <p class="mx-auto">Département : <%= item.departement %></p>
+                        <% if (item.hashtag != '' && item.hashtag != null && item.hashtag != 'NULL') { %>
                         <p class="mx-auto">Centres d'intérêt : <% item.hashtag.split(',').forEach(function(elem) { %>#<%= elem %> <% }) %></p>
-                       
+                        <% } %>
                       <div id="demo" class="carousel slide mx-auto" data-ride="carousel">
                         <!-- Indicators -->
                         <ul class="carousel-indicators">

@@ -283,7 +283,7 @@ function add_user(info) {
       con.query(sql2, ent.encode(info.login), function(err, result) {
         if (err) throw err;
         else {
-          let sql3 = "ALTER TABLE interests ADD `" + result[0].user_ID + "` INT NOT NULL";
+          let sql3 = "ALTER TABLE interests ADD `" + result[0].user_ID + "` INT NOT NULL DEFAULT 0";
           con.query(sql3, result[0].user_ID, function(err, result) {
             if (err) throw err;
           });
@@ -301,7 +301,7 @@ function verif_add_infos(info){
     console.log("Mauvais input tester 1: " + info.gender);
     return(1);
   }
-  else if (info.orientation !== "Hommes" && info.orientation !== "Femmes" && info.orientation !== "Bi" && info.orientation != "Autre") {
+  else if (info.orientation !== "Hommes" && info.orientation !== "Femmes" && info.orientation !== "Bi" && info.orientation != "Autres") {
     console.log("Mauvais input tester 2: " + info.orientation);
     return(2);
   }

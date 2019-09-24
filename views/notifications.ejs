@@ -27,7 +27,7 @@
             </form>
             <div id="2">
                 <% notifications.reverse().forEach(function(item) { %>
-                <div class="my-2 shadow-lg media bg-primary border p-3 col-sm-9 rounded mx-auto">
+                <div class="my-2 shadow-lg media <% if (item.valid_notification == 1) { %> bg-primary <% } else { %> bg-secondary <% } %> border p-3 col-sm-9 rounded mx-auto">
                     <% if (item.valid_notification == 1) { %><p class="text-danger text-center mx-auto"> <% } else { %> <p class="text-center mx-auto"> <% }
                     if (item.motive == 'message') { %>
                         <a class="text-white" href="/messages">Vous avez reçu un message de <strong><%= item.notifier_first_name %></strong> 
