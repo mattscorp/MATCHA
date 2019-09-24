@@ -276,13 +276,37 @@ function add_user(info) {
 }
 module.exports.add_user = add_user;
 
+//Fonction de verification des infos entrees lors de la premiere connection et lors d un changement sur profil
+function verif_add_infos(info){
+  if(info.gender !== "Homme" && info.gender !== "Femme" && info.gender !== "Autre"){
+    console.log("Mauvais input tester : " + info.gender);
+    return(1);
+  }
+  else if (info.orientation !== "Hommes" && info.orientation !== "Femmes" && info.orientation !== "Bi" && info.orientation != "Autre"){
+    console.log("Mauvais input tester : " + info.orientation);
+    return(2);
+  }
+  else if (info.geo_consent !== "Oui" && info.geo_consent !== "Non"){
+    console.log("Mauvais input tester : " + info.geo_consent);
+    return(3);
+  }
+  else{
+    return(0);
+  }
+}
+
+
 // Fonction pour ajouter les infos d'un utilisateur lors de sa première connection
 function add_infos(info, login) {
   let sql = "UPDATE users SET bio = ?, age = ?, gender = ?, orientation = ?, geo_consent = ? WHERE login = ?";
   let values = [info.bio, info.age, info.gender, info.orientation, info.geo_consent, login];
-  con.query(sql, values, function (err, result) {  
-  	if (err) throw err;  
-  });  
+  if(verif_add_infos(info) == 0){
+    con.query(sql, values, function (err, result) {  
+    	if (err) throw err;
+    });
+  }
+  else
+    console.log('User: ' + login + ' ESSAI DE POURRIR LA BDD');
 }
 module.exports.add_infos = add_infos;
 
@@ -290,9 +314,13 @@ module.exports.add_infos = add_infos;
 function modif_infos_perso(info, login) {
   let sql = "UPDATE users SET login = ?, first_name = ?, last_name = ?, email = ?, age = ?, gender = ?, orientation = ?, bio = ?, geo_consent = ? WHERE login = ?"; 
   let values = [info.login, info.first_name, info.last_name, info.email, info.age, info.gender, info.orientation, info.bio, info.geoloc, login];
-  con.query(sql, values, function (err, result) {  
-    if (err) throw err;  
-  });  
+  if(verif_add_infos(info) == 0){
+    con.query(sql, values, function (err, result) {  
+      if (err) throw err;  
+    });  
+  }
+  else
+    console.log('User: ' + login + ' ESSAI DE POURRIR LA BDD');
 }
 module.exports.modif_infos_perso = modif_infos_perso;
 
