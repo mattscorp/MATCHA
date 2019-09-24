@@ -18,6 +18,13 @@ let con = db_connect.con;
 
 const topic_exists = async function(topic) {
   return new Promise((resolve, reject) => {
+     let iChars = "~`!#$%^&*+=-[]\\';,/{}|\":<>?";
+  let count = 0;
+  for (var i = 0; i < topic.length; i++) {
+    if (iChars.indexOf(topic.charAt(i)) != -1)
+       count++;
+  }
+  if (count == 0) {
     let sql = "SELECT * FROM interests WHERE topic = ?";
     con.query(sql, [topic], function(err, result) {
       if (err)
@@ -27,6 +34,7 @@ const topic_exists = async function(topic) {
       else
         resolve(1);
     })
+  }
   });
 }
 module.exports.topic_exists = topic_exists;
@@ -60,12 +68,20 @@ const recup_all_interests_swipe = async function() {
 module.exports.recup_all_interests_swipe = recup_all_interests_swipe;
 
 const add_topic = function(topic) {
-  let sql = "INSERT INTO interests (topic) VALUES ?";
-  let values = [[topic]];
-  con.query(sql, [values], function(err, result) {
-    if (err)
-      throw err;
-  });
+  let iChars = "~`!#$%^&*+=-[]\\';,/{}|\":<>?";
+  let count = 0;
+  for (var i = 0; i < topic.length; i++) {
+    if (iChars.indexOf(topic.charAt(i)) != -1)
+       count++;
+  }
+  if (count == 0) {
+    let sql = "INSERT INTO interests (topic) VALUES ?";
+    let values = [[topic]];
+    con.query(sql, [values], function(err, result) {
+      if (err)
+        throw err;
+    });
+   }
 }
 module.exports.add_topic = add_topic;
 
@@ -122,7 +138,7 @@ module.exports.add_topic_user = add_topic_user;
 const delete_interest = function(topic, user_ID) {
   // On passe de 0 a 1 sur la table interests
   let sql = "UPDATE interests SET `" + user_ID + "` = 0 WHERE `topic` = ?";
-  let values = [topic];
+  let values = [[ent.encode(topic)];
   con.query(sql, values, function(err, result) {
     if (err)
       throw err;

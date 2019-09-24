@@ -44,6 +44,7 @@ router.get('/', async function (req, res) {
     	let interests_parse = JSON.parse(await user.recup_interests(info_parse[0].user_ID));
     	let new_notifications = await notifications.notifications_number(info_parse[0].user_ID);
     	let all_interests_parse = JSON.parse(await interests.recup_all_interests(info_parse[0].user_ID));
+    	let all_interests_parse = JSON.parse(await interests.recup_all_interests(info_parse[0].user_ID));
     	res.render('account', {info: info_parse[0], interests: interests_parse, new_notifications: new_notifications, all_interests: all_interests_parse});
     }
   } else {
