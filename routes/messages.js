@@ -88,15 +88,18 @@ router.get('/see_messages', async function(req, res) {
         if (block_me_profiles.includes(info_messaged_parse[0].user_ID) || block_profiles.includes(info_messaged_parse[0].user_ID) || (!(like_profiles.includes(info_messaged_parse[0].user_ID) && like_me_profiles.includes(info_messaged_parse[0].user_ID))))
             res.redirect('/messages');
         else {
+        let status = await user.is_connected(info_messaged_parse[0].login);
         // Messages entre les deux
     	let messages_parse = JSON.parse(await messages.messages(req.query.messaging_ID, req.query.messaged_ID));
         let new_notifications = await notifications.notifications_number(info_parse[0].user_ID);
     	res.render('see_messages', {messaging_first_name: info_parse[0].first_name,
+                                    login: info_parse[0].login,
                                     messaging_profile_picture: info_parse[0].profile_picture,
 									messaging_ID: req.query.messaging_ID,
 									messages: messages_parse,
 									infos_messaged: info_messaged_parse[0],
-                                    new_notifications: new_notifications
+                                    new_notifications: new_notifications,
+                                    status: status
 									});
         }
 	}

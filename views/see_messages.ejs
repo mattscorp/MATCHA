@@ -21,8 +21,13 @@
             </div>
             <div class="card-deck">
                 <div class="card carte mx-auto">
-                    <div class="card-header">
-                        <strong>Messages de <%= infos_messaged.first_name %></strong>
+                    <div id="connected" class="card-header">
+                        <p><strong>Messages de <%= infos_messaged.first_name %></strong></p>
+                        <% if (status == 1) { %>
+                            <p class="text-success"><%= infos_messaged.first_name %> est connecté</p>
+                        <% } else { %>
+                            <p class="text-danger"><%= infos_messaged.first_name %> est déconnecté</p>
+                        <% } %>
                     </div>
                     <div class="carte_image">
                         <img class="card-img-top carte_image" src="<%= infos_messaged.profile_picture %>" title="Profile de <%= infos_messaged.login %>">
@@ -75,8 +80,27 @@
         function updateDiv() { 
             $( "#here" ).load(window.location.href + " #here" );
         }
+    </script>
+    <script type="text/javascript">
+        setInterval('updateDiv2()', 3000);
         function updateDiv2() { 
             $( "#0" ).load(window.location.href + " #0" );
         }
+    </script>
+    <script type="text/javascript">
+        setInterval('updateDiv3()', 3000);
+        function updateDiv3() { 
+            $( "#connected" ).load(window.location.href + " #connected" );
+        }
+    </script>
+    <script type="text/javascript">
+    window.onbeforeunload = function(e) {
+        $.post('onbeforeunload', {user_login:'<%= login %>'});
+    };
+    </script>
+    <script type="text/javascript">
+    window.onload = function(e) {
+        $.post('onload', {user_login:'<%= login %>'});
+    };
     </script>
 </html>

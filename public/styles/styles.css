@@ -30,6 +30,20 @@ body {
   text-align: center;
 }
 
+.bg-medium {
+  background-color: rgba(0,0,100,0.1);
+}
+
+.fa-eraser {
+  font-size:24px;
+  background-color: rgba(0,0,0,0);
+  border:none;
+}
+
+.fa-eraser:hover {
+  background-color: rgba(0,0,0,0.15);
+}
+
 .connect_background {
   background: url('/resources/wallpaper2.jpg') no-repeat center center fixed;
   -webkit-background-size: cover;

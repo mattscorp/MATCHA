@@ -311,6 +311,16 @@ router.post('/change_infos', async function(req, res) {
 	}
 });
 
+router.post('/onload', function(req, res) {
+	user.connected(req.body.user_login);
+	console.log(req.body.user_login + 'est connecte');
+});
+
+router.post('/onbeforeunload', function(req, res) {
+	user.not_connected(req.body.user_login);
+	console.log(req.body.user_login + 'est deconnecte');
+});
+
 // Suppression d'une image
 router.post('/delete_image', async function(req, res) {
 	if (req.session.login && req.session.login != '')
@@ -321,12 +331,12 @@ router.post('/delete_image', async function(req, res) {
 // Ajout d'un nouveau centre d'intérêt
 router.post('/new_topic', async function(req, res) {
 	if (req.session.login && req.session.login != '') {
-		var topic_exists = await interests.topic_exists(req.body.new_topic);
-		var info_user = await user.recup_info(req.session.login);
-		var info_parse = JSON.parse(info_user);
+		let topic_exists = await interests.topic_exists(req.body.submit.split('#')[1]);
+		let info_user = await user.recup_info(req.session.login);
+		let info_parse = JSON.parse(info_user);
 		if (topic_exists == 0)
-			interests.add_topic(req.body.new_topic);
-		interests.add_topic_user(req.body.new_topic, info_parse[0].user_ID);
+			interests.add_topic(req.body.submit.split('#')[1]);
+		interests.add_topic_user(req.body.submit.split('#')[1], info_parse[0].user_ID);
 	}
 	res.redirect('/');
 });

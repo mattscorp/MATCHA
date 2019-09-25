@@ -44,4 +44,14 @@
             $( "#0" ).load(window.location.href + " #0" );
         }
     </script>
+    <script type="text/javascript">
+    window.onbeforeunload = function(e) {
+        $.post('onbeforeunload', {user_login:'<%= infos.login %>'});
+    };
+    </script>
+    <script type="text/javascript">
+    window.onload = function(e) {
+        $.post('onload', {user_login:'<%= infos.login %>'});
+    };
+    </script>
 </html>

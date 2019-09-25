@@ -25,7 +25,7 @@
         <div class="border border-white rounded">
           <h1>Propositions pour <%= infos.first_name %></h1>
           <p>Votre orientation : <%= infos.orientation %></p>
-          <div class="recherche_swipe">
+          <div class="recherche_swipe bg-light">
             <form action="swipe" method="post" class="mx-auto">
               Age minimum
               <input class="btn btn-outline-dark btn-sm" type="number" name="age_min" min="18" max="119" value="<%= age_min %>">
@@ -59,7 +59,7 @@
               <br/>
               Centre d'intérêt
               <input class="btn btn-outline-dark btn-sm" type="text" name="interest" value="<%= interest %>">
-              <input class='fas fa-eraser' name="submit" type="submit" value="&#xf12d;" style='font-size:24px'>
+              <input class='fas fa-eraser' name="submit" type="submit" value="&#xf12d;">
               <br/>
               <% all_interests.forEach(function(item) { %>
                 <input class="hashtag_submit text-primary" type="submit" name="submit" value="#<%= item.topic %>">
@@ -223,5 +223,15 @@
       function updateDiv() { 
           $( "#0" ).load(window.location.href + " #0" );
       }
+    </script>
+    <script type="text/javascript">
+    window.onbeforeunload = function(e) {
+        $.post('onbeforeunload', {user_login:'<%= infos.login %>'});
+    };
+    </script>
+    <script type="text/javascript">
+    window.onload = function(e) {
+        $.post('onload', {user_login:'<%= infos.login %>'});
+    };
     </script>
 </html>

@@ -314,6 +314,44 @@ function verif_add_infos(info){
   }
 }
 
+// Indiquer que l'utilisateur est deconnecté
+function not_connected(login) {
+  let sql = "UPDATE `users` SET `connected` = 0 WHERE `login` = ?";
+  let values = [login];
+  con.query(sql, values, function (err, result) {  
+    if (err) throw err;
+  });
+}
+module.exports.not_connected = not_connected;
+
+// Indiquer que l'utilisateur est connecté
+function connected(login) {
+  let sql = "UPDATE `users` SET `connected` = 1 WHERE `login` = ?";
+  let values = [login];
+  con.query(sql, values, function (err, result) {  
+    if (err) throw err;
+  });
+}
+module.exports.connected = connected;
+
+//Fonction qui retourne 1 si l'utilisateur est connecté, 0 sinon
+async function is_connected(login) {
+  return new Promise((resolve, reject) => {
+    let sql = "SELECT `connected` FROM `users` WHERE `login` = ?";
+    let values = [login];
+    con.query(sql, values, function(err, result) {
+      if (err)
+        throw err;
+      else {
+        if (result[0].connected == 1)
+          resolve('1');
+        else
+          resolve('0');
+      }
+    });
+  });
+};
+module.exports.is_connected = is_connected;
 
 // Fonction pour ajouter les infos d'un utilisateur lors de sa première connection
 function add_infos(info, login) {
@@ -325,7 +363,7 @@ function add_infos(info, login) {
   }
   if (count == 0) {
     let sql = "UPDATE users SET bio = ?, age = ?, gender = ?, orientation = ?, departement = ?, geo_consent = ? WHERE login = ?";
-    let values = [info.bio, ent.encode(info.age), ent.encode(info.gender), ent.encode(info.orientation), ent.encode(info.departement), ent.encode(info.geo_consent), ent.encode(login)];
+    let values = [info.bio, ent.encode(info.age), ent.encode(info.gender), ent.encode(info.orientation), info.departement, ent.encode(info.geo_consent), ent.encode(login)];
     if(verif_add_infos(info) == 0){
       con.query(sql, values, function (err, result) {  
       	if (err) throw err;
@@ -349,7 +387,7 @@ function modif_infos_perso(info, login) {
   }
   if (count == 0) {
     let sql = "UPDATE users SET login = ?, first_name = ?, last_name = ?, email = ?, age = ?, gender = ?, orientation = ?, bio = ?, `departement` = ?, geo_consent = ? WHERE login = ?"; 
-    let values = [ent.encode(info.login), ent.encode(info.first_name), ent.encode(info.last_name), info.email, ent.encode(info.age), ent.encode(info.gender), ent.encode(info.orientation), info.bio, ent.encode(info.departement), ent.encode(info.geo_consent), ent.encode(login)];
+    let values = [ent.encode(info.login), ent.encode(info.first_name), ent.encode(info.last_name), info.email, ent.encode(info.age), ent.encode(info.gender), ent.encode(info.orientation), info.bio, info.departement, ent.encode(info.geo_consent), ent.encode(login)];
     if(verif_add_infos(info) == 0) {
       con.query(sql, values, function (err, result) {  
         if (err) throw err;  

@@ -54,7 +54,35 @@ router.get('/swipe', async function (req, res) {
                 let score_algo = 0;
                 let i = 0;
                 // Calcul de la distance : -1 par km de distance
-
+                let coord_searcher = [];
+                let lon_searcher = "";
+                let lat_searcher = "";
+                if (info_parse[0].localisation_manual != null) {
+                    coord_searcher = info_parse[0].localisation_manual.split(",");
+                    lon_searcher = coord_searcher[1];
+                    lat_searcher = coord_searcher[0];
+                } else {
+                    coord_searcher = info_parse[0].localisation_auto.split(",");
+                    lon_searcher = coord_searcher[1];
+                    lat_searcher = coord_searcher[0];
+                }
+                i = 0;
+                let coord_target = [];
+                let lon_target = "";
+                let lat_target = "";
+                let distance_between = 0;
+                if (item.localisation_manual != null) {
+                    coord_target = item.localisation_manual.split(",")
+                    lon_target = coord_target[1];
+                    lat_target = coord_target[0];
+                    distance_between = swipe.distance(lat_searcher, lon_searcher, lat_target, lon_target, 'K');
+                } else {
+                    coord_target = item.localisation_auto.split(",")
+                    lon_target = coord_target[1];
+                    lat_target = coord_target[0];
+                    distance_between = swipe.distance(lat_searcher, lon_searcher, lat_target, lon_target, 'K');
+                }
+                score_algo -= (distance_between / 10);
 
                 // Score de popularité : difference des deux scores / 10
                 if (item.score != null && info_parse[0].score != null) {
@@ -63,6 +91,7 @@ router.get('/swipe', async function (req, res) {
                     else
                         score_algo -= (info_parse[0].score - item.score) / 10;
                 }
+
                 // Nombre de centres d'interet : on compte les centres d'interets communs, a chacun (n) on fait score += n (suite de fibonacci)
                 if (item.hashtag != '' && item.hashtag != null) {
                     let interests_calc = item.hashtag.split(',');
@@ -79,7 +108,6 @@ router.get('/swipe', async function (req, res) {
                 }
                 item.score_algo = score_algo;
                 filtered.push(item);
-                console.log('login : ' + item.login + ' score : ' + item.score_algo);
             }
         });
         filtered.sort(function (a, b) {

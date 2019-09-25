@@ -14,6 +14,8 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
         <!-- Latest compiled JavaScript -->
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+        <!-- Eraser icon -->
+        <script src='https://kit.fontawesome.com/a076d05399.js'></script>
     </head>
  
     <body>
@@ -107,25 +109,26 @@
                 <h2>Centres d'intérêts</h2>
                 <div>
                     <p>Tes centres d'intérêts :</p>
+                    <div class="d-inline-flex p-3 text-primary">
                     <% interests.forEach(function(elem) { %>
-                        <form action="delete_interest" method="post">
-                            <p>#<%= elem.topic %></p>
-                            <input type="hidden" name="topic" value="<%= elem.topic %>">
-                            <input class="modify_button" type="image" src="/resources/delete.jpeg" title="submit">
-                        </form>
+                        <div class="p-2">
+                            <form action="delete_interest" method="post" class=".form-inline">
+                                #<%= elem.topic %>
+                                <input type="hidden" name="topic" value="<%= elem.topic %>">
+                                <input class='fas fa-eraser' type="submit" value="&#xf12d;" title="Effacer">
+                            </form>
+                        </div>
                     <% }); %>
+                </div>
                     <form action="new_topic" method="post">
                         <input required type="text" name="new_topic">
                         <input class="btn btn-dark" type="submit" name="submit" value="Ajouter un topic">
                     </form>
-                    <p>
+                    <form action="new_topic" method="post">
                     <% all_interests.forEach(function(elem) { %>
-                        <form action="new_topic" method="post">
-                            <input type="hidden" name="new_topic" value="<%= elem.topic %>">
-                            <input class="hashtag_submit" type="submit" name="submit" value="#<%= elem.topic %>">
-                        </form>
+                        <input class="hashtag_submit text-primary" type="submit" name="submit" value="#<%= elem.topic %>" title="Ajouter">    
                     <% }); %>
-                </p>
+                    </form>
                 </div>
             </div>
         
@@ -262,5 +265,14 @@
             $( "#0" ).load(window.location.href + " #0" );
         }
     </script>
-
+    <script type="text/javascript">
+    window.onbeforeunload = function(e) {
+        $.post('onbeforeunload', {user_login:'<%= info.login %>'});
+    };
+    </script>
+    <script type="text/javascript">
+    window.onload = function(e) {
+        $.post('onload', {user_login:'<%= info.login %>'});
+    };
+    </script>
 </html>

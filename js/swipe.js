@@ -87,6 +87,7 @@ function distance(lat1, lon1, lat2, lon2, unit) {
 		return dist;
 	}
 }
+module.exports.distance = distance;
 
 
 // Renvoie la liste des profiles à proposer à l'utilisateur
@@ -110,13 +111,13 @@ const get_profiles_research = async function(user_ID, age_min, age_max, score, o
 			loc[0] = parseInt(loc[0]);
 			if(info_parse[0].localisation_manual != null)
 				{
-					let coord_searcher = info_parse[0].localisation_manual.split(",")
+					let coord_searcher = info_parse[0].localisation_manual.split(",");
 					var lon_searcher = coord_searcher[1];
 					var lat_searcher = coord_searcher[0];
 				}
 				else
 				{
-					let coord_searcher = info_parse[0].localisation_auto.split(",")
+					let coord_searcher = info_parse[0].localisation_auto.split(",");
 					var lon_searcher = coord_searcher[1];
 					var lat_searcher = coord_searcher[0];
 				}

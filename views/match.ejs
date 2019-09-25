@@ -24,7 +24,11 @@
             <div id="match" class="collapse">
                 <div class="card-deck">
                     <% profiles.forEach(function(item) { 
-                      if (like.includes(item.user_ID) && like_me.includes(item.user_ID) && !block_me.includes(item.user_ID) && !block.includes(item.user_ID)) { %>
+                      if (like.includes(item.user_ID) && like_me.includes(item.user_ID) && !block_me.includes(item.user_ID) && !block.includes(item.user_ID)) { 
+                        let tab = [];
+                        if (item.hashtag != '' && item.hashtag != null && item.hashtag != 'NULL') {
+                          tab = item.hashtag.split(',');
+                        } %>
                     <div class="card carte mx-auto">
                         <div class="card-header">
                             <strong><%= item.first_name %></strong>
@@ -57,7 +61,10 @@
                                       <p class="mx-auto">Intéressé par : <%= item.orientation %></p>
                                       <p class="mx-auto">Bio : <%= item.bio %></p>
                                       <p class="mx-auto">Score de popularité : <% if (item.score == null) { %>Too Fresh<% } else { %><%= item.score %>/100<% } %></p>
-                                     
+                                      <p class="mx-auto">Département : <%= item.departement %></p>
+                                      <% if (item.hashtag != '' && item.hashtag != null && item.hashtag != 'NULL') { %>
+                                      <p class="mx-auto">Centres d'intérêt : <% item.hashtag.split(',').forEach(function(elem) { %>#<%= elem %> <% }) %></p>
+                                      <% } %>
                                     <div id="demo" class="carousel slide mx-auto" data-ride="carousel">
                                       <!-- Indicators -->
                                       <ul class="carousel-indicators">
@@ -139,7 +146,11 @@
             <div id="liker" class="collapse">
                 <div class="card-deck">
                   <% profiles.forEach(function(item) { 
-                      if (like.includes(item.user_ID) && !block_me.includes(item.user_ID) && !block.includes(item.user_ID)) { %>
+                      if (like.includes(item.user_ID) && !block_me.includes(item.user_ID) && !block.includes(item.user_ID)) { 
+                        let tab = [];
+                        if (item.hashtag != '' && item.hashtag != null && item.hashtag != 'NULL') {
+                          tab = item.hashtag.split(',');
+                        } %>
                     <div class="card carte mx-auto">
                     <div class="card-header">
                         <strong><%= item.first_name %></strong>
@@ -172,7 +183,10 @@
                                   <p class="mx-auto">Intéressé par : <%= item.orientation %></p>
                                   <p class="mx-auto">Bio : <%= item.bio %></p>
                                   <p class="mx-auto">Score de popularité : <% if (item.score == null) { %>Too Fresh<% } else { %><%= item.score %>/100<% } %></p>
-                                 
+                                  <p class="mx-auto">Département : <%= item.departement %></p>
+                                  <% if (item.hashtag != '' && item.hashtag != null && item.hashtag != 'NULL') { %>
+                                  <p class="mx-auto">Centres d'intérêt : <% item.hashtag.split(',').forEach(function(elem) { %>#<%= elem %> <% }) %></p>
+                                  <% } %>                                 
                                 <div id="demo" class="carousel slide mx-auto" data-ride="carousel">
                                   <!-- Indicators -->
                                   <ul class="carousel-indicators">
@@ -254,7 +268,11 @@
             <div id="liked" class="collapse">
                 <div class="card-deck">
                   <% profiles.forEach(function(item) { 
-                      if (like_me.includes(item.user_ID) && !block_me.includes(item.user_ID) && !block.includes(item.user_ID)) { %>
+                      if (like_me.includes(item.user_ID) && !block_me.includes(item.user_ID) && !block.includes(item.user_ID)) { 
+                        let tab = [];
+                        if (item.hashtag != '' && item.hashtag != null && item.hashtag != 'NULL') {
+                          tab = item.hashtag.split(',');
+                        } %>
                     <div class="card carte mx-auto">
                         <div class="card-header">
                             <strong><%= item.first_name %></strong>
@@ -287,7 +305,10 @@
                                   <p class="mx-auto">Intéressé par : <%= item.orientation %></p>
                                   <p class="mx-auto">Bio : <%= item.bio %></p>
                                   <p class="mx-auto">Score de popularité : <% if (item.score == null) { %>Too Fresh<% } else { %><%= item.score %>/100<% } %></p>
-                                 
+                                  <p class="mx-auto">Département : <%= item.departement %></p>
+                                  <% if (item.hashtag != '' && item.hashtag != null && item.hashtag != 'NULL') { %>
+                                  <p class="mx-auto">Centres d'intérêt : <% item.hashtag.split(',').forEach(function(elem) { %>#<%= elem %> <% }) %></p>
+                                  <% } %>
                                 <div id="demo" class="carousel slide mx-auto" data-ride="carousel">
                                   <!-- Indicators -->
                                   <ul class="carousel-indicators">
@@ -368,7 +389,11 @@
             <div id="blocked" class="collapse">
                 <div class="card-deck">
                   <% profiles.forEach(function(item) { 
-                      if (block.includes(item.user_ID) && !block_me.includes(item.user_ID)) { %>
+                      if (block.includes(item.user_ID) && !block_me.includes(item.user_ID)) { 
+                        let tab = [];
+                        if (item.hashtag != '' && item.hashtag != null && item.hashtag != 'NULL') {
+                          tab = item.hashtag.split(',');
+                        } %>
                     <div class="card carte mx-auto">
                     <div class="card-header">
                         <strong><%= item.first_name %></strong>
@@ -401,7 +426,10 @@
                                   <p class="mx-auto">Intéressé par : <%= item.orientation %></p>
                                   <p class="mx-auto">Bio : <%= item.bio %></p>
                                   <p class="mx-auto">Score de popularité : <% if (item.score == null) { %>Too Fresh<% } else { %><%= item.score %>/100<% } %></p>
-                                 
+                                  <p class="mx-auto">Département : <%= item.departement %></p>
+                                  <% if (item.hashtag != '' && item.hashtag != null && item.hashtag != 'NULL') { %>
+                                  <p class="mx-auto">Centres d'intérêt : <% item.hashtag.split(',').forEach(function(elem) { %>#<%= elem %> <% }) %></p>
+                                  <% } %>
                                 <div id="demo" class="carousel slide mx-auto" data-ride="carousel">
                                   <!-- Indicators -->
                                   <ul class="carousel-indicators">
@@ -489,5 +517,15 @@
       function myFunction(login, visited_ID) {
         $.post('visit', {visited_ID: visited_ID});
       }
+    </script>
+    <script type="text/javascript">
+    window.onbeforeunload = function(e) {
+        $.post('onbeforeunload', {user_login:'<%= infos.login %>'});
+    };
+    </script>
+    <script type="text/javascript">
+    window.onload = function(e) {
+        $.post('onload', {user_login:'<%= infos.login %>'});
+    };
     </script>
 </html>
