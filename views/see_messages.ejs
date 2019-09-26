@@ -24,9 +24,9 @@
                     <div id="connected" class="card-header">
                         <p><strong>Messages de <%= infos_messaged.first_name %></strong></p>
                         <% if (status == 1) { %>
-                            <p class="text-success"><%= infos_messaged.first_name %> est connecté</p>
+                            <p class="small font-italic text-success">En ligne</p>
                         <% } else { %>
-                            <p class="text-danger"><%= infos_messaged.first_name %> est déconnecté</p>
+                            <p class="small font-italic text-danger">Hors ligne</p>
                         <% } %>
                     </div>
                     <div class="carte_image">

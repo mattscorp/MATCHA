@@ -57,7 +57,7 @@ router.get('/swipe', async function (req, res) {
                 let coord_searcher = [];
                 let lon_searcher = "";
                 let lat_searcher = "";
-                if (info_parse[0].localisation_manual != null) {
+                if (info_parse[0].localisation_manual != null && info_parse[0].localisation_manual != '' && info_parse[0].localisation_manual != 'null' && info_parse[0].geo_consent == 'Oui') {
                     coord_searcher = info_parse[0].localisation_manual.split(",");
                     lon_searcher = coord_searcher[1];
                     lat_searcher = coord_searcher[0];
@@ -71,7 +71,7 @@ router.get('/swipe', async function (req, res) {
                 let lon_target = "";
                 let lat_target = "";
                 let distance_between = 0;
-                if (item.localisation_manual != null) {
+                if (item.localisation_manual != null && item.localisation_manual != '' && item.localisation_manual != 'null' && item.geo_consent == 'Oui') {
                     coord_target = item.localisation_manual.split(",")
                     lon_target = coord_target[1];
                     lat_target = coord_target[0];
@@ -82,7 +82,10 @@ router.get('/swipe', async function (req, res) {
                     lat_target = coord_target[0];
                     distance_between = swipe.distance(lat_searcher, lon_searcher, lat_target, lon_target, 'K');
                 }
+                console.log('******************'+ item.login + '**************'); 
+                console.log(score_algo + ' before distance');
                 score_algo -= (distance_between / 10);
+                console.log(score_algo + ' after distance');
 
                 // Score de popularité : difference des deux scores / 10
                 if (item.score != null && info_parse[0].score != null) {
@@ -91,6 +94,7 @@ router.get('/swipe', async function (req, res) {
                     else
                         score_algo -= (info_parse[0].score - item.score) / 10;
                 }
+                console.log(score_algo + ' after score');
 
                 // Nombre de centres d'interet : on compte les centres d'interets communs, a chacun (n) on fait score += n (suite de fibonacci)
                 if (item.hashtag != '' && item.hashtag != null) {
@@ -106,6 +110,7 @@ router.get('/swipe', async function (req, res) {
                         });
                     }
                 }
+                console.log(score_algo + ' after topics');
                 item.score_algo = score_algo;
                 filtered.push(item);
             }

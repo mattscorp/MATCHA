@@ -313,12 +313,10 @@ router.post('/change_infos', async function(req, res) {
 
 router.post('/onload', function(req, res) {
 	user.connected(req.body.user_login);
-	console.log(req.body.user_login + 'est connecte');
 });
 
 router.post('/onbeforeunload', function(req, res) {
 	user.not_connected(req.body.user_login);
-	console.log(req.body.user_login + 'est deconnecte');
 });
 
 // Suppression d'une image

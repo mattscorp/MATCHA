@@ -105,46 +105,39 @@ const get_profiles_research = async function(user_ID, age_min, age_max, score, o
 		{
 			let loc = localisation.split(" ");
 			if(loc[0] == '')
-			{
 				resolve(JSON.stringify(result));
-			}
 			loc[0] = parseInt(loc[0]);
-			if(info_parse[0].localisation_manual != null)
-				{
-					let coord_searcher = info_parse[0].localisation_manual.split(",");
-					var lon_searcher = coord_searcher[1];
-					var lat_searcher = coord_searcher[0];
+			if(info_parse[0].localisation_manual != null && info_parse[0].localisation_manual != '' && info_parse[0].localisation_manual != 'null' && info_parse[0].geo_consent == 'Oui')
+			{
+				let coord_searcher = info_parse[0].localisation_manual.split(",");
+				var lon_searcher = coord_searcher[1];
+				var lat_searcher = coord_searcher[0];
+			}
+			else
+			{
+				let coord_searcher = info_parse[0].localisation_auto.split(",");
+				var lon_searcher = coord_searcher[1];
+				var lat_searcher = coord_searcher[0];
+			}
+			let i = 0;
+			while(result[i]) {
+				if(result[i].localisation_manual != null){ 
+					let coord_target = result[i].localisation_manual.split(",")
+					let lon_target = coord_target[1];
+					let lat_target = coord_target[0];
+					let distance_between = distance(lat_searcher, lon_searcher, lat_target, lon_target, 'K');
+					if(distance_between >= loc[0])
+						delete result[i];
+				} else {
+					let coord_target = result[i].localisation_auto.split(",")
+					let lon_target = coord_target[1];
+					let lat_target = coord_target[0];
+					let distance_between = distance(lat_searcher, lon_searcher, lat_target, lon_target, 'K');
+					if(distance_between >= loc[0])
+						delete result[i];
 				}
-				else
-				{
-					let coord_searcher = info_parse[0].localisation_auto.split(",");
-					var lon_searcher = coord_searcher[1];
-					var lat_searcher = coord_searcher[0];
-				}
-				let i = 0;
-					while(result[i])
-					{
-						if(result[i].localisation_manual != null){
-							let coord_target = result[i].localisation_manual.split(",")
-							let lon_target = coord_target[1];
-							let lat_target = coord_target[0];
-							let distance_between = distance(lat_searcher, lon_searcher, lat_target, lon_target, 'K');
-							if(distance_between >= loc[0]){
-								delete result[i];
-							}
-					}
-						else 
-						{
-							let coord_target = result[i].localisation_auto.split(",")
-							let lon_target = coord_target[1];
-							let lat_target = coord_target[0];
-							let distance_between = distance(lat_searcher, lon_searcher, lat_target, lon_target, 'K');
-							if(distance_between >= loc[0]){
-								delete result[i];
-							}
-						}
-						i++;
-					}
+				i++;
+			}
 			var filtered = result.filter(function (el) {
 			  return el != null;
 			});

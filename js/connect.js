@@ -47,7 +47,6 @@ module.exports.user_connect = user_connect;
 
 // Fonction pour verifier qu'il n'y a pas de char speciaux 
 const user_special = async function(user) {
-  console.log(user);
   return new Promise((resolve, reject) => {
     let iChars = "~`!#$%^&*+=-[]\\';,/{}|\":<>?";
     let count = 0;
