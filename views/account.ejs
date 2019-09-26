@@ -26,6 +26,12 @@
             <div class="border border-white rounded">
                 <h1>Infos de <strong class="first_letter"><%= info.first_name %></strong></h1>
             </div>
+             <% if (hashtag_nb == 'false') { %>
+                <div class="alert alert-danger alert-dismissible fade show">
+                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                    Tu as déjà atteint la limite de 7 centres d'intérêts ! Tu dois en supprimer un pour en ajouter un nouveau.
+                </div>
+            <% } %>
             <form action="change_password" method="get">
                 <input class="btn btn-dark" type="submit" value="Changer mon mot de passe">
             </form>
@@ -131,7 +137,6 @@
                     </form>
                 </div>
             </div>
-        
 
             <h2>Photos</h2>
             <div>

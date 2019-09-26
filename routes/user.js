@@ -32,24 +32,39 @@ const router = express.Router();
 
 // Chargement de la page index.html
 router.get('/', async function (req, res) {
-  if (req.session.login && req.session.login != '') {
-  	let info_parse = JSON.parse(await user.recup_info(req.session.login));
-    if (info_parse[0].email_confirmation == '' || info_parse[0].email_confirmation != 1) {
-     	res.render('confirm_your_email');
-    } else if (info_parse[0].bio == null || info_parse[0].age == null || info_parse[0].gender == null || info_parse[0].orientation == null) {
-    	res.render('info_user', {info: info_parse[0]});
-    } else if (info_parse[0].profile_picture == null) {
-    	res.render('profile_picture', {info:info_parse[0]});
-    } else {
-    	let interests_parse = JSON.parse(await user.recup_interests(info_parse[0].user_ID));
-    	let new_notifications = await notifications.notifications_number(info_parse[0].user_ID);
-    	let all_interests_parse = JSON.parse(await interests.recup_all_interests(info_parse[0].user_ID));
-    	res.render('account', {info: info_parse[0], interests: interests_parse, new_notifications: new_notifications, all_interests: all_interests_parse});
-    }
-  } else {
-    res.render('connect', {user: 'true', password: 'true', creation: 'true'});
+ 	if (req.session.login && req.session.login != '') {
+  		const info_parse = JSON.parse(await user.recup_info(req.session.login));
+	  	if (info_parse[0].email_confirmation == 2) {
+	  		res.render('banned', {user_ID: info_parse[0].user_ID});
+	  	} else if (info_parse[0].email_confirmation == '' || info_parse[0].email_confirmation != 1) {
+	     	res.render('confirm_your_email');
+	    } else if (info_parse[0].bio == null || info_parse[0].age == null || info_parse[0].gender == null || info_parse[0].orientation == null) {
+	    	res.render('info_user', {info: info_parse[0]});
+	    } else if (info_parse[0].profile_picture == null) {
+	    	res.render('profile_picture', {info:info_parse[0]});
+	    } else {
+	    	const interests_parse = JSON.parse(await user.recup_interests(info_parse[0].user_ID));
+	    	const new_notifications = await notifications.notifications_number(info_parse[0].user_ID);
+	    	const all_interests_parse = JSON.parse(await interests.recup_all_interests(info_parse[0].user_ID));
+	    	const hashtag_nb = info_parse[0].hashtag.split(',').length;
+	    	res.render('account', {hashtag_nb: 'true', info: info_parse[0], interests: interests_parse, new_notifications: new_notifications, all_interests: all_interests_parse});
+	    }
+	} else {
+	    res.render('connect', {user: 'true', password: 'true', creation: 'true'});
    }
 });
+
+// Deconnection du user banni
+async function disconnect(req) {
+	return new Promise((resolve, reject) => {
+		req.session.login = '';
+		resolve(1);
+	})
+}
+router.post('/disconnect', async function(req, res) {
+	await disconnect(req);
+	res.redirect('/');
+})
 
 // Géolocalisation
 router.post('/geo', async function(req, res) {
@@ -332,11 +347,20 @@ router.post('/new_topic', async function(req, res) {
 		let topic_exists = await interests.topic_exists(req.body.submit.split('#')[1]);
 		let info_user = await user.recup_info(req.session.login);
 		let info_parse = JSON.parse(info_user);
-		if (topic_exists == 0)
-			interests.add_topic(req.body.submit.split('#')[1]);
-		interests.add_topic_user(req.body.submit.split('#')[1], info_parse[0].user_ID);
-	}
-	res.redirect('/');
+		const hashtag_nb = info_parse[0].hashtag.split(',').length;
+		if (hashtag_nb >= 7) {
+			const interests_parse = JSON.parse(await user.recup_interests(info_parse[0].user_ID));
+	    	const new_notifications = await notifications.notifications_number(info_parse[0].user_ID);
+	    	const all_interests_parse = JSON.parse(await interests.recup_all_interests(info_parse[0].user_ID));
+	    	res.render('account', {hashtag_nb: 'false', info: info_parse[0], interests: interests_parse, new_notifications: new_notifications, all_interests: all_interests_parse});
+		} else {
+			if (topic_exists == 0)
+				interests.add_topic(req.body.submit.split('#')[1]);
+			interests.add_topic_user(req.body.submit.split('#')[1], info_parse[0].user_ID);
+			res.redirect('/');
+		}
+	} else
+		res.redirect('/');
 });
 
 // Suppression d'un centre d'intérêt

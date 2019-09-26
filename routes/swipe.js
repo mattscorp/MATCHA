@@ -182,6 +182,17 @@ router.post('/swipe', async function(req, res) {
     }
 })
 
+router.post('/report_fake', async function(req, res) {
+  if (!req.session.login || req.session.login == '')
+        res.redirect('/');
+    else {
+        let info_parse = JSON.parse(await user.recup_info(req.session.login));
+        if (await swipe.report_fake(info_parse[0].user_ID, req.body.fake_ID) > 3)
+            swipe.ban_fake(req.body.fake_ID);
+        res.redirect('/match');
+    }  
+})
+
 router.post('/like_profile', async function(req, res) {
     if (!req.session.login || req.session.login == '')
         res.redirect('/');

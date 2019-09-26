@@ -127,6 +127,10 @@
                                         <input class="mx-auto bg-danger" type="submit" name="submit" value="Unlike">
                                         <input class="mx-auto bg-danger" type="submit" name="submit" value="Block">
                                       </form>
+                                      <form class="mx-auto" action="report_fake" method="post">
+                                        <input type="hidden" name="fake_ID" value="<%= item.user_ID %>">
+                                        <input class="mx-auto bg-danger" type="submit" name="submit" value="Signaler un faux compte">
+                                      </form>
                                   </div>
 
                                   <!-- Modal footer -->
@@ -249,6 +253,10 @@
                                       <input class="mx-auto bg-danger" type="submit" name="submit" value="Unlike">
                                       <input class="mx-auto bg-danger" type="submit" name="submit" value="Block">
                                   </form>
+                                  <form class="mx-auto" action="report_fake" method="post">
+                                    <input type="hidden" name="fake_ID" value="<%= item.user_ID %>">
+                                    <input class="mx-auto bg-danger" type="submit" name="submit" value="Signaler un faux compte">
+                                  </form>
                               </div>
 
                               <!-- Modal footer -->
@@ -370,6 +378,10 @@
                                     <input type="hidden" name="liked_ID" value="<%= item.user_ID %>">
                                     <input class="mx-auto bg-danger" type="submit" name="submit" value="Block">
                                   </form>
+                                  <form class="mx-auto" action="report_fake" method="post">
+                                    <input type="hidden" name="fake_ID" value="<%= item.user_ID %>">
+                                    <input class="mx-auto bg-danger" type="submit" name="submit" value="Signaler un faux compte">
+                                  </form>
                               </div>
 
                               <!-- Modal footer -->
@@ -490,6 +502,10 @@
                                   <form class="mx-auto" action="unlike_block" method="post">
                                     <input type="hidden" name="liked_ID" value="<%= item.user_ID %>">
                                     <input class="mx-auto bg-success" type="submit" name="submit" value="Unblock">
+                                  </form>
+                                  <form class="mx-auto" action="report_fake" method="post">
+                                    <input type="hidden" name="fake_ID" value="<%= item.user_ID %>">
+                                    <input class="mx-auto bg-danger" type="submit" name="submit" value="Signaler un faux compte">
                                   </form>
                               </div>
 

@@ -50,6 +50,44 @@ const like_only = async function(user_ID) {
 }
 module.exports.like_only = like_only;
 
+// Ajoute un report a la table report, puis renvoie le nombre de reports pour l'utilisateur
+const report_fake = async function(reporter, reported) {
+	return new Promise((resolve, reject) => {
+		let sql = "SELECT * FROM `report` WHERE `reported_ID` = ? AND `reporter_ID` = ?";
+		let values = [reported, reporter];
+		con.query(sql, values, function(err, result) {
+			if (result.length == 0) {
+				sql = "INSERT INTO `report` (`reporter_ID`, `reported_ID`, `valid_report`) VALUES ?";
+				values = [[reporter, reported, 1]];
+				con.query(sql, [values], function(err, result) {
+					if (err) throw err;
+					sql = "SELECT * FROM `report` WHERE `reported_ID` = ? AND `reporter_ID` != ?";
+					values = [reported, reporter];
+					con.query(sql, values, function(err, result) {
+						if (err) throw err;
+						else
+							resolve(result.length);
+					});
+				});
+			}
+			else
+				resolve(0);
+		});
+	});
+}
+module.exports.report_fake = report_fake;
+
+// Set email_confirmation = '2' si l'utilisateur a ete report comme fake compte 3 fois
+const ban_fake = function(fake) {
+	let sql = "UPDATE `users` SET `email_confirmation` = '2' WHERE `user_ID` = ?"
+	let values = [fake];
+	con.query(sql, values, function(err, result) {
+		if (err)
+			throw err;
+	});
+}
+module.exports.ban_fake = ban_fake;
+
 // Renvoie la liste des profiles à proposer à l'utilisateur
 const get_profiles = async function(user_ID) {
 	return new Promise((resolve, reject) => {
@@ -62,7 +100,6 @@ const get_profiles = async function(user_ID) {
 	})
 }
 module.exports.get_profiles = get_profiles;
-
 
 // Fonction qui permet de calculer la disstance entre deux coordonnees GPS
 
