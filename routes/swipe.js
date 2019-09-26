@@ -82,10 +82,7 @@ router.get('/swipe', async function (req, res) {
                     lat_target = coord_target[0];
                     distance_between = swipe.distance(lat_searcher, lon_searcher, lat_target, lon_target, 'K');
                 }
-                console.log('******************'+ item.login + '**************'); 
-                console.log(score_algo + ' before distance');
                 score_algo -= (distance_between / 10);
-                console.log(score_algo + ' after distance');
 
                 // Score de popularité : difference des deux scores / 10
                 if (item.score != null && info_parse[0].score != null) {
@@ -94,7 +91,6 @@ router.get('/swipe', async function (req, res) {
                     else
                         score_algo -= (info_parse[0].score - item.score) / 10;
                 }
-                console.log(score_algo + ' after score');
 
                 // Nombre de centres d'interet : on compte les centres d'interets communs, a chacun (n) on fait score += n (suite de fibonacci)
                 if (item.hashtag != '' && item.hashtag != null) {
@@ -110,7 +106,6 @@ router.get('/swipe', async function (req, res) {
                         });
                     }
                 }
-                console.log(score_algo + ' after topics');
                 item.score_algo = score_algo;
                 filtered.push(item);
             }
@@ -192,11 +187,13 @@ router.post('/like_profile', async function(req, res) {
         res.redirect('/');
     else {
         let info_parse = JSON.parse(await user.recup_info(req.session.login));
+        let info_parse_liked = JSON.parse(await user.recup_info(req.session.login));
         swipe.like_profile(info_parse, req.body.submit, req.body.liked_ID);
         if (req.body.submit == 'Like') {
             notifications.notification(info_parse[0], req.body.liked_ID, 'like');
             if ((await swipe.like_reverse(info_parse, req.body.liked_ID)) === true) {
                 notifications.notification(info_parse[0], req.body.liked_ID, 'match');
+                notifications.notification(info_parse_liked[0], info_parse[0].user_ID, 'match');
                 swipe.add_match(info_parse, req.body.liked_ID);
             }
         }

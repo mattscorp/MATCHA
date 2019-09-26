@@ -32,10 +32,27 @@ router.get('/notifications', async function(req, res) {
         res.redirect('/');
     else {
         let info_parse = JSON.parse(await user.recup_info(req.session.login));
+        // Profiles qui m'ont liké
+        let like_me_parse = JSON.parse(await match.like_me_info(info_parse[0].user_ID));
+        let like_me_profiles = [];
+        like_me_parse.forEach(function(item) {
+            like_me_profiles.push(item.liker_ID);
+        });
+        // Profiles qui m'ont vu mais refusé
+        let like_me_not_parse = JSON.parse(await stats.like_me_not_info(info_parse[0].user_ID));
+        let like_me_not_profiles = [];
+        like_me_not_parse.forEach(function(item) {
+            like_me_not_profiles.push(item.liker_ID);
+        });
+        // Nombre de personnes qui ont vu mon profile
+        let like_nb = like_me_profiles.length;
+        let nope_nb = like_me_not_profiles.length;
         // Ensemble des notifications de l'utilisateur
         let new_notifications = await notifications.notifications_number(info_parse[0].user_ID);
         let notifications_parse = JSON.parse(await notifications.recup_notifications(info_parse[0].user_ID));
         res.render('notifications', {user: info_parse[0],
+                                    like_nb: like_nb,
+                                    nope_nb: nope_nb,
                                     notifications: notifications_parse,
                                     new_notifications: new_notifications});
     }
@@ -50,5 +67,38 @@ router.post('/delete_notifications', async function(req, res) {
         res.redirect(backURL);
     }
 })
+/*
+router.get('/stats', async function(req, res) {
+    if (!req.session.login || req.session.login == '')
+        res.redirect('/');
+    else {
+        // Infos de l'utilisateur
+        let info_parse = JSON.parse(await user.recup_info(req.session.login));
+
+        // Profiles qui m'ont liké
+        let like_me_parse = JSON.parse(await match.like_me_info(info_parse[0].user_ID));
+        let like_me_profiles = [];
+        like_me_parse.forEach(function(item) {
+            like_me_profiles.push(item.liker_ID);
+        });
+        // Profiles qui m'ont vu mais refusé
+        let like_me_not_parse = JSON.parse(await stats.like_me_not_info(info_parse[0].user_ID));
+        let like_me_not_profiles = [];
+        like_me_not_parse.forEach(function(item) {
+            like_me_not_profiles.push(item.liker_ID);
+        });
+        // Nombre de personnes qui ont vu mon profile
+        let like_nb = like_me_profiles.length;
+        let nope_nb = like_me_not_profiles.length;
+        // Ensemble des profiles
+        let new_notifications = await notifications.notifications_number(info_parse[0].user_ID);
+        let profiles_parse = JSON.parse(await swipe.get_profiles(info_parse[0].user_ID, block_parse, like_parse));
+        res.render('stats', {infos: info_parse[0],
+                                like_nb: like_nb,
+                                nope_nb: nope_nb,
+                                new_notifications:new_notifications});
+    }
+})
+*/
 
 module.exports = router;

@@ -43,9 +43,6 @@ app.use(swipe);
 const match = require('./routes/match.js');
 app.use(match);
 
-const stats = require('./routes/stats.js');
-app.use(stats);
-
 const notifications = require('./routes/notifications.js');
 app.use(notifications);
 

@@ -16,11 +16,14 @@
     </head>
     <body>
         <div class="container-fluid">
-            <div id="0">
+            <div class="mx-auto" id="0">
             	<% include partials/nav %>
             </div>
-            <h1>Notifications de <%= user.first_name %></h1>
-            <p id="1">Tu as <%= new_notifications %> nouvelles notifications.</p>
+            <h1>Tes statistiques</h1>
+                <p class="font-italic text-dark">Nombre de likes : <strong><%= like_nb %></strong></p>
+                <p class="font-italic text-dark">Ton score de popularité : <strong><% if (nope_nb != 0) { %><%= (like_nb / (like_nb + nope_nb) * 100).toFixed(0)%><% } else { %>100<% } %>/100</strong></p>
+            <h1>Tes notifications</h1>
+            <p class="font-italic" id="1">Tu as <%= new_notifications %> nouvelles notifications.</p>
             <form action="delete_notifications" method="post">
                 <input type="hidden" name="user_ID" value="<%= user.user_ID %>">
                 <input class="btn btn-dark" type="submit" name="submit" value="Marquer les notifications commes lues">
