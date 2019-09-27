@@ -52,7 +52,13 @@ const ft = async function() {
   //while(i < 666){
   let password =  await ft_pass();
   let email_confirmation = 1;
-  let genre = 'Homme';
+  let genre = getRandomIntInclusive(0, 2);
+    if(genre == 0)
+      genre = 'Homme';
+    if(genre == 1)
+      genre = 'Femme';
+    if(genre == 2)
+      genre = 'Autre';
  
 
   let card = faker.helpers.createCard();
@@ -60,13 +66,15 @@ const ft = async function() {
   let departement = getRandomIntInclusive(1, 98);
   let age = getRandomIntInclusive(18, 120);
 
-  let orientation = getRandomIntInclusive(0, 2);
+  let orientation = getRandomIntInclusive(0, 3);
     if(orientation == 0)
       orientation = 'Bi';
     if(orientation == 1)
       orientation = 'Femmes';
     if(orientation == 2)
       orientation = 'Hommes';
+    if(orientation == 3)
+      orientation = 'Autres';
   let fullname = card.name.split(' ');
   let geo_consent = 'Oui';
   let loc = card.address.geo.lat + ',' + card.address.geo.lng;
@@ -102,10 +110,11 @@ const ft = async function() {
     }
     y++;
   }
-  
+  // On verifie qu'on a pas de char speciaux dans le login, sinon on remplace par '1'
+  let login = card.username.replace(/-|_|\.|,|'~'/gi, "1");
 
   let sql = "INSERT INTO users (email, login, first_name, last_name, password, email_confirmation, localisation_manual, localisation_auto, gender, departement, age, orientation, geo_consent, bio, hashtag) VALUES ?";
-  let values = [[card.email, card.username, fullname[0], fullname[1], password, email_confirmation, loc, loc, genre, departement, age, orientation, geo_consent, bio, hashtag_1]];
+  let values = [[card.email, login, fullname[0], fullname[1], password, email_confirmation, loc, loc, genre, departement, age, orientation, geo_consent, bio, hashtag_1]];
    con.query(sql, [values], function (err, result) {  
     if (err) throw err;  
   
@@ -137,7 +146,7 @@ const topic = async function(hashtag, login) {
 
 
 let sql_user = "SELECT user_ID FROM users WHERE login = ?"
-let val = [card.username];
+let val = [login];
 let hashtag_filtered = hashtag_1.split(',');
 con.query(sql_user, [val], function (err, result) {  
   if (err) throw err;
@@ -146,10 +155,10 @@ con.query(sql_user, [val], function (err, result) {
     if (err) throw err;
   });
   let o = 1;
-  topic(hashtag_filtered[0], card.username);
+  topic(hashtag_filtered[0], login);
   while(hashtag_filtered[o])
   {
-    topic(hashtag_filtered[o], card.username);
+    topic(hashtag_filtered[o], login);
     o++;
   }
 });  

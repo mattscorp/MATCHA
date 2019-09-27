@@ -46,7 +46,9 @@ router.get('/', async function (req, res) {
 	    	const interests_parse = JSON.parse(await user.recup_interests(info_parse[0].user_ID));
 	    	const new_notifications = await notifications.notifications_number(info_parse[0].user_ID);
 	    	const all_interests_parse = JSON.parse(await interests.recup_all_interests(info_parse[0].user_ID));
-	    	const hashtag_nb = info_parse[0].hashtag.split(',').length;
+	    	let hashtag_nb = 0;
+	    	if (info_parse[0].hashtag != null)
+		    	hashtag_nb = info_parse[0].hashtag.split(',').length;
 	    	res.render('account', {hashtag_nb: 'true', info: info_parse[0], interests: interests_parse, new_notifications: new_notifications, all_interests: all_interests_parse});
 	    }
 	} else {
