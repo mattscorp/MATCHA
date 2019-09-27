@@ -6,9 +6,11 @@ const ent = require('ent');
 const multer = require('multer'); // Pour l'upload de photos
 const upload = multer({dest: __dirname + '/../public/images'});
 const router = express.Router();
-const download = require('image-downloader');
+// const download = require('image-downloader'); /// a enlever !
 const interests = require('../js/interests.js');
 const user = require('../js/connect.js');
+const fs = require('fs');
+const download = require('download');
 
 const http = require('http');
 const https = require('https');
@@ -35,10 +37,10 @@ const ft_pass = async function(){
   });
 }
 
-const add_new_image = async function(infos, login) {
-  const sql_req = "UPDATE users SET image_1 = ? WHERE login = ?";
-  const sql_req2 = "UPDATE users SET profil_picture = ? WHERE login = ?";
-    let values = ['/images/' + infos.filename, login];
+const add_new_image = async function(user_ID) {
+  const sql_req = "UPDATE users SET image_1 = ? WHERE user_ID = ?";
+  const sql_req2 = "UPDATE users SET profile_picture = ? WHERE user_ID = ?";
+    let values = ['/images/' + user_ID + '/480.jpg', user_ID];
   con.query(sql_req, values, function (err, result) {  
     if (err) throw err;  
   });  
@@ -141,6 +143,20 @@ let val = [card.username];
 let hashtag_filtered = hashtag_1.split(',');
 con.query(sql_user, [val], function (err, result) {  
   if (err) throw err;
+
+let picture = faker.image.imageUrl();
+console.log(picture);
+console.log(result[0].user_ID);
+download(picture, './public/images/'+result[0].user_ID).then(() => {
+   
+    console.log('done!');
+    console.log(result[0].user_ID);
+    
+
+    add_new_image(result[0].user_ID);
+
+    console.log('BDDDDDDDDDD');
+});
   let sql3 = "ALTER TABLE interests ADD `" + result[0].user_ID + "` INT NOT NULL DEFAULT 0";
   con.query(sql3, result[0].user_ID, function(err, result) {
     if (err) throw err;
@@ -168,7 +184,10 @@ con.query(sql_user, [val], function (err, result) {
   
 
 
-let picture = faker.image.imageUrl();
+
+ 
+
+
   
 /*
 const options = {
@@ -196,7 +215,7 @@ downloadIMG()
 
 
   console.log(card);
-  console.log('image =======>>>> ' + picture);
+ // console.log('image =======>>>> ' + picture);
   console.log(values);
 }
 
