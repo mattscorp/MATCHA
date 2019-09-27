@@ -5,8 +5,7 @@ const bcrypt = require('bcryptjs');
 const ent = require('ent');
 const multer = require('multer'); // Pour l'upload de photos
 const upload = multer({dest: __dirname + '/../public/images'});
-const router = express.Router();
-// const download = require('image-downloader'); /// a enlever !
+
 const interests = require('../js/interests.js');
 const user = require('../js/connect.js');
 
@@ -14,16 +13,13 @@ const download = require('download');
 
 const http = require('http');
 const https = require('https');
-const fs = require('fs');
-const util = require('util');
-const readFile = util.promisify(fs.readFile);
+
 
 const faker = require('faker');
 faker.locale = "fr";
 
 const db_connect = require('../db_connection.js');
 let con = db_connect.con;
-let con_1 = db_connect.con_1;
 
 //
 function getRandomIntInclusive(min, max) {
@@ -45,41 +41,6 @@ const ft_pass = async function(){
 }
 
 //
-const create_db = async function(filesql) {
-  return new Promise((resolve, reject) => {
-    let sql_create = "CREATE DATABASE IF NOT EXISTS `db_matcha`;";
-    con_1.query(sql_create, async function(err, result) {
-      if (err)
-        throw err;
-      else {
-        con.connect(function(err) {
-          if (err) throw err;
-          console.log("Connected!");
-        });
-        let file_data = await readFile(filesql, 'utf8');
-        let array = file_data.split('\n');
-        let x =0;
-        let str = '';
-        for (x = 0; x < array.length ; x++) {
-          if (array[x] != '') {
-            str = str + array[x];
-            str = str.replace(/\n/gi, " ");
-            if (array[x].indexOf(';') != -1) {
-              con.query(str, function(err, result) {
-                if (err)
-                  throw err;
-              });
-              str = '';
-            }
-          }
-        }
-        resolve(0);  
-      }
-    });
-  });
-}
-
-//
 const add_new_image = async function(user_ID) {
   const sql_req = "UPDATE users SET image_1 = ? WHERE user_ID = ?";
   const sql_req2 = "UPDATE users SET profile_picture = ? WHERE user_ID = ?";
@@ -94,10 +55,9 @@ const add_new_image = async function(user_ID) {
 
 //
 const ft = async function() {
-  const create = await create_db('./db_matcha_structure.sql');
-  if (create) {
-    let i = 0;
-    //while(i < 666){
+  let nb = 1;
+   while(nb < 667){
+    //Initialisatino des variables
     let password =  await ft_pass();
     let email_confirmation = 1;
     let genre = getRandomIntInclusive(0, 2);
@@ -123,8 +83,10 @@ const ft = async function() {
     let geo_consent = 'Oui';
     let loc = card.address.geo.lat + ',' + card.address.geo.lng;
     let bio = card.posts[0].sentence;
+    // On separe les hashtags
     let hashtag = card.company.catchPhrase.split(' ');
     let y = 1;
+    // On filtre les hashtag pour virer les char speciaux
     let iChars = "~`!#$%^&*+=-[]\\';,/{}|\":<>?";
     let count = 0;
     for (var f = 0; f < hashtag[0].length; f++) {
@@ -134,15 +96,13 @@ const ft = async function() {
     let hashtag_1 = "";
     if (count == 0)
       hashtag_1 = hashtag[0];
+    // On assemble les hashtags
     while(hashtag[y])
     {
       count = 0;
       for (var f = 0; f < hashtag[y].length; f++) {
         if (iChars.indexOf(hashtag[y].charAt(f)) != -1)
            count++;
-         console.log('TOTOTOTOTOT' + iChars.indexOf(hashtag[y].charAt(f)));
-         console.log('TOTOTOT' + count);
-
       }
       if (count == 0) {
         if (hashtag_1 != "")
@@ -153,8 +113,8 @@ const ft = async function() {
       y++;
     }
     // On verifie qu'on a pas de char speciaux dans le login, sinon on remplace par '1'
-    let login = card.username.replace(/-|_|\.|,|'~'/gi, "1");
-
+    let login = card.username.replace(/-|_|\.|,|'~'/gi, "1") + nb;
+    // On insere les donnees dans la db
     let sql = "INSERT INTO users (email, login, first_name, last_name, password, email_confirmation, localisation_manual, localisation_auto, gender, departement, age, orientation, geo_consent, bio, hashtag) VALUES ?";
     let values = [[card.email, login, fullname[0], fullname[1], password, email_confirmation, loc, loc, genre, departement, age, orientation, geo_consent, bio, hashtag_1]];
     con.query(sql, [values], function (err, result) {  
@@ -172,46 +132,38 @@ const ft = async function() {
      });
     }
 
-    const topic = async function(hashtag, login) {
-      console.log("hhhhhh====> " + login);
-        let topic_exists = await interests.topic_exists(hashtag);
-        let info_user = await recup_info_sans_ent(login);
-        console.log('**************' + info_user);
-        let info_parse = JSON.parse(info_user);
+    // On verifie si le topic existe, sinon on l'ajoute
+    const topic = async function(ft_hashtag, nb1) {
+        let topic_exists = await interests.topic_exists(ft_hashtag);
+        interests.add_topic_user(ft_hashtag, nb1);
         if (topic_exists == 0)
-          interests.add_topic(hashtag);
-        interests.add_topic_user(hashtag, info_parse[0].user_ID);
+          interests.add_topic(ft_hashtag);
+        console.log("ft_hashtag : " + ft_hashtag);
+        console.log('nb1 = ' + nb1);
     }
-
-    let sql_user = "SELECT user_ID FROM users WHERE login = ?"
-    let val = [login];
+    
     let hashtag_filtered = hashtag_1.split(',');
-    con.query(sql_user, [val], function (err, result) {  
-      if (err) throw err;
-      let picture = faker.image.imageUrl();
-      console.log(picture);
-      console.log(result[0].user_ID);
-      download(picture, './public/images/'+result[0].user_ID).then(() => {     
-        console.log('done!');
-        console.log(result[0].user_ID);
-        add_new_image(result[0].user_ID);
-        console.log('BDDDDDDDDDD');
+    
+    let picture = faker.image.imageUrl();
+    download(picture, './public/images/' + nb).then(() => {     
+      add_new_image(nb);
+    });
+
+    const add_topic_async = function(nb_ok) {
+      let sql3 = "ALTER TABLE interests ADD `" + nb_ok + "` INT NOT NULL DEFAULT 0";
+      con.query(sql3, function(err) {
+        let o = 1;
+        topic(hashtag_filtered[0], nb_ok);
+        while(hashtag_filtered[o])
+        {
+          topic(hashtag_filtered[o], nb_ok);
+          o++;
+        }
       });
-    let sql3 = "ALTER TABLE interests ADD `" + result[0].user_ID + "` INT NOT NULL DEFAULT 0";
-    con.query(sql3, result[0].user_ID, function(err, result) {
-      if (err) throw err;
-    });
-    let o = 1;
-    topic(hashtag_filtered[0], login);
-    while(hashtag_filtered[o])
-    {
-      topic(hashtag_filtered[o], login);
-      o++;
     }
-    });
+    add_topic_async(nb);
+  console.log(nb + ' : ajout de ' + login)
+  nb++;
   }
 }
-
-
-
-module.exports = router;
+module.exports.ft = ft;

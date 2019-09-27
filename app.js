@@ -27,9 +27,6 @@ let con = db_connect.con;
 
 //Connexion a la Database
 
-const grapping = require('./js/grapping.js');
-app.use(grapping);
-
 const user = require('./routes/user.js');
 app.use(user);
 

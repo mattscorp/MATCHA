@@ -67,6 +67,7 @@ const recup_all_interests_swipe = async function() {
 }
 module.exports.recup_all_interests_swipe = recup_all_interests_swipe;
 
+// Ajoute une ligne pour le nouveau topic dans la table interest
 const add_topic = function(topic) {
   let iChars = "~`!#$%^&*+=-[]\\';,/{}|\":<>?";
   let count = 0;
@@ -85,6 +86,7 @@ const add_topic = function(topic) {
 }
 module.exports.add_topic = add_topic;
 
+// Ajoute la colonne de l'utilisateur et on ajoute le hashtage dans la table user
 const add_topic_user = function(topic, user_ID) {
   // On verifie qu'il n'y a pas de caracteres speciaux
   let iChars = "~`!#$%^&*+=-[]\\';,/{}|\":<>?";
