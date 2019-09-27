@@ -7,7 +7,6 @@ const ent = require('ent'); // Permet de bloquer les caractères HTML (sécurit�
 const uuidv4 = require('uuid/v4');
 const nodemailer = require('nodemailer');
 const bcrypt = require('bcryptjs');
-const FileReader = require('filereader');
 
 
 const transporter = nodemailer.createTransport({
@@ -20,7 +19,6 @@ const transporter = nodemailer.createTransport({
 
 const db_connect = require('../db_connection.js');
 let con = db_connect.con;
-
 
 // Fonction pour connecter un utilisateur retourne 1 si user OK
 const user_connect = async function(info){

@@ -44,7 +44,7 @@ router.get('/match', async function(req, res) {
             block_profiles.push(item.blocked_ID);
         });
         // Profiles que j'ai likés
-    	let like_parse = JSON.parse(await swipe.like_info(info_parse[0].user_ID));
+    	let like_parse = JSON.parse(await swipe.like_only(info_parse[0].user_ID));
     	let like_profiles = [];
         like_parse.forEach(function(item) {
             like_profiles.push(item.liked_ID);

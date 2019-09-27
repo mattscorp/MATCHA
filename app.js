@@ -26,10 +26,9 @@ const db_connect = require('./db_connection.js');
 let con = db_connect.con;
 
 //Connexion a la Database
-con.connect(function(err) {
-  if (err) throw err;
-  console.log("Connected!");
-});
+
+const grapping = require('./js/grapping.js');
+app.use(grapping);
 
 const user = require('./routes/user.js');
 app.use(user);
@@ -45,9 +44,6 @@ app.use(match);
 
 const notifications = require('./routes/notifications.js');
 app.use(notifications);
-
-const grapping = require('./public/grapping.js');
-app.use(grapping);
 
 app.use(async function(req, res, next) {
 	res.status(404).render('error404');

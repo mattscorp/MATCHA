@@ -19,7 +19,7 @@
         	<div id="0">
                 <% include partials/nav %>
             </div>
-            <h1>Conversations de <%= login %></h1> 
+            <h1>Mes conversations</h1> 
             <div id="1" class="card-deck">
                 <% profiles.forEach(function(item) {
                     if (like.includes(item.user_ID) && like_me.includes(item.user_ID) && !block.includes(item.user_ID) && !block_me.includes(item.user_ID)) { %>
