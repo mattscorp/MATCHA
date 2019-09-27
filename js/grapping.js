@@ -41,22 +41,9 @@ const ft_pass = async function(){
 }
 
 //
-const add_new_image = async function(user_ID) {
-  const sql_req = "UPDATE users SET image_1 = ? WHERE user_ID = ?";
-  const sql_req2 = "UPDATE users SET profile_picture = ? WHERE user_ID = ?";
-    let values = ['/images/' + user_ID + '/480.jpg', user_ID];
-  con.query(sql_req, values, function (err, result) {  
-    if (err) throw err;  
-  });  
-  con.query(sql_req2, values, function (err, result) {  
-    if (err) throw err;  
-  });  
-}
-
-//
 const ft = async function() {
   let nb = 1;
-   while(nb < 667){
+   while(nb < 10){
     //Initialisatino des variables
     let password =  await ft_pass();
     let email_confirmation = 1;
@@ -135,35 +122,64 @@ const ft = async function() {
     // On verifie si le topic existe, sinon on l'ajoute
     const topic = async function(ft_hashtag, nb1) {
         let topic_exists = await interests.topic_exists(ft_hashtag);
-        interests.add_topic_user(ft_hashtag, nb1);
-        if (topic_exists == 0)
-          interests.add_topic(ft_hashtag);
-        console.log("ft_hashtag : " + ft_hashtag);
-        console.log('nb1 = ' + nb1);
+        if (topic_exists == 0) {
+            let iChars = "~`!#$%^&*+=-[]\\';,/{}|\":<>?";
+            let count_po = 0;
+            for (var po = 0; po < ft_hashtag.length; po++) {
+              if (iChars.indexOf(ft_hashtag.charAt(po)) != -1)
+                 count_po++;
+            }
+            if (count_po == 0) {
+              let sql = "INSERT INTO interests (topic) VALUES ?";
+              let values = [[ft_hashtag]];
+              con.query(sql, [values], function(err, result) {
+                if (err)
+                  throw err;
+                else
+                  interests.add_topic_user(ft_hashtag, nb1);
+              });
+          }
+        }
     }
     
     let hashtag_filtered = hashtag_1.split(',');
-    
+     //
+    const add_new_image = async function(user_ID_photo) {
+      const sql_req = "UPDATE users SET image_1 = ? WHERE user_ID = ?";
+      const sql_req2 = "UPDATE users SET profile_picture = ? WHERE user_ID = ?";
+        let values = ['/images/' + user_ID_photo + '/480.jpg', user_ID_photo];
+      con.query(sql_req, values, function (err, result) {  
+        if (err) throw err;  
+      });  
+      con.query(sql_req2, values, function (err, result) {  
+        if (err) throw err;  
+      });  
+    }
     let picture = faker.image.imageUrl();
-    download(picture, './public/images/' + nb).then(() => {     
-      add_new_image(nb);
+    add_new_image(nb);
+    download(picture, './public/images/' + nb).then(() => {
     });
 
-    const add_topic_async = function(nb_ok) {
+    const add_topic_async = function(nb_ok, hashtag_filtered_1) {
       let sql3 = "ALTER TABLE interests ADD `" + nb_ok + "` INT NOT NULL DEFAULT 0";
       con.query(sql3, function(err) {
         let o = 1;
-        topic(hashtag_filtered[0], nb_ok);
-        while(hashtag_filtered[o])
+        topic(hashtag_filtered_1[0], nb_ok);
+        console.log("user : " + nb_ok + " - hashtag : " + hashtag_filtered_1[0]);
+        while(hashtag_filtered_1[o])
         {
-          topic(hashtag_filtered[o], nb_ok);
+        console.log("user : " + nb_ok + " - hashtag : " + hashtag_filtered_1[o]);
+
+          topic(hashtag_filtered_1[o], nb_ok);
           o++;
         }
       });
     }
-    add_topic_async(nb);
+   
+  add_topic_async(nb, hashtag_filtered);
   console.log(nb + ' : ajout de ' + login)
   nb++;
   }
+
 }
 module.exports.ft = ft;

@@ -18,7 +18,7 @@ let con = db_connect.con;
 
 const topic_exists = async function(topic) {
   return new Promise((resolve, reject) => {
-     let iChars = "~`!#$%^&*+=-[]\\';,/{}|\":<>?";
+     let iChars = "~`!#$%^&*+=-[]\\';.,/{}|\":<>?";
   let count = 0;
   for (var i = 0; i < topic.length; i++) {
     if (iChars.indexOf(topic.charAt(i)) != -1)

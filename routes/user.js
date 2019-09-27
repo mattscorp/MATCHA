@@ -346,21 +346,26 @@ router.post('/delete_image', async function(req, res) {
 // Ajout d'un nouveau centre d'intérêt
 router.post('/new_topic', async function(req, res) {
 	if (req.session.login && req.session.login != '') {
-		let topic_exists = await interests.topic_exists(req.body.submit.split('#')[1]);
-		let info_user = await user.recup_info(req.session.login);
-		let info_parse = JSON.parse(info_user);
-		const hashtag_nb = info_parse[0].hashtag.split(',').length;
-		if (hashtag_nb >= 7) {
-			const interests_parse = JSON.parse(await user.recup_interests(info_parse[0].user_ID));
-	    	const new_notifications = await notifications.notifications_number(info_parse[0].user_ID);
-	    	const all_interests_parse = JSON.parse(await interests.recup_all_interests(info_parse[0].user_ID));
-	    	res.render('account', {hashtag_nb: 'false', info: info_parse[0], interests: interests_parse, new_notifications: new_notifications, all_interests: all_interests_parse});
-		} else {
-			if (topic_exists == 0)
-				interests.add_topic(req.body.submit.split('#')[1]);
-			interests.add_topic_user(req.body.submit.split('#')[1], info_parse[0].user_ID);
-			res.redirect('/');
-		}
+		let new_topic = "";
+		if (req.body.submit == "Ajouter un topic")
+			new_topic = req.body.new_topic;
+		else
+			new_topic = req.body.submit.split('#')[1];
+			let topic_exists = await interests.topic_exists(new_topic);
+			let info_user = await user.recup_info(req.session.login);
+			let info_parse = JSON.parse(info_user);
+			const hashtag_nb = info_parse[0].hashtag.split(',').length;
+			if (hashtag_nb >= 7) {
+				const interests_parse = JSON.parse(await user.recup_interests(info_parse[0].user_ID));
+		    	const new_notifications = await notifications.notifications_number(info_parse[0].user_ID);
+		    	const all_interests_parse = JSON.parse(await interests.recup_all_interests(info_parse[0].user_ID));
+		    	res.render('account', {hashtag_nb: 'false', info: info_parse[0], interests: interests_parse, new_notifications: new_notifications, all_interests: all_interests_parse});
+			} else {
+				if (topic_exists == 0)
+					interests.add_topic(new_topic);
+				interests.add_topic_user(new_topic, info_parse[0].user_ID);
+				res.redirect('/');
+			} 
 	} else
 		res.redirect('/');
 });
