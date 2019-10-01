@@ -55,35 +55,58 @@ const report_email = function(reporter_ID, reported_ID) {
 }
 module.exports.report_email = report_email;
 
-const last_three_messages = function(user_ID) {
+const ft_concatenate = async function(return_table, first_name, profile_picture, i) {
+	console.log(`ceci est dans ton cul ${i}`);
+	// return new Promise((resolve, reject) => {
+		let test = '';
+		if (i == 2)
+			test = '{"first_name":"' + first_name + '", "profile_picture":"' + profile_picture + '"}';
+		else
+			test = '{"first_name":"' + first_name + '", "profile_picture":"' + profile_picture + '"},';
+		console.log('dans test ; ' + test);
+		return (test);
+	// });
+}
+
+const last_three_messages = async function(user_ID) {
 	return new Promise((resolve, reject) => {
 		let sql = "SELECT DISTINCT `recipient_ID`, `sender_ID` FROM `message` WHERE `recipient_ID` = ? OR `sender_ID` = ? ORDER BY `date` DESC LIMIT 3";
 		con.query(sql, [user_ID, user_ID], function(err, result) {
 			if (err)
 				throw err;
 			else {
-				let return_table = [{'profile_picture': '', 'first_name': ''},{'profile_picture': '', 'first_name': ''},{'profile_picture': '', 'first_name': ''}];
+				// let return_table = [{'profile_picture': '', 'first_name': ''},{'profile_picture': '', 'first_name': ''},{'profile_picture': '', 'first_name': ''}];
+				let return_table = '{[';
 				let i = 0;
 				let values = '';
+				console.log(JSON.stringify(result, null,2));
 				while (result[i]) {
+					let j = i;
 					sql = "SELECT `profile_picture`, `first_name` FROM `users` WHERE `user_ID` = ?";
-					if (result[i].sender_ID == user_ID)
-						values = result[i].recipient_ID;
+					if (result[j].sender_ID == user_ID)
+						values = result[j].recipient_ID;
 					else
-						values = result[i].sender_ID;
-					con.query(sql, values, function(err, result) {
+						values = result[j].sender_ID;
+					con.query(sql, values, async function(err, result1) {
+						console.log(JSON.stringify(result1, null,2));
+						console.log(j);
 						if (err)
 							throw err;
 						else {
-							console.log(result[0].profile_picture);
-							return_table[i].profile_picture = result[0].profile_picture;
-							return_table[i].first_name = result[0].first_name;
+							console.log('i est avant ton cul ' + j);
+							return_table = return_table + await ft_concatenate(return_table, result1[0].first_name, result1[0].profile_picture, j);
+							//return_table = return_table.concat('{"first_name":"', result[i].first_name, '", "profile_picture":"', result[i].profile_picture, '"}');
+							// if (i != 2)
+							// 	return_table = return_table + ','
+							// return_table[i].profile_picture = result[0].profile_picture;
+							// return_table[i].first_name = result[0].first_name;
 
+					console.log(`fahd ` + return_table);
 						}
-					})
+					});
 					i++;
 				}
-				console.log('test : ' + return_table[0].profile_picture);
+				return_table = return_table + ']}';
 				console.log('ici ' + return_table);
 				resolve(return_table);
 			}
