@@ -17,6 +17,7 @@ const readFile = util.promisify(fs.readFile);
 const user = require('../js/connect.js');
 const interests = require('../js/interests.js');
 const notifications = require('../js/notifications.js');
+const messages = require('../js/messages.js');
 
 app.set('view engine', 'ejs');
 app.use(bodyParser.json()); // support json encoded bodies
@@ -49,7 +50,20 @@ router.get('/', async function (req, res) {
 	    	let hashtag_nb = 0;
 	    	if (info_parse[0].hashtag != null)
 		    	hashtag_nb = info_parse[0].hashtag.split(',').length;
-	    	res.render('account', {hashtag_nb: 'true', info: info_parse[0], interests: interests_parse, new_notifications: new_notifications, all_interests: all_interests_parse});
+		    // Obtention des trois derniers messages
+		    let messages_bottom = [];
+		    let messaged_bottom = await messages.last_three_messages(info_parse[0].user_ID);
+		    console.log('messaged_bottom ===> ' + messaged_bottom);
+		    console.log('messaged_bottom[0] ===> ' + messaged_bottom[0].profile_picture);
+		    if (messaged_bottom == '') console.log('vide');
+	    	res.render('account', {hashtag_nb: 'true',
+	    							info: info_parse[0],
+	    							interests: interests_parse,
+	    							new_notifications: new_notifications,
+	    							all_interests: all_interests_parse,
+	    							messaged_bottom: messaged_bottom,
+	    							messages_bottom: messages_bottom
+	    						});
 	    }
 	} else {
 	    res.render('connect', {user: 'true', password: 'true', creation: 'true'});

@@ -69,13 +69,6 @@
         </div>
     </body>
     <script type="text/javascript">
-        setInterval('load_geo()', 3000);
-        function load_geo() {
-            $.getJSON('http://www.geoplugin.net/json.gp?jsoncallback=?', function(data) {
-                $.post('geo', data, function(data) {
-                });
-            });
-        }
         setInterval('updateDiv()', 3000);
         function updateDiv() { 
             $( "#here" ).load(window.location.href + " #here" );

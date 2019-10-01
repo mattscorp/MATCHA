@@ -41,98 +41,6 @@ const ft_pass = async function(){
 }
 
 //
-
-const topic_exists_1 = function(topic, nb1) {
-
- let iChars = "~`!#$%^&*+=-[]\\';.,/{}|\":<>?";
- let count = 0;
- for (var i = 0; i < topic.length; i++) {
-  if (iChars.indexOf(topic.charAt(i)) != -1)
-   count++;
-}
-if (count == 0) {
-  let sql = "SELECT * FROM interests WHERE topic = ?";
-  con.query(sql, [topic], function(err, result) {
-    if (err)
-      throw err;
-    else if (result == '' || result == 0){
-
-      console.log(" return 0 result dans topic exist " + result);
-
-      let sql = "INSERT INTO interests (topic) VALUES ?";
-      let values = [[topic]];
-      con.query(sql, [values], function(err, result) {
-        if (err)
-          throw err;
-        else{
-                  //    interests.add_topic_user(topic, nb1);
-                  let sql = "UPDATE interests SET `" + nb1 + "` = 1 WHERE `topic` = ?";
-                  let values = [topic];
-                  con.query(sql, values, function(err, result) {
-                    if (err)
-                      throw err;
-                  });
-                      // On incremente topic_score dans la table interests
-                      sql = "UPDATE `interests` SET `topic_score` = `topic_score` + 1 WHERE `topic` = ?";
-                      con.query(sql, values, function(err, result) {
-                        if (err)
-                          throw err;
-                      });
-                      // On ajoute le hashtag dans la table users
-                      sql = "SELECT `hashtag` FROM `users` WHERE `user_ID`  = ?";
-                      values = [nb1];
-                      con.query(sql, values, function(err, result) {
-                        if (err)
-                          throw err;
-                        else {
-                          let hashtag = "";
-                          if (result[0].hashtag != null && result[0].hashtag != '') {
-                            hashtag = result[0].hashtag.split(',');
-                            if (!hashtag.includes(topic))
-                              hashtag.push(topic);
-                            hashtag.join();
-                          }
-                          else
-                            hashtag =  topic;
-                          sql = "UPDATE `users` SET `hashtag` = '" + hashtag + "' WHERE `user_ID` = ?"
-                          values = [nb1];
-                          con.query(sql, values, function(err, result) {
-                            if (err)
-                              throw err;
-                          });
-                        }
-                      });
-                    }
-                  });
-    }
-    else{
-  console.log(" return 1 result dans topic exist " + result[0]);
-}
-  });
- // delete_row(topic);
-}
-
-}
-
-
-const add_topic_async = function(nb_ok, hashtag_filtered_1) {
-      let sql3 = "ALTER TABLE interests ADD `" + nb_ok + "` INT NOT NULL DEFAULT 0";
-      con.query(sql3, function(err) {
-        let o = 1;
-        topic_exists_1(hashtag_filtered_1[0], nb_ok);
-       
-        console.log("user : " + nb_ok + " - hashtag : " + hashtag_filtered_1[0]);
-        while(hashtag_filtered_1[o])
-        {
-        console.log("user : " + nb_ok + " - hashtag : " + hashtag_filtered_1[o]);
-        topic_exists_1(hashtag_filtered_1[o], nb_ok);
-     //   delete_row(hashtag_filtered_1[o]);
-          o++;
-        }
-      });
-    }
-
-//
 const ft = async function() {
   let nb = 1;
    while(nb < 510){
@@ -211,6 +119,28 @@ const ft = async function() {
      });
     }
 
+    // On verifie si le topic existe, sinon on l'ajoute
+    const topic = async function(ft_hashtag, nb1) {
+        let topic_exists = await interests.topic_exists(ft_hashtag);
+        if (topic_exists == 0) {
+            let iChars = "~`!#$%^&*+=-[]\\';,/{}|\":<>?";
+            let count_po = 0;
+            for (var po = 0; po < ft_hashtag.length; po++) {
+              if (iChars.indexOf(ft_hashtag.charAt(po)) != -1)
+                 count_po++;
+            }
+            if (count_po == 0) {
+              let sql = "INSERT INTO interests (topic) VALUES ?";
+              let values = [[ft_hashtag]];
+              con.query(sql, [values], function(err, result) {
+                if (err)
+                  throw err;
+                else
+                  interests.add_topic_user(ft_hashtag, nb1);
+              });
+          }
+        }
+    }
     
     let hashtag_filtered = hashtag_1.split(',');
      //
@@ -229,14 +159,27 @@ const ft = async function() {
     add_new_image(nb);
     download(picture, './public/images/' + nb).then(() => {
     });
-  
+
+    const add_topic_async = function(nb_ok, hashtag_filtered_1) {
+      let sql3 = "ALTER TABLE interests ADD `" + nb_ok + "` INT NOT NULL DEFAULT 0";
+      con.query(sql3, function(err) {
+        let o = 1;
+        topic(hashtag_filtered_1[0], nb_ok);
+        console.log("user : " + nb_ok + " - hashtag : " + hashtag_filtered_1[0]);
+        while(hashtag_filtered_1[o])
+        {
+        console.log("user : " + nb_ok + " - hashtag : " + hashtag_filtered_1[o]);
+
+          topic(hashtag_filtered_1[o], nb_ok);
+          o++;
+        }
+      });
+    }
    
   add_topic_async(nb, hashtag_filtered);
-  
   console.log(nb + ' : ajout de ' + login)
   nb++;
   }
 
 }
-
 module.exports.ft = ft;

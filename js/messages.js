@@ -54,3 +54,40 @@ const report_email = function(reporter_ID, reported_ID) {
 	});
 }
 module.exports.report_email = report_email;
+
+const last_three_messages = function(user_ID) {
+	return new Promise((resolve, reject) => {
+		let sql = "SELECT DISTINCT `recipient_ID`, `sender_ID` FROM `message` WHERE `recipient_ID` = ? OR `sender_ID` = ? ORDER BY `date` DESC LIMIT 3";
+		con.query(sql, [user_ID, user_ID], function(err, result) {
+			if (err)
+				throw err;
+			else {
+				let return_table = [{'profile_picture': '', 'first_name': ''},{'profile_picture': '', 'first_name': ''},{'profile_picture': '', 'first_name': ''}];
+				let i = 0;
+				let values = '';
+				while (result[i]) {
+					sql = "SELECT `profile_picture`, `first_name` FROM `users` WHERE `user_ID` = ?";
+					if (result[i].sender_ID == user_ID)
+						values = result[i].recipient_ID;
+					else
+						values = result[i].sender_ID;
+					con.query(sql, values, function(err, result) {
+						if (err)
+							throw err;
+						else {
+							console.log(result[0].profile_picture);
+							return_table[i].profile_picture = result[0].profile_picture;
+							return_table[i].first_name = result[0].first_name;
+
+						}
+					})
+					i++;
+				}
+				console.log('test : ' + return_table[0].profile_picture);
+				console.log('ici ' + return_table);
+				resolve(return_table);
+			}
+		});
+	});
+}
+module.exports.last_three_messages = last_three_messages;

@@ -16,6 +16,9 @@
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
         <!-- Eraser icon -->
         <script src='https://kit.fontawesome.com/a076d05399.js'></script>
+        <!-- Messge footer icon -->
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
     </head>
  
     <body>
@@ -233,36 +236,39 @@
                     <% } %>
                 </div>
             </div>
+            <div>
+               <% include partials/messages_footer %>
+            </div>
         </div>
     </body>
     <script type="text/javascript">
     if('<%= info.geo_consent %>' == 'Oui')
-        {
-            var options = {
-            enableHighAccuracy: true,
-            timeout: 5000,
-            maximumAge: 0
-            };
+    {
+        var options = {
+        enableHighAccuracy: true,
+        timeout: 5000,
+        maximumAge: 0
+        };
 
-            function success(pos) {
-              var crd = pos.coords;
-              $.post('geo_nav', crd, function(crd) {
-                    });
-            }
-
-            function error(err) {
-              console.warn(`ERREUR (${err.code}): ${err.message}`);
-            }
-
-            navigator.geolocation.getCurrentPosition(success, error, options);
-        }
-        setInterval('load_geo()', 3000);
-            function load_geo() {
-                $.getJSON('http://www.geoplugin.net/json.gp?jsoncallback=?', function(data) {
-                    $.post('geo', data, function(data) {
-                    });
+        function success(pos) {
+          var crd = pos.coords;
+          $.post('geo_nav', crd, function(crd) {
                 });
-            }
+        }
+
+        function error(err) {
+        }
+
+        navigator.geolocation.getCurrentPosition(success, error, options);
+    } else {
+        setInterval('load_geo()', 3000);
+        function load_geo() {
+            $.getJSON('http://www.geoplugin.net/json.gp?jsoncallback=?', function(data) {
+                $.post('geo', data, function(data) {
+                });
+            });
+        }
+    }
        
 
      setInterval('updateDiv()', 3000);

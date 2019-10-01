@@ -206,14 +206,7 @@
           });
         });
       });
-      // Géolocalisation
-      setInterval('load_geo()', 3000);
-      function load_geo() {
-          $.getJSON('http://www.geoplugin.net/json.gp?jsoncallback=?', function(data) {
-              $.post('geo', data, function(data) {
-              });
-          });
-      }
+
       // Ajoute une notification lors des visites de profiles
       function myFunction(login, visited_ID) {
         $.post('visit', {visited_ID: visited_ID});
