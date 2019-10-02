@@ -12,6 +12,7 @@ const interests = require('../js/interests.js');
 const swipe = require('../js/swipe.js');
 const match = require('../js/match.js');
 const notifications = require('../js/notifications.js');
+const messages = require('../js/messages.js');
 
 app.set('view engine', 'ejs');
 app.use(bodyParser.json()); // support json encoded bodies
@@ -113,7 +114,35 @@ router.get('/swipe', async function (req, res) {
         filtered.sort(function (a, b) {
           return b.score_algo - a.score_algo;
         });
+        // Obtention des trois derniers messages
+        let messaged_bottom = JSON.parse(await messages.last_three_messages(info_parse[0].user_ID));
+        let messenger_0 = '';
+        let messenger_1 = '';
+        let messenger_2 = '';
+        let messenger_3 = '';
+        let messenger_4 = '';
+        let messages_0 = '';
+        let messages_1 = '';
+        let messages_2 = '';
+        if (messaged_bottom[0])
+            messenger_0 = JSON.parse(await messages.get_messenger(messaged_bottom[0], info_parse[0].user_ID));
+        if (messaged_bottom[1])
+            messenger_1 = JSON.parse(await messages.get_messenger(messaged_bottom[1], info_parse[0].user_ID));
+        if (messaged_bottom[2])
+            messenger_2 = JSON.parse(await messages.get_messenger(messaged_bottom[2], info_parse[0].user_ID));
+        if (messaged_bottom[3])
+            messenger_3 = JSON.parse(await messages.get_messenger(messaged_bottom[2], info_parse[0].user_ID));
+        if (messaged_bottom[4])
+            messenger_4 = JSON.parse(await messages.get_messenger(messaged_bottom[2], info_parse[0].user_ID));
+        if (messenger_0 != '')
+            messages_0 = JSON.parse(await messages.messages(info_parse[0].user_ID, messenger_0[0].user_ID));
+        if (messenger_1 != '')
+            messages_1 = JSON.parse(await messages.messages(info_parse[0].user_ID, messenger_1[0].user_ID));
+        if (messenger_3 != '')
+            messages_2 = JSON.parse(await messages.messages(info_parse[0].user_ID, messenger_2[0].user_ID));
+
 		res.render('swipe', {infos: info_parse[0],
+                            info: info_parse[0],
                             block_me: block_me_profiles,
                             profiles: filtered,
                             previous_profiles: previous_profiles,
@@ -125,7 +154,15 @@ router.get('/swipe', async function (req, res) {
                             departement: "Non",
                             all_interests: all_interests,
                             score:0,
-                            localisation:1000000});
+                            localisation:1000000,
+                            messaged_bottom: messaged_bottom,
+                            messenger_0: messenger_0,
+                            messenger_1: messenger_1,
+                            messenger_2: messenger_2,
+                            messages_0: messages_0,
+                            messages_1: messages_1,
+                            messages_2: messages_2
+                           });
 	}
 })
 
@@ -165,7 +202,34 @@ router.post('/swipe', async function(req, res) {
             interest = req.body.submit.trim().split('#')[1];
         else
             interest = req.body.interest.trim();
+        // Obtention des trois derniers messages
+        let messaged_bottom = JSON.parse(await messages.last_three_messages(info_parse[0].user_ID));
+        let messenger_0 = '';
+        let messenger_1 = '';
+        let messenger_2 = '';
+        let messenger_3 = '';
+        let messenger_4 = '';
+        let messages_0 = '';
+        let messages_1 = '';
+        let messages_2 = '';
+        if (messaged_bottom[0])
+            messenger_0 = JSON.parse(await messages.get_messenger(messaged_bottom[0], info_parse[0].user_ID));
+        if (messaged_bottom[1])
+            messenger_1 = JSON.parse(await messages.get_messenger(messaged_bottom[1], info_parse[0].user_ID));
+        if (messaged_bottom[2])
+            messenger_2 = JSON.parse(await messages.get_messenger(messaged_bottom[2], info_parse[0].user_ID));
+        if (messaged_bottom[3])
+            messenger_3 = JSON.parse(await messages.get_messenger(messaged_bottom[2], info_parse[0].user_ID));
+        if (messaged_bottom[4])
+            messenger_4 = JSON.parse(await messages.get_messenger(messaged_bottom[2], info_parse[0].user_ID));
+        if (messenger_0 != '')
+            messages_0 = JSON.parse(await messages.messages(info_parse[0].user_ID, messenger_0[0].user_ID));
+        if (messenger_1 != '')
+            messages_1 = JSON.parse(await messages.messages(info_parse[0].user_ID, messenger_1[0].user_ID));
+        if (messenger_3 != '')
+            messages_2 = JSON.parse(await messages.messages(info_parse[0].user_ID, messenger_2[0].user_ID));
         res.render('swipe', {infos: info_parse[0],
+                            info: info_parse[0],
                             block_me: block_me_profiles,
                             profiles: filtered,
                             previous_profiles: previous_profiles,
@@ -177,7 +241,14 @@ router.post('/swipe', async function(req, res) {
                             score: (req.body.score == '') ? 0 : req.body.score,
                             interest: interest,
                             departement: req.body.departement,
-                            localisation:(req.body.localisation == '') ? 1000000 : req.body.localisation
+                            localisation:(req.body.localisation == '') ? 1000000 : req.body.localisation,
+                            messaged_bottom: messaged_bottom,
+                            messenger_0: messenger_0,
+                            messenger_1: messenger_1,
+                            messenger_2: messenger_2,
+                            messages_0: messages_0,
+                            messages_1: messages_1,
+                            messages_2: messages_2
                             });
     }
 })

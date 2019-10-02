@@ -52,12 +52,30 @@ router.get('/', async function (req, res) {
 		    	hashtag_nb = info_parse[0].hashtag.split(',').length;
 		    // Obtention des trois derniers messages
 		    let messaged_bottom = JSON.parse(await messages.last_three_messages(info_parse[0].user_ID));
-		    let messenger_0 = JSON.parse(await messages.get_messenger(messaged_bottom[0], info_parse[0].user_ID));
-		    let messenger_1 = JSON.parse(await messages.get_messenger(messaged_bottom[1], info_parse[0].user_ID));
-		    let messenger_2 = JSON.parse(await messages.get_messenger(messaged_bottom[2], info_parse[0].user_ID));
-		    let messages_0 = JSON.parse(await messages.messages(info_parse[0].user_ID, messenger_0[0].user_ID));
-		    let messages_1 = JSON.parse(await messages.messages(info_parse[0].user_ID, messenger_1[0].user_ID));
-		    let messages_2 = JSON.parse(await messages.messages(info_parse[0].user_ID, messenger_2[0].user_ID));
+		    let messenger_0 = '';
+		    let messenger_1 = '';
+		    let messenger_2 = '';
+		    let messenger_3 = '';
+		    let messenger_4 = '';
+		    let messages_0 = '';
+		    let messages_1 = '';
+		    let messages_2 = '';
+		    if (messaged_bottom[0])
+			    messenger_0 = JSON.parse(await messages.get_messenger(messaged_bottom[0], info_parse[0].user_ID));
+			if (messaged_bottom[1])
+		    	messenger_1 = JSON.parse(await messages.get_messenger(messaged_bottom[1], info_parse[0].user_ID));
+		    if (messaged_bottom[2])
+			    messenger_2 = JSON.parse(await messages.get_messenger(messaged_bottom[2], info_parse[0].user_ID));
+			if (messaged_bottom[3])
+			    messenger_3 = JSON.parse(await messages.get_messenger(messaged_bottom[2], info_parse[0].user_ID));
+			if (messaged_bottom[4])
+			    messenger_4 = JSON.parse(await messages.get_messenger(messaged_bottom[2], info_parse[0].user_ID));
+			if (messenger_0 != '')
+			    messages_0 = JSON.parse(await messages.messages(info_parse[0].user_ID, messenger_0[0].user_ID));
+			if (messenger_1 != '')
+		    	messages_1 = JSON.parse(await messages.messages(info_parse[0].user_ID, messenger_1[0].user_ID));
+		    if (messenger_3 != '')
+			    messages_2 = JSON.parse(await messages.messages(info_parse[0].user_ID, messenger_2[0].user_ID));
 
 	    	res.render('account', {hashtag_nb: 'true',
 	    							info: info_parse[0],

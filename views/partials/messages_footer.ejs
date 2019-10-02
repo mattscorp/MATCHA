@@ -25,21 +25,25 @@
 
 	      <div class="container">
 			  <!-- Nav pills -->
-			  <ul class="nav nav-pills" role="tablist">
-			    <li class="nav-item">
+			  <ul class="nav nav-pills mx-auto" role="tablist">
+			  	<% if (messenger_0[0]) { %>
+			    <li class="nav-item bg-secondary rounded mx-auto">
 			      <a class="nav-link active" data-toggle="pill" href="#home"><img src="<%= messenger_0[0].profile_picture %>" alt="Photo de <%= messenger_0[0].first_name %>" class="mr-3 mt-3 rounded-circle border img_messages"></a>
 			    </li>
-			    <li class="nav-item">
+			    <% } if (messenger_1[0]) { %>
+			    <li class="nav-item bg-secondary rounded mx-auto">
 			      <a class="nav-link" data-toggle="pill" href="#menu1"><img src="<%= messenger_1[0].profile_picture %>" alt="Photo de <%= messenger_1[0].first_name %>" class="mr-3 mt-3 rounded-circle border img_messages"></a>
 			    </li>
-			    <li class="nav-item">
+			    <% } if (messenger_2[0]) { %>
+			    <li class="nav-item bg-secondary rounded mx-auto">
 			      <a class="nav-link" data-toggle="pill" href="#menu2"><img src="<%= messenger_2[0].profile_picture %>" alt="Photo de <%= messenger_2[0].first_name %>" class="mr-3 mt-3 rounded-circle border img_messages"></a>
 			    </li>
+			    <% } %>
 			  </ul>
 
 			  <!-- Tab panes -->
 			  <div class="tab-content">
-
+			  <% if (messenger_0[0]) { %>
 			    <div id="home" class="container tab-pane active"><br>
 			      <h3>Messages de <%= messenger_0[0].first_name %></h3>
                     <form action="report" method="post">
@@ -77,6 +81,7 @@
 			      </div>
 			    </div>
 
+			    <% } if (messenger_1[0]) { %>
 			    <div id="menu1" class="container tab-pane fade"><br>
 			      <h3>Messages de <%= messenger_1[0].first_name %></h3>
                     <form action="report" method="post">
@@ -114,6 +119,7 @@
 				  </div>
 			    </div>
 
+			    <% } if (messenger_2[0]) { %>
 			    <div id="menu2" class="container tab-pane fade"><br>
 			      <h3>Messages de <%= messenger_2[0].first_name %></h3>
                     <form action="report" method="post">
@@ -150,6 +156,7 @@
 			      <% }) %>
 			      </div>
 			    </div>
+			    <% } %>
 
 			  </div>
 			    <% } %>

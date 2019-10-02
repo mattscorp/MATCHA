@@ -13,6 +13,8 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
         <!-- Latest compiled JavaScript -->
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+        <!-- Messge footer icon -->
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     </head>
     <body>
         <div class="container-fluid">
@@ -52,6 +54,9 @@
                         <br/><small>le <%= item.date.split('-')[2].split('T')[0]; %>/<%= item.date.split('-')[1]; %>/<%= item.date.split('-')[0]; %> à <%= item.date.split('T')[1].split('.')[0] %></small></a></p>
                 </div>
                 <% }) %>
+            </div>
+            <div>
+               <% include partials/messages_footer %>
             </div>
         </div>
     </body>

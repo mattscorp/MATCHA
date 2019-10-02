@@ -12,6 +12,7 @@ const interests = require('../js/interests.js');
 const swipe = require('../js/swipe.js');
 const match = require('../js/match.js');
 const notifications = require('../js/notifications.js');
+const messages = require('../js/messages.js');
 
 app.set('view engine', 'ejs');
 app.use(bodyParser.json()); // support json encoded bodies
@@ -58,14 +59,51 @@ router.get('/match', async function(req, res) {
         // Ensemble des profiles
         let new_notifications = await notifications.notifications_number(info_parse[0].user_ID);
         let profiles_parse = JSON.parse(await swipe.get_profiles(info_parse[0].user_ID, block_parse, like_parse));
+        // Obtention des trois derniers messages
+        let messaged_bottom = JSON.parse(await messages.last_three_messages(info_parse[0].user_ID));
+        let messenger_0 = '';
+        let messenger_1 = '';
+        let messenger_2 = '';
+        let messenger_3 = '';
+        let messenger_4 = '';
+        let messages_0 = '';
+        let messages_1 = '';
+        let messages_2 = '';
+        if (messaged_bottom[0])
+            messenger_0 = JSON.parse(await messages.get_messenger(messaged_bottom[0], info_parse[0].user_ID));
+        if (messaged_bottom[1])
+            messenger_1 = JSON.parse(await messages.get_messenger(messaged_bottom[1], info_parse[0].user_ID));
+        if (messaged_bottom[2])
+            messenger_2 = JSON.parse(await messages.get_messenger(messaged_bottom[2], info_parse[0].user_ID));
+        if (messaged_bottom[3])
+            messenger_3 = JSON.parse(await messages.get_messenger(messaged_bottom[2], info_parse[0].user_ID));
+        if (messaged_bottom[4])
+            messenger_4 = JSON.parse(await messages.get_messenger(messaged_bottom[2], info_parse[0].user_ID));
+        if (messenger_0 != '')
+            messages_0 = JSON.parse(await messages.messages(info_parse[0].user_ID, messenger_0[0].user_ID));
+        if (messenger_1 != '')
+            messages_1 = JSON.parse(await messages.messages(info_parse[0].user_ID, messenger_1[0].user_ID));
+        if (messenger_3 != '')
+            messages_2 = JSON.parse(await messages.messages(info_parse[0].user_ID, messenger_2[0].user_ID));
+
+
         res.render('match', {infos: info_parse[0],
-        						block_me: block_me_profiles,
-        						block: block_profiles,
-        						like: like_profiles,
-                                like_me: like_me_profiles,
-                                profiles: profiles_parse,
-                                new_notifications: new_notifications});
-    }
+                            info: info_parse[0],
+    						block_me: block_me_profiles,
+    						block: block_profiles,
+    						like: like_profiles,
+                            like_me: like_me_profiles,
+                            profiles: profiles_parse,
+                            new_notifications: new_notifications,
+                            messaged_bottom: messaged_bottom,
+                            messenger_0: messenger_0,
+                            messenger_1: messenger_1,
+                            messenger_2: messenger_2,
+                            messages_0: messages_0,
+                            messages_1: messages_1,
+                            messages_2: messages_2
+                            });
+        }
 })
 
 router.post('/unlike_block', async function(req, res) {
