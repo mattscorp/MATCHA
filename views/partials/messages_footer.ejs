@@ -27,13 +27,13 @@
 			  <!-- Nav pills -->
 			  <ul class="nav nav-pills" role="tablist">
 			    <li class="nav-item">
-			      <a class="nav-link active" data-toggle="pill" href="#home"><%= messaged_bottom[0].first_name %></a>
+			      <a class="nav-link active" data-toggle="pill" href="#home"><img src="<%= messenger_0[0].profile_picture %>" alt="Photo de <%= messenger_0[0].first_name %>" class="mr-3 mt-3 rounded-circle border img_messages"></a>
 			    </li>
 			    <li class="nav-item">
-			      <a class="nav-link" data-toggle="pill" href="#menu1"><%= messaged_bottom[1].first_name %></a>
+			      <a class="nav-link" data-toggle="pill" href="#menu1"><img src="<%= messenger_1[0].profile_picture %>" alt="Photo de <%= messenger_1[0].first_name %>" class="mr-3 mt-3 rounded-circle border img_messages"></a>
 			    </li>
 			    <li class="nav-item">
-			      <a class="nav-link" data-toggle="pill" href="#menu2"><%= messaged_bottom[2].first_name %></a>
+			      <a class="nav-link" data-toggle="pill" href="#menu2"><img src="<%= messenger_2[0].profile_picture %>" alt="Photo de <%= messenger_2[0].first_name %>" class="mr-3 mt-3 rounded-circle border img_messages"></a>
 			    </li>
 			  </ul>
 
@@ -41,18 +41,116 @@
 			  <div class="tab-content">
 
 			    <div id="home" class="container tab-pane active"><br>
+			      <h3>Messages de <%= messenger_0[0].first_name %></h3>
+                    <form action="report" method="post">
+                        <input type="hidden" name="messaging_ID" value="<%= info.user_ID %>">
+                        <input type="hidden" name="messaged_ID" value="<%= messenger_0[0].user_ID %>">
+                        <input class="btn btn-danger" type="submit" name="submit" value="Signaler cet utilisateur">
+                    </form>
+                    <br/>
+                    <form action="new_message" method="post">
+	                    <input type="hidden" name="sender_ID" value="<%= info.user_ID %>">
+	                    <input type="hidden" name="recipient_ID" value="<%= messenger_0[0].user_ID %>">
+	                    <textarea required type="text" name="message" placeholder="Nouveau message"></textarea> 
+	                    <br/>
+	                    <input class="btn btn-dark" type="submit" name="submit" value="Envoyer">
+	                </form>
+                    <br/>
+                  <div class="pre-scrollable">
+			      <% messages_0.reverse().forEach(function(item) { %>
+			      	<% if (item.recipient_ID == messenger_0[0].user_ID) { %>
+                        <div class="my-2 shadow-lg media bg-primary border p-3 col-sm-9 float-sm-right rounded">
+                            <img src="<%= info.profile_picture %>" alt="Photo de <%= info.first_name %>" class="mr-3 mt-3 rounded-circle border img_messages">
+                            <div class="media-body">
+                                <p><kbd><%= item.message %></kbd></p><small><i>le <%= item.date.split('-')[2].split('T')[0]; %>/<%= item.date.split('-')[1]; %>/<%= item.date.split('-')[0]; %> à <%= item.date.split('T')[1].split('.')[0] %></i></small>
+                            </div>
+                        </div>
+                    <% } else { %>
+                        <div class="media bg-info border p-3 col-sm-9 float-sm-left rounded">
+                            <img src="<%= messenger_0[0].profile_picture %>" alt="Photo de <%= messenger_0[0].first_name %>" class="mr-3 mt-3 rounded-circle border img_messages">
+                            <div class="media-body">
+                                <p><kbd><%= item.message %></kbd><small></p><i>le <%= item.date.split('-')[2].split('T')[0]; %>/<%= item.date.split('-')[1]; %>/<%= item.date.split('-')[0]; %> à <%= item.date.split('T')[1].split('.')[0] %></i></small>
+                            </div>
+                        </div>
+                    <% } %>
+			      <% }) %>
+			      </div>
+			    </div>
 
-			      <h3>HOME</h3>
-			      <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-			    </div>
 			    <div id="menu1" class="container tab-pane fade"><br>
-			      <h3>Menu 1</h3>
-			      <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+			      <h3>Messages de <%= messenger_1[0].first_name %></h3>
+                    <form action="report" method="post">
+                        <input type="hidden" name="messaging_ID" value="<%= info.user_ID %>">
+                        <input type="hidden" name="messaged_ID" value="<%= messenger_1[0].user_ID %>">
+                        <input class="btn btn-danger" type="submit" name="submit" value="Signaler cet utilisateur">
+                    </form>
+                    <br/>
+                    <form action="new_message" method="post">
+	                    <input type="hidden" name="sender_ID" value="<%= info.user_ID %>">
+	                    <input type="hidden" name="recipient_ID" value="<%= messenger_1[0].user_ID %>">
+	                    <textarea required type="text" name="message" placeholder="Nouveau message"></textarea> 
+	                    <br/>
+	                    <input class="btn btn-dark" type="submit" name="submit" value="Envoyer">
+	                </form>
+                  <br/>
+                  <div class="pre-scrollable">
+				      <% messages_1.reverse().forEach(function(item) { %>
+				      	<% if (item.recipient_ID == messenger_1[0].user_ID) { %>
+	                        <div class="my-2 shadow-lg media bg-primary border p-3 col-sm-9 float-sm-right rounded">
+	                            <img src="<%= info.profile_picture %>" alt="Photo de <%= info.first_name %>" class="mr-3 mt-3 rounded-circle border img_messages">
+	                            <div class="media-body">
+	                                <p><kbd><%= item.message %></kbd></p><small><i>le <%= item.date.split('-')[2].split('T')[0]; %>/<%= item.date.split('-')[1]; %>/<%= item.date.split('-')[0]; %> à <%= item.date.split('T')[1].split('.')[0] %></i></small>
+	                            </div>
+	                        </div>
+	                    <% } else { %>
+	                        <div class="media bg-info border p-3 col-sm-9 float-sm-left rounded">
+	                            <img src="<%= messenger_1[0].profile_picture %>" alt="Photo de <%= messenger_1[0].first_name %>" class="mr-3 mt-3 rounded-circle border img_messages">
+	                            <div class="media-body">
+	                                <p><kbd><%= item.message %></kbd><small></p><i>le <%= item.date.split('-')[2].split('T')[0]; %>/<%= item.date.split('-')[1]; %>/<%= item.date.split('-')[0]; %> à <%= item.date.split('T')[1].split('.')[0] %></i></small>
+	                            </div>
+	                        </div>
+	                    <% } %>
+				      <% }) %>
+				  </div>
 			    </div>
+
 			    <div id="menu2" class="container tab-pane fade"><br>
-			      <h3>Menu 2</h3>
-			      <p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam.</p>
+			      <h3>Messages de <%= messenger_2[0].first_name %></h3>
+                    <form action="report" method="post">
+                        <input type="hidden" name="messaging_ID" value="<%= info.user_ID %>">
+                        <input type="hidden" name="messaged_ID" value="<%= messenger_2[0].user_ID %>">
+                        <input class="btn btn-danger" type="submit" name="submit" value="Signaler cet utilisateur">
+                    </form>
+                    <br/>
+                    <form action="new_message" method="post">
+	                    <input type="hidden" name="sender_ID" value="<%= info.user_ID %>">
+	                    <input type="hidden" name="recipient_ID" value="<%= messenger_2[0].user_ID %>">
+	                    <textarea required type="text" name="message" placeholder="Nouveau message"></textarea> 
+	                    <br/>
+	                    <input class="btn btn-dark" type="submit" name="submit" value="Envoyer">
+	                </form>
+                  <br/>
+                  <div class="pre-scrollable">
+			      <% messages_2.reverse().forEach(function(item) { %>
+			      	<% if (item.recipient_ID == messenger_2[0].user_ID) { %>
+                        <div class="my-2 shadow-lg media bg-primary border p-3 col-sm-9 float-sm-right rounded">
+                            <img src="<%= info.profile_picture %>" alt="Photo de <%= info.first_name %>" class="mr-3 mt-3 rounded-circle border img_messages">
+                            <div class="media-body">
+                                <p><kbd><%= item.message %></kbd></p><small><i>le <%= item.date.split('-')[2].split('T')[0]; %>/<%= item.date.split('-')[1]; %>/<%= item.date.split('-')[0]; %> à <%= item.date.split('T')[1].split('.')[0] %></i></small>
+                            </div>
+                        </div>
+                    <% } else { %>
+                        <div class="media bg-info border p-3 col-sm-9 float-sm-left rounded">
+                            <img src="<%= messenger_2[0].profile_picture %>" alt="Photo de <%= messenger_2[0].first_name %>" class="mr-3 mt-3 rounded-circle border img_messages">
+                            <div class="media-body">
+                                <p><kbd><%= item.message %></kbd><small></p><i>le <%= item.date.split('-')[2].split('T')[0]; %>/<%= item.date.split('-')[1]; %>/<%= item.date.split('-')[0]; %> à <%= item.date.split('T')[1].split('.')[0] %></i></small>
+                            </div>
+                        </div>
+                    <% } %>
+			      <% }) %>
+			      </div>
 			    </div>
+
 			  </div>
 			    <% } %>
 			</div>

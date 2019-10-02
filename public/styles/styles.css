@@ -116,7 +116,28 @@ body {
   margin-right: -50px;
 }
 
+.bottom_message_button {
+  left: 50%;
+  margin-left: -50px;
+  right: 50%;
+  margin-right: -50px;
+}
+
 .img_messages {
   width: 60px;
   height: 60px;
+}
+
+.messages_footer{
+  position: fixed;
+  bottom: 5px;
+  right: 5px;
+  border: none;
+  color: white;
+  background-color: rgba(0,0,0,0.40);
+  padding-top: 10px;
+}
+
+.messages_footer:hover {
+  background-color: rgba(0,0,0,0.60);
 }

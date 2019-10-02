@@ -51,18 +51,26 @@ router.get('/', async function (req, res) {
 	    	if (info_parse[0].hashtag != null)
 		    	hashtag_nb = info_parse[0].hashtag.split(',').length;
 		    // Obtention des trois derniers messages
-		    let messages_bottom = [];
-		    let messaged_bottom = await messages.last_three_messages(info_parse[0].user_ID);
-		    console.log('messaged_bottom ===> ' + messaged_bottom);
-		    console.log('messaged_bottom[0] ===> ' + messaged_bottom[1] + "\n\n\n\n");
-		    if (messaged_bottom == '') console.log('vide');
+		    let messaged_bottom = JSON.parse(await messages.last_three_messages(info_parse[0].user_ID));
+		    let messenger_0 = JSON.parse(await messages.get_messenger(messaged_bottom[0], info_parse[0].user_ID));
+		    let messenger_1 = JSON.parse(await messages.get_messenger(messaged_bottom[1], info_parse[0].user_ID));
+		    let messenger_2 = JSON.parse(await messages.get_messenger(messaged_bottom[2], info_parse[0].user_ID));
+		    let messages_0 = JSON.parse(await messages.messages(info_parse[0].user_ID, messenger_0[0].user_ID));
+		    let messages_1 = JSON.parse(await messages.messages(info_parse[0].user_ID, messenger_1[0].user_ID));
+		    let messages_2 = JSON.parse(await messages.messages(info_parse[0].user_ID, messenger_2[0].user_ID));
+
 	    	res.render('account', {hashtag_nb: 'true',
 	    							info: info_parse[0],
 	    							interests: interests_parse,
 	    							new_notifications: new_notifications,
 	    							all_interests: all_interests_parse,
 	    							messaged_bottom: messaged_bottom,
-	    							messages_bottom: messages_bottom
+	    							messenger_0: messenger_0,
+	    							messenger_1: messenger_1,
+	    							messenger_2: messenger_2,
+	    							messages_0: messages_0,
+	    							messages_1: messages_1,
+	    							messages_2: messages_2
 	    						});
 	    }
 	} else {
