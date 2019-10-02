@@ -26,7 +26,7 @@ const topic_exists = async function(topic) {
   }
   if (count == 0) {
     let sql = "SELECT * FROM interests WHERE topic = ?";
-    con.query(sql, [topic], function(err, result) {
+    con.query(sql, [topic.toLowerCase()], function(err, result) {
       if (err)
         throw err;
       else if (result == '')
@@ -77,7 +77,7 @@ const add_topic = function(topic) {
   }
   if (count == 0) {
     let sql = "INSERT INTO interests (topic) VALUES ?";
-    let values = [[topic]];
+    let values = [[topic.toLowerCase()]];
     con.query(sql, [values], function(err, result) {
       if (err)
         throw err;
@@ -98,7 +98,7 @@ const add_topic_user = function(topic, user_ID) {
   if (count == 0) {
     // On ajoute 1 dans la table interests
     let sql = "UPDATE interests SET `" + user_ID + "` = 1 WHERE `topic` = ?";
-    let values = [topic];
+    let values = [topic.toLowerCase()];
     con.query(sql, values, function(err, result) {
       if (err)
         throw err;
@@ -140,7 +140,7 @@ module.exports.add_topic_user = add_topic_user;
 const delete_interest = function(topic, user_ID) {
   // On passe de 0 a 1 sur la table interests
   let sql = "UPDATE interests SET `" + user_ID + "` = 0 WHERE `topic` = ?";
-  let values = [ent.encode(topic)];
+  let values = [ent.encode(topic.toLowerCase())];
   con.query(sql, values, function(err, result) {
     if (err)
       throw err;
