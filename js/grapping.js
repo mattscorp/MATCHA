@@ -43,7 +43,7 @@ const ft_pass = async function(){
 //
 const ft = async function() {
   let nb = 1;
-   while(nb < 510){
+   while(nb < 50){
     //Initialisatino des variables
     let password =  await ft_pass();
     let email_confirmation = 1;
@@ -82,7 +82,7 @@ const ft = async function() {
     }
     let hashtag_1 = "";
     if (count == 0)
-      hashtag_1 = hashtag[0];
+      hashtag_1 = hashtag[0].toLowerCase();
     // On assemble les hashtags
     while(hashtag[y])
     {
@@ -93,9 +93,9 @@ const ft = async function() {
       }
       if (count == 0) {
         if (hashtag_1 != "")
-          hashtag_1 = hashtag_1 + ',' + hashtag[y];
+          hashtag_1 = hashtag_1 + ',' + hashtag[y].toLowerCase();
         else
-          hashtag_1 = hashtag[y];
+          hashtag_1 = hashtag[y].toLowerCase();
       }
       y++;
     }
@@ -131,7 +131,7 @@ const ft = async function() {
             }
             if (count_po == 0) {
               let sql = "INSERT INTO interests (topic) VALUES ?";
-              let values = [[ft_hashtag]];
+              let values = [[ft_hashtag.toLowerCase()]];
               con.query(sql, [values], function(err, result) {
                 if (err)
                   throw err;
@@ -164,13 +164,13 @@ const ft = async function() {
       let sql3 = "ALTER TABLE interests ADD `" + nb_ok + "` INT NOT NULL DEFAULT 0";
       con.query(sql3, function(err) {
         let o = 1;
-        topic(hashtag_filtered_1[0], nb_ok);
-        console.log("user : " + nb_ok + " - hashtag : " + hashtag_filtered_1[0]);
+        topic(hashtag_filtered_1[0].toLowerCase(), nb_ok);
+        console.log("user : " + nb_ok + " - hashtag : " + hashtag_filtered_1[0].toLowerCase());
         while(hashtag_filtered_1[o])
         {
-        console.log("user : " + nb_ok + " - hashtag : " + hashtag_filtered_1[o]);
+        console.log("user : " + nb_ok + " - hashtag : " + hashtag_filtered_1[o].toLowerCase());
 
-          topic(hashtag_filtered_1[o], nb_ok);
+          topic(hashtag_filtered_1[o].toLowerCase(), nb_ok);
           o++;
         }
       });

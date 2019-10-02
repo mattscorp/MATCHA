@@ -388,24 +388,64 @@ router.post('/new_topic', async function(req, res) {
 	if (req.session.login && req.session.login != '') {
 		let new_topic = "";
 		if (req.body.submit == "Ajouter un topic")
-			new_topic = req.body.new_topic;
+			new_topic = req.body.new_topic.trim();
 		else
-			new_topic = req.body.submit.split('#')[1];
-			let topic_exists = await interests.topic_exists(new_topic);
-			let info_user = await user.recup_info(req.session.login);
-			let info_parse = JSON.parse(info_user);
-			const hashtag_nb = info_parse[0].hashtag.split(',').length;
-			if (hashtag_nb >= 7) {
-				const interests_parse = JSON.parse(await user.recup_interests(info_parse[0].user_ID));
-		    	const new_notifications = await notifications.notifications_number(info_parse[0].user_ID);
-		    	const all_interests_parse = JSON.parse(await interests.recup_all_interests(info_parse[0].user_ID));
-		    	res.render('account', {hashtag_nb: 'false', info: info_parse[0], interests: interests_parse, new_notifications: new_notifications, all_interests: all_interests_parse});
-			} else {
+			new_topic = req.body.submit.split('#')[1].trim();
+		let topic_exists = await interests.topic_exists(new_topic);
+		let info_user = await user.recup_info(req.session.login);
+		let info_parse = JSON.parse(info_user);
+		const hashtag_nb = info_parse[0].hashtag.split(',').length;
+		if (hashtag_nb >= 7) {
+			const interests_parse = JSON.parse(await user.recup_interests(info_parse[0].user_ID));
+	    	const new_notifications = await notifications.notifications_number(info_parse[0].user_ID);
+	    	const all_interests_parse = JSON.parse(await interests.recup_all_interests(info_parse[0].user_ID));
+	    	// Obtention des trois derniers messages
+		    let messaged_bottom = JSON.parse(await messages.last_three_messages(info_parse[0].user_ID));
+		    let messenger_0 = '';
+		    let messenger_1 = '';
+		    let messenger_2 = '';
+		    let messenger_3 = '';
+		    let messenger_4 = '';
+		    let messages_0 = '';
+		    let messages_1 = '';
+		    let messages_2 = '';
+		    if (messaged_bottom[0])
+			    messenger_0 = JSON.parse(await messages.get_messenger(messaged_bottom[0], info_parse[0].user_ID));
+			if (messaged_bottom[1])
+		    	messenger_1 = JSON.parse(await messages.get_messenger(messaged_bottom[1], info_parse[0].user_ID));
+		    if (messaged_bottom[2])
+			    messenger_2 = JSON.parse(await messages.get_messenger(messaged_bottom[2], info_parse[0].user_ID));
+			if (messaged_bottom[3])
+			    messenger_3 = JSON.parse(await messages.get_messenger(messaged_bottom[2], info_parse[0].user_ID));
+			if (messaged_bottom[4])
+			    messenger_4 = JSON.parse(await messages.get_messenger(messaged_bottom[2], info_parse[0].user_ID));
+			if (messenger_0 != '')
+			    messages_0 = JSON.parse(await messages.messages(info_parse[0].user_ID, messenger_0[0].user_ID));
+			if (messenger_1 != '')
+		    	messages_1 = JSON.parse(await messages.messages(info_parse[0].user_ID, messenger_1[0].user_ID));
+		    if (messenger_3 != '')
+			    messages_2 = JSON.parse(await messages.messages(info_parse[0].user_ID, messenger_2[0].user_ID));
+	    	res.render('account', {hashtag_nb: 'false',
+	    							info: info_parse[0],
+	    							interests: interests_parse,
+	    							new_notifications: new_notifications,
+	    							all_interests: all_interests_parse,
+	    							messaged_bottom: messaged_bottom,
+	    							messenger_0: messenger_0,
+	    							messenger_1: messenger_1,
+	    							messenger_2: messenger_2,
+	    							messages_0: messages_0,
+	    							messages_1: messages_1,
+	    							messages_2: messages_2
+	    						});
+		} else {
+			if (new_topic.trim() != '') {
 				if (topic_exists == 0)
 					interests.add_topic(new_topic);
 				interests.add_topic_user(new_topic, info_parse[0].user_ID);
-				res.redirect('/');
-			} 
+			}
+			res.redirect('/');
+		} 
 	} else
 		res.redirect('/');
 });

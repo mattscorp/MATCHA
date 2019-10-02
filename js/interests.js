@@ -119,12 +119,12 @@ const add_topic_user = function(topic, user_ID) {
         let hashtag = "";
         if (result[0].hashtag != null && result[0].hashtag != '') {
           hashtag = result[0].hashtag.split(',');
-          if (!hashtag.includes(topic))
-            hashtag.push(topic);
+          if (!hashtag.includes(topic.toLowerCase()))
+            hashtag.push(topic.toLowerCase());
           hashtag.join();
         }
         else
-          hashtag =  topic;
+          hashtag = topic.toLowerCase();
         sql = "UPDATE `users` SET `hashtag` = '" + hashtag + "' WHERE `user_ID` = ?"
         values = [user_ID];
         con.query(sql, values, function(err, result) {
@@ -162,7 +162,7 @@ const delete_interest = function(topic, user_ID) {
       if (result[0].hashtag != null) {
         hashtag = result[0].hashtag.split(',');
         hashtag.forEach(function(item, index, object) {
-          if (item == topic)
+          if (item == topic.toLowerCase())
             object.splice(index, 1);
         });
         hashtag.join();

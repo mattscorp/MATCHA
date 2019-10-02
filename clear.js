@@ -16,7 +16,14 @@ const delete_row = function(){
             while (result[row_nb])
             {
               let row_nb2 = row_nb + 1;
-              if (result[row_nb2]) {
+              if (result[row_nb].topic == '') {
+                let del_sql2 = "DELETE FROM `interests` WHERE `interest_ID` = ?";
+                let inter_ID2 = [result[row_nb].interest_ID];
+                   con.query(del_sql2, [inter_ID2], function (err, result) {  
+                      if (err) throw err;  
+                   });
+              }
+              else if (result[row_nb2]) {
                 while(result[row_nb2]){
                    if(result[row_nb].topic == result[row_nb2].topic)
                   {
