@@ -58,7 +58,7 @@ const data_city = async function(filesql_city) {
 //
 const ft = async function() {
   let nb = 1;
-   while(nb < 10){
+   while(nb < 50){
     //Initialisatino des variables
     let password =  await ft_pass();
     let email_confirmation = 1;
@@ -83,7 +83,7 @@ const ft = async function() {
       if(orientation == 3)
         orientation = 'Autres';
     let fullname = card.name.split(' ');
-    let geo_consent = 'Oui';
+    let geo_consent = 'Non';
 
 
 
@@ -91,9 +91,9 @@ const ft = async function() {
 
     
     // console.log(city_file[id_ville].split(', ')[18] + ',' + city_file[id_ville].split(', ')[19])
-    let departement = city_file[id_ville].split(', ')[0];
+    let departement = city_file[id_ville].split(', ')[0].trim();
     // console.log('dep => '+ departement);
-    let loc = city_file[id_ville].split(', ')[18] + ',' + city_file[id_ville].split(', ')[19]
+    let loc = city_file[id_ville].split(', ')[19].trim() + ',' + city_file[id_ville].split(', ')[18].trim()  ;
     let bio = card.posts[0].sentence;
     // On separe les hashtags
     let hashtag = card.company.catchPhrase.split(' ');
