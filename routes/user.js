@@ -36,7 +36,12 @@ const router = express.Router();
 router.get('/', async function (req, res) {
  	if (req.session.login && req.session.login != '') {
   		const info_parse = JSON.parse(await user.recup_info(req.session.login));
-  		if (!info_parse[0].email_confirmation && info_parse[0].insta == null) {
+  		if (info_parse[0] == '1') {
+  			console.log(info_parse('1'));
+  			req.session.login = '';
+  			res.redirect('/');
+  		}
+  		else if (!info_parse[0].email_confirmation && info_parse[0].insta == null) {
 		  	if (info_parse[0].email_confirmation == 2) {
 		  		res.render('banned', {user_ID: info_parse[0].user_ID});
 		  	} else if (info_parse[0].email_confirmation == '' || info_parse[0].email_confirmation != 1) {

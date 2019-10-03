@@ -548,7 +548,10 @@ const recup_info = async function(login){
    let sql = "SELECT `user_ID`, `last_name`, `first_name`, `login`, `hashtag`, `insta`, `email`, `localisation_auto`, `localisation_manual`, `gender`, `orientation`, `age`, `bio`, `image_1`, `image_2`, `image_3`, `image_4`, `image_5`, `profile_picture`, `score`, `geo_consent`, `departement`, `email_confirmation` FROM users WHERE login = ? OR insta = ?";
    con.query(sql, [ent.encode(login), login], function(err, result) {
      if(err) throw err;
-     resolve(JSON.stringify(result));
+     if (result[0] == '')
+      resolve('1');
+     else
+      resolve(JSON.stringify(result));
    })
  });
 }
