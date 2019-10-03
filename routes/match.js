@@ -83,7 +83,7 @@ router.get('/match', async function(req, res) {
             messages_0 = JSON.parse(await messages.messages(info_parse[0].user_ID, messenger_0[0].user_ID));
         if (messenger_1 != '')
             messages_1 = JSON.parse(await messages.messages(info_parse[0].user_ID, messenger_1[0].user_ID));
-        if (messenger_3 != '')
+        if (messenger_2 != '')
             messages_2 = JSON.parse(await messages.messages(info_parse[0].user_ID, messenger_2[0].user_ID));
 
 

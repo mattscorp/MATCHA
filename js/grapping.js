@@ -43,7 +43,7 @@ const ft_pass = async function(){
 //
 const ft = async function() {
   let nb = 1;
-   while(nb < 50){
+   while(nb < 510){
     //Initialisatino des variables
     let password =  await ft_pass();
     let email_confirmation = 1;

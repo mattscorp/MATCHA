@@ -49,11 +49,11 @@
                     <form action="change_infos" method="post">
                         <h2>Informations personnelles</h2>
                         <p>Pseudo : </p>
-                        <input required type="text" class="form-control" name="login" value="<%= info.login%>" />
+                        <input required type="text" pattern="[A-Za-z0-9]+" class="form-control" name="login" value="<%= info.login%>" />
                         <p>Prénom : </p>
-                        <input required type="text" class="form-control" name="first_name" value="<%= info.first_name%>" />
+                        <input required type="text" pattern="[A-Za-z0-9]+" class="form-control" name="first_name" value="<%= info.first_name%>" />
                         <p>Nom : </p>
-                        <input required type="text" class="form-control" name="last_name" value="<%= info.last_name%>" />
+                        <input required type="text" pattern="[A-Za-z0-9]+" class="form-control" name="last_name" value="<%= info.last_name%>" />
                         <p>Email : </p>
                         <input required type="email" class="form-control" name="email" value="<%= info.email%>" />
                         <p>Age : </p>
@@ -130,7 +130,7 @@
                     <% }); %>
                 </div>
                     <form action="new_topic" method="post">
-                        <input required type="text" name="new_topic">
+                        <input required type="text" pattern="[A-Za-z0-9]+" name="new_topic">
                         <input class="btn btn-dark" type="submit" name="submit" value="Ajouter un topic">
                     </form>
                     <form action="new_topic" method="post">

@@ -66,9 +66,9 @@
                 </div>
             <% } %>%>
             <form method="post" action="creation">
-                <input class="form-control" required type="text" name="user[first_name]" placeholder="Ton prénom"> <br>
-                <input class="form-control" required type="text" name="user[last_name]" placeholder="Ton nom"> <br>
-                <input class="form-control" required type="text" name="user[login]" placeholder="Ton pseudo"> <br>
+                <input class="form-control" required type="text" pattern="[A-Za-z0-9]+" name="user[first_name]" placeholder="Ton prénom"> <br>
+                <input class="form-control" required type="text" pattern="[A-Za-z0-9]+" name="user[last_name]" placeholder="Ton nom"> <br>
+                <input class="form-control" required type="text" pattern="[A-Za-z0-9]+" name="user[login]" placeholder="Ton pseudo"> <br>
                 <input class="form-control" required type="email" name="user[email]"placeholder="Ton email"> <br>
                 <input class="form-control" required type="password" name="user[mdp1]" placeholder="Ton mot de passe"> <br>
                 <input class="form-control" required type="password" name="user[mdp2]" placeholder="Verifie ton mot de passe"> <br>
