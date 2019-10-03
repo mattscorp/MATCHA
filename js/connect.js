@@ -359,8 +359,8 @@ function add_infos(info, login) {
        count++;
   }
   if (count == 0) {
-    let sql = "UPDATE users SET bio = ?, age = ?, gender = ?, orientation = ?, departement = ?, geo_consent = ? WHERE login = ?";
-    let values = [info.bio, ent.encode(info.age), ent.encode(info.gender), ent.encode(info.orientation), info.departement, ent.encode(info.geo_consent), ent.encode(login)];
+    let sql = "UPDATE users SET bio = ?, age = ?, gender = ?, orientation = ?, departement = ?, geo_consent = ? WHERE login = ? or insta = ?";
+    let values = [info.bio, ent.encode(info.age), ent.encode(info.gender), ent.encode(info.orientation), info.departement, ent.encode(info.geo_consent), ent.encode(login), login];
     if(verif_add_infos(info) == 0){
       con.query(sql, values, function (err, result) {  
       	if (err) throw err;
@@ -545,8 +545,8 @@ module.exports.validation_mail = validation_mail;
 // Fonction pour recuperer les info utilisateur
 const recup_info = async function(login){
  return new Promise((resolve, reject) =>{
-   let sql = "SELECT `user_ID`, `last_name`, `first_name`, `login`, `hashtag`, `email`, `localisation_auto`, `localisation_manual`, `gender`, `orientation`, `age`, `bio`, `image_1`, `image_2`, `image_3`, `image_4`, `image_5`, `profile_picture`, `score`, `geo_consent`, `departement`, `email_confirmation` FROM users WHERE login = ?";
-   con.query(sql, [ent.encode(login)], function(err, result){
+   let sql = "SELECT `user_ID`, `last_name`, `first_name`, `login`, `hashtag`, `insta`, `email`, `localisation_auto`, `localisation_manual`, `gender`, `orientation`, `age`, `bio`, `image_1`, `image_2`, `image_3`, `image_4`, `image_5`, `profile_picture`, `score`, `geo_consent`, `departement`, `email_confirmation` FROM users WHERE login = ? OR insta = ?";
+   con.query(sql, [ent.encode(login), login], function(err, result) {
      if(err) throw err;
      resolve(JSON.stringify(result));
    })
@@ -569,8 +569,8 @@ module.exports.recup_interests = recup_interests;
 // Ajout des coordonnées à la BDD
 const add_coordinates = async function(infos, login) {
   let geoloc = infos.geoplugin_latitude + ',' + infos.geoplugin_longitude;
-  let sql = "UPDATE users SET localisation_auto = '" + geoloc + "' WHERE login = ?";
-  con.query(sql, [ent.encode(login)], function(err, result) {
+  let sql = "UPDATE users SET localisation_auto = '" + geoloc + "' WHERE login = ? OR insta = ?";
+  con.query(sql, [ent.encode(login), login], function(err, result) {
     if (err) throw err;
   });
 }
@@ -580,8 +580,8 @@ module.exports.add_coordinates = add_coordinates;
 // Ajout des coordonnées via navigateur à la BDD
 const add_coordinates_nav = async function(infos, login) {
   let geoloc = infos.latitude + ',' + infos.longitude;
-  let sql = "UPDATE users SET localisation_manual = '" + geoloc + "' WHERE login = ?";
-  con.query(sql, [ent.encode(login)], function(err, result) {
+  let sql = "UPDATE users SET localisation_manual = '" + geoloc + "' WHERE login = ? OR insta = ?";
+  con.query(sql, [ent.encode(login), login], function(err, result) {
     if (err) throw err;
   });
 }

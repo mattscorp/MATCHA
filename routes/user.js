@@ -1,7 +1,7 @@
 'use strict'
 
 const express = require('express');
-var app = express();
+let app = express();
 const session = require('express-session');
 const server = require('http').createServer(app);
 const ent = require('ent'); // Permet de bloquer les caractères HTML (sécurité équivalente à htmlentities en PHP)
@@ -13,7 +13,7 @@ const alert = require('alert-node');
 const fs = require('fs');
 const util = require('util');
 const readFile = util.promisify(fs.readFile);
-var request = require('request');
+const request = require('request');
 
 const user = require('../js/connect.js');
 const interests = require('../js/interests.js');
@@ -78,8 +78,7 @@ router.get('/', async function (req, res) {
 		    if (messenger_2 != '')
 			    messages_2 = JSON.parse(await messages.messages(info_parse[0].user_ID, messenger_2[0].user_ID));
 
-	    	res.render('account', {hashtag_nb: 'true',
-	    							info: info_parse[0],
+	    	res.render('account', {info: info_parse[0],
 	    							interests: interests_parse,
 	    							new_notifications: new_notifications,
 	    							all_interests: all_interests_parse,
@@ -441,19 +440,8 @@ router.post('/new_topic', async function(req, res) {
 		    	messages_1 = JSON.parse(await messages.messages(info_parse[0].user_ID, messenger_1[0].user_ID));
 		    if (messenger_2 != '')
 			    messages_2 = JSON.parse(await messages.messages(info_parse[0].user_ID, messenger_2[0].user_ID));
-	    	res.render('account', {hashtag_nb: 'false',
-	    							info: info_parse[0],
-	    							interests: interests_parse,
-	    							new_notifications: new_notifications,
-	    							all_interests: all_interests_parse,
-	    							messaged_bottom: messaged_bottom,
-	    							messenger_0: messenger_0,
-	    							messenger_1: messenger_1,
-	    							messenger_2: messenger_2,
-	    							messages_0: messages_0,
-	    							messages_1: messages_1,
-	    							messages_2: messages_2
-	    						});
+			alert("Tu as déjà atteint la limite de 7 centres d'intérêts ! Tu dois en supprimer un pour en ajouter un nouveau.");
+	    	res.redirect('/');
 		} else {
 			if (new_topic.trim() != '') {
 				if (topic_exists == 0)

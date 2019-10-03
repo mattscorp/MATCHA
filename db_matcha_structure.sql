@@ -84,6 +84,7 @@ CREATE TABLE IF NOT EXISTS `users` (
   `localisation_manual` text,
   `departement` varchar(11) NOT NULL,
   `geo_consent` text NOT NULL,
+  `insta` varchar(10) DEFAULT NULL,
   `gender` varchar(10) DEFAULT NULL,
   `orientation` varchar(10) DEFAULT NULL,
   `age` int(11) DEFAULT NULL,

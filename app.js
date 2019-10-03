@@ -20,12 +20,12 @@ app.use(session({
 }));
 app.use(express.static('public'));
 
-//Variable de connexion a la Database
+//Connexion a la Database
 
 const db_connect = require('./db_connection.js');
 let con = db_connect.con;
 
-//Connexion a la Database
+//
 
 const user = require('./routes/user.js');
 app.use(user);
@@ -38,6 +38,9 @@ app.use(swipe);
 
 const match = require('./routes/match.js');
 app.use(match);
+
+const insta = require('./routes/insta.js');
+app.use(insta);
 
 const notifications = require('./routes/notifications.js');
 app.use(notifications);

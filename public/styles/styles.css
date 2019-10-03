@@ -141,3 +141,9 @@ body {
 .messages_footer:hover {
   background-color: rgba(0,0,0,0.60);
 }
+
+.insta {
+  max-height: 60px;
+  max-width: auto;
+  background-color: none; 
+}

@@ -29,12 +29,6 @@
             <div class="border border-white rounded">
                 <h1>Infos de <strong class="first_letter"><%= info.first_name %></strong></h1>
             </div>
-             <% if (hashtag_nb == 'false') { %>
-                <div class="alert alert-danger alert-dismissible fade show">
-                    <button type="button" class="close" data-dismiss="alert">&times;</button>
-                    Tu as déjà atteint la limite de 7 centres d'intérêts ! Tu dois en supprimer un pour en ajouter un nouveau.
-                </div>
-            <% } %>
             <form action="change_password" method="get">
                 <input class="btn btn-dark" type="submit" value="Changer mon mot de passe">
             </form>
@@ -242,39 +236,39 @@
         </div>
     </body>
     <script type="text/javascript">
-    if('<%= info.geo_consent %>' == 'Oui')
-    {
-        var options = {
-        enableHighAccuracy: true,
-        timeout: 5000,
-        maximumAge: 0
-        };
+        if('<%= info.geo_consent %>' == 'Oui')
+        {
+            var options = {
+            enableHighAccuracy: true,
+            timeout: 5000,
+            maximumAge: 0
+            };
 
-        function success(pos) {
-          var crd = pos.coords;
-          $.post('geo_nav', crd, function(crd) {
+            function success(pos) {
+              var crd = pos.coords;
+              $.post('geo_nav', crd, function(crd) {
+                    });
+            }
+
+            function error(err) {
+            }
+
+            navigator.geolocation.getCurrentPosition(success, error, options);
+        } else {
+            setInterval('load_geo()', 3000);
+            function load_geo() {
+                $.getJSON('http://www.geoplugin.net/json.gp?jsoncallback=?', function(data) {
+                    $.post('geo', data, function(data) {
+                    });
                 });
+            }
         }
+           
 
-        function error(err) {
-        }
-
-        navigator.geolocation.getCurrentPosition(success, error, options);
-    } else {
-        setInterval('load_geo()', 3000);
-        function load_geo() {
-            $.getJSON('http://www.geoplugin.net/json.gp?jsoncallback=?', function(data) {
-                $.post('geo', data, function(data) {
-                });
-            });
-        }
-    }
-       
-
-     setInterval('updateDiv()', 3000);
-        function updateDiv() { 
-            $( "#0" ).load(window.location.href + " #0" );
-        }
+        setInterval('updateDiv()', 3000);
+            function updateDiv() { 
+                $( "#0" ).load(window.location.href + " #0" );
+            }
     </script>
     <script type="text/javascript">
     window.onbeforeunload = function(e) {
