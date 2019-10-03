@@ -16,7 +16,7 @@ CREATE TABLE IF NOT EXISTS `history` (
   `action_ID` int(11) NOT NULL PRIMARY KEY AUTO_INCREMENT,
   `from_ID` int(11) DEFAULT NULL,
   `to_ID` int(11) DEFAULT NULL,
-  `history_first_name` text NOT NULL,
+  `history_first_name` text,
   `action` varchar(10) DEFAULT NULL,
   `date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
@@ -25,7 +25,7 @@ CREATE TABLE IF NOT EXISTS `history` (
 CREATE TABLE IF NOT EXISTS `interests` (
   `interest_ID` int(11) NOT NULL PRIMARY KEY AUTO_INCREMENT,
   `topic` varchar(50) DEFAULT NULL,
-  `topic_score` int(11) NOT NULL
+  `topic_score` int(11) NOT NULL DEFAULT 0
 );
 
 
@@ -58,7 +58,7 @@ CREATE TABLE IF NOT EXISTS `notifications` (
   `notification_ID` int(11) NOT NULL PRIMARY KEY AUTO_INCREMENT,
   `notified_ID` int(11) DEFAULT NULL,
   `notifier_ID` int(11) DEFAULT NULL,
-  `notifier_first_name` text NOT NULL,
+  `notifier_first_name` text,
   `motive` text,
   `valid_notification` int(11) DEFAULT NULL,
   `date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
@@ -77,21 +77,21 @@ CREATE TABLE IF NOT EXISTS `users` (
   `user_ID` INT(11) NOT NULL PRIMARY KEY AUTO_INCREMENT, 
   `last_name` varchar(255) DEFAULT NULL,
   `first_name` varchar(255) DEFAULT NULL,
-  `login` varchar(20) DEFAULT NULL,
+  `login` varchar(100) DEFAULT NULL,
   `email` varchar(255) DEFAULT NULL,
   `password` text,
   `localisation_auto` text,
   `localisation_manual` text,
-  `departement` varchar(11) NOT NULL,
-  `geo_consent` text NOT NULL,
+  `departement` varchar(11) NOT NULL DEFAULT '0',
+  `geo_consent` text,
   `insta` varchar(10) DEFAULT NULL,
   `gender` varchar(10) DEFAULT NULL,
   `orientation` varchar(10) DEFAULT NULL,
   `age` int(11) DEFAULT NULL,
   `bio` text,
   `hashtag` text,
-  `nb_like` int(11) NOT NULL,
-  `nb_nope` int(11) NOT NULL,
+  `nb_like` int(11) NOT NULL DEFAULT 0,
+  `nb_nope` int(11) NOT NULL  DEFAULT 0,
   `score` int(11) DEFAULT NULL,
   `image_1` text,
   `image_2` text,

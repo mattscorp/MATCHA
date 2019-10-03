@@ -75,7 +75,7 @@ module.exports.get_messenger = get_messenger;
 
 const last_three_messages = async function(user_ID) {
 	return new Promise((resolve, reject) => {
-		let sql = "SELECT DISTINCT `recipient_ID`, `sender_ID` FROM `message` WHERE `recipient_ID` = ? OR `sender_ID` = ? ORDER BY `date` DESC LIMIT 5";
+		let sql = "SELECT DISTINCT `date`, `recipient_ID`, `sender_ID` FROM `message` WHERE `recipient_ID` = ? OR `sender_ID` = ? ORDER BY `date` DESC LIMIT 5";
 		con.query(sql, [user_ID, user_ID], function(err, result) {
 			if (err)
 				throw err;
