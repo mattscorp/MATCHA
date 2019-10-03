@@ -35,22 +35,12 @@ const router = express.Router();
 // Chargement de la page index.html
 router.get('/', async function (req, res) {
  	if (req.session.login && req.session.login != '') {
- 		console.log(req.session.login);
-  		const info_parse = await user.recup_info(JSON.parse(req.session.login)[0].uuid);
-  		console.log('info : ' + info_parse);
-  		if (info_parse[0] == '1') {
-  			console.log(info_parse('1'));
-  			req.session.login = '';
-  			res.redirect('/');
-  		}
-  		else if (!info_parse[0].email_confirmation && info_parse[0].insta == null) {
-		  	if (info_parse[0].email_confirmation == 2) {
-		  		res.render('banned', {user_ID: info_parse[0].user_ID});
-		  	} else if (info_parse[0].email_confirmation == '' || info_parse[0].email_confirmation != '1') {
-		     	res.render('confirm_your_email');
-		    }
-		}
-	    else { 
+  		const info_parse = JSON.parse(await user.recup_info(JSON.parse(req.session.login)[0].uuid));
+	  	if (info_parse[0].email_confirmation == '2') {
+	  		res.render('banned', {user_ID: info_parse[0].user_ID});
+	  	} else if (info_parse[0].email_confirmation == '' || info_parse[0].email_confirmation != '1') {
+	     	res.render('confirm_your_email');
+	    } else { 
 		    if (info_parse[0].bio == null || info_parse[0].age == null || info_parse[0].gender == null || info_parse[0].orientation == null) {
 		    	res.render('info_user', {info: info_parse[0]});
 		    } else if (info_parse[0].profile_picture == null) {
@@ -250,6 +240,7 @@ router.post('/connect', async function(req, res){
 		if(val_verif === 1) {
 			let uuid_user = await user.recup_info_uuid(req.body.user_connect.name);
 			req.session.login = uuid_user;
+			console.log('utilsiateur connecte : ' + uuid_user);
 			res.redirect('/');
 		} else if (val_verif == 2)
 			res.render('connect', {user: 'false', password: 'true', creation: 'true'});

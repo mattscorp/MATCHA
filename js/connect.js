@@ -522,14 +522,15 @@ module.exports.delete_photo = delete_photo;
 // Validation de l'addresse email user
 const validation_mail = async function(login, uuid) {
 	return new Promise((resolve, reject) => {
-		let sql = "SELECT email_confirmation FROM users WHERE uuid = ?";
-	  	con.query(sql, [uuid], function(err, result){
+		let sql = "SELECT email_confirmation FROM users WHERE login = ?";
+	  	con.query(sql, [ent.encode(login)], function(err, result){
+        console.log(result);
 	    	if(err) 
           throw err;
-        else if (!result[0].email_confirmation || result[0].email_confirmation == '' || result[0].email_confirmation == null)
+        else if (!result[0].email_confirmation || result[0].email_confirmation == '' || result[0].email_confirmation == null || result[0].email_confirmation == '1')
           resolve (0);
 	    	else if (result[0].email_confirmation == uuid) {
-	    		let sql2 = "UPDATE users SET email_confirmation = 1 WHERE login = ?";
+	    		let sql2 = "UPDATE users SET email_confirmation = '1' WHERE login = ?";
 	    		con.query(sql2, [ent.encode(login)], function(err, result) {
 	    			if(err) throw err;
 	    		})
@@ -563,8 +564,8 @@ module.exports.recup_info = recup_info;
 // Fonction pour recuperer l'uuid utilisateur
 const recup_info_uuid = async function(login){
  return new Promise((resolve, reject) =>{
-   let sql = "SELECT `uuid` FROM users WHERE login = ?";
-   con.query(sql, [login], function(err, result) {
+   let sql = "SELECT `uuid` FROM users WHERE login = ? OR insta = ?";
+   con.query(sql, [login, login], function(err, result) {
     console.log(result);
      if(err) throw err;
      if (result[0] == '')

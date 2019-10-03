@@ -62,18 +62,19 @@ router.get('/auth', async function(req, res) {
 		request(options, async function (error, response, body) {
 			if (!error && response.statusCode == 200) {
 				let insta_infos = JSON.parse(body);
+				console.log(body);
 				let uuid_user = uuidv4();
 				if (error)
 					throw error;
 				else if (insta_infos.user.is_business != false) {
 					alert("Tu ne peux pas utiliser un compte instagram d'entreprise");
 					res.redirect('/');
-				} else {
+				} else {console.log(insta_infos.user.id);
 					if (await ft_insta.login_exist(insta_infos.user.username) == '1') {
 						
 						// On cree l'utilisateur
 						let sql = "INSERT INTO `users` (`login`, `uuid`, `insta`, `first_name`, `last_name`, `email_confirmation`, `image_1`, `profile_picture`) VALUES (?)";
-						let values = [[insta_infos.user.username, uuid_user, insta_infos.user.username, insta_infos.user.full_name.split(' ')[0], insta_infos.user.full_name.split(' ')[1], '1',insta_infos.user.profile_picture ,insta_infos.user.profile_picture]];
+						let values = [[insta_infos.user.username, uuid_user, insta_infos.user.id, insta_infos.user.full_name.split(' ')[0], insta_infos.user.full_name.split(' ')[1], '1',insta_infos.user.profile_picture ,insta_infos.user.profile_picture]];
 						con.query(sql, values, function(err, result) {
 							if (err)
 								throw err;
@@ -89,7 +90,7 @@ router.get('/auth', async function(req, res) {
 											if (err)
 												throw err;
 											else {
-												let uuid_user = await user.recup_info_uuid(insta_infos.user.username);
+												let uuid_user = await user.recup_info_uuid(insta_infos.user.id);
 												req.session.login = uuid_user;
 												res.redirect('/');
 											}
@@ -99,7 +100,7 @@ router.get('/auth', async function(req, res) {
 							}
 						});
 					} else {
-						let uuid_user = await user.recup_info_uuid(insta_infos.user.username);
+						let uuid_user = await user.recup_info_uuid(insta_infos.user.id);
 						console.log(uuid_user);
 						req.session.login = uuid_user;
 						res.redirect('/');
