@@ -383,8 +383,8 @@ function modif_infos_perso(info, login) {
        count++;
   }
   if (count == 0) {
-    let sql = "UPDATE users SET login = ?, first_name = ?, last_name = ?, email = ?, age = ?, gender = ?, orientation = ?, bio = ?, `departement` = ?, geo_consent = ? WHERE login = ?"; 
-    let values = [ent.encode(info.login), ent.encode(info.first_name), ent.encode(info.last_name), info.email, ent.encode(info.age), ent.encode(info.gender), ent.encode(info.orientation), info.bio, info.departement, ent.encode(info.geo_consent), ent.encode(login)];
+    let sql = "UPDATE users SET login = ?, first_name = ?, last_name = ?, email = ?, age = ?, gender = ?, orientation = ?, bio = ?, `departement` = ?, geo_consent = ? WHERE login = ? OR insta = ?"; 
+    let values = [ent.encode(info.login), ent.encode(info.first_name), ent.encode(info.last_name), info.email, ent.encode(info.age), ent.encode(info.gender), ent.encode(info.orientation), info.bio, info.departement, ent.encode(info.geo_consent), ent.encode(login), login];
     if(verif_add_infos(info) == 0) {
       con.query(sql, values, function (err, result) {  
         if (err) throw err;  

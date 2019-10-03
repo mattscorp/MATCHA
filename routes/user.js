@@ -36,60 +36,65 @@ const router = express.Router();
 router.get('/', async function (req, res) {
  	if (req.session.login && req.session.login != '') {
   		const info_parse = JSON.parse(await user.recup_info(req.session.login));
-	  	if (info_parse[0].email_confirmation == 2) {
-	  		res.render('banned', {user_ID: info_parse[0].user_ID});
-	  	} else if (info_parse[0].email_confirmation == '' || info_parse[0].email_confirmation != 1) {
-	     	res.render('confirm_your_email');
-	    } else if (info_parse[0].bio == null || info_parse[0].age == null || info_parse[0].gender == null || info_parse[0].orientation == null) {
-	    	res.render('info_user', {info: info_parse[0]});
-	    } else if (info_parse[0].profile_picture == null) {
-	    	res.render('profile_picture', {info:info_parse[0]});
-	    } else {
-	    	const interests_parse = JSON.parse(await user.recup_interests(info_parse[0].user_ID));
-	    	const new_notifications = await notifications.notifications_number(info_parse[0].user_ID);
-	    	const all_interests_parse = JSON.parse(await interests.recup_all_interests(info_parse[0].user_ID));
-	    	let hashtag_nb = 0;
-	    	if (info_parse[0].hashtag != null && info_parse[0].hashtag != '')
-		    	hashtag_nb = info_parse[0].hashtag.split(',').length;
-		    // Obtention des trois derniers messages
-		    let messaged_bottom = JSON.parse(await messages.last_three_messages(info_parse[0].user_ID));
-		    let messenger_0 = '';
-		    let messenger_1 = '';
-		    let messenger_2 = '';
-		    let messenger_3 = '';
-		    let messenger_4 = '';
-		    let messages_0 = '';
-		    let messages_1 = '';
-		    let messages_2 = '';
-		    if (messaged_bottom[0])
-			    messenger_0 = JSON.parse(await messages.get_messenger(messaged_bottom[0], info_parse[0].user_ID));
-			if (messaged_bottom[1])
-		    	messenger_1 = JSON.parse(await messages.get_messenger(messaged_bottom[1], info_parse[0].user_ID));
-		    if (messaged_bottom[2])
-			    messenger_2 = JSON.parse(await messages.get_messenger(messaged_bottom[2], info_parse[0].user_ID));
-			if (messaged_bottom[3])
-			    messenger_3 = JSON.parse(await messages.get_messenger(messaged_bottom[2], info_parse[0].user_ID));
-			if (messaged_bottom[4])
-			    messenger_4 = JSON.parse(await messages.get_messenger(messaged_bottom[2], info_parse[0].user_ID));
-			if (messenger_0 != '')
-			    messages_0 = JSON.parse(await messages.messages(info_parse[0].user_ID, messenger_0[0].user_ID));
-			if (messenger_1 != '')
-		    	messages_1 = JSON.parse(await messages.messages(info_parse[0].user_ID, messenger_1[0].user_ID));
-		    if (messenger_2 != '')
-			    messages_2 = JSON.parse(await messages.messages(info_parse[0].user_ID, messenger_2[0].user_ID));
+  		if (!info_parse[0].email_confirmation && info_parse[0].insta == null) {
+		  	if (info_parse[0].email_confirmation == 2) {
+		  		res.render('banned', {user_ID: info_parse[0].user_ID});
+		  	} else if (info_parse[0].email_confirmation == '' || info_parse[0].email_confirmation != 1) {
+		     	res.render('confirm_your_email');
+		    }
+		}
+	    else { 
+		    if (info_parse[0].bio == null || info_parse[0].age == null || info_parse[0].gender == null || info_parse[0].orientation == null) {
+		    	res.render('info_user', {info: info_parse[0]});
+		    } else if (info_parse[0].profile_picture == null) {
+		    	res.render('profile_picture', {info:info_parse[0]});
+		    } else {
+		    	const interests_parse = JSON.parse(await user.recup_interests(info_parse[0].user_ID));
+		    	const new_notifications = await notifications.notifications_number(info_parse[0].user_ID);
+		    	const all_interests_parse = JSON.parse(await interests.recup_all_interests(info_parse[0].user_ID));
+		    	let hashtag_nb = 0;
+		    	if (info_parse[0].hashtag != null && info_parse[0].hashtag != '')
+			    	hashtag_nb = info_parse[0].hashtag.split(',').length;
+			    // Obtention des trois derniers messages
+			    let messaged_bottom = JSON.parse(await messages.last_three_messages(info_parse[0].user_ID));
+			    let messenger_0 = '';
+			    let messenger_1 = '';
+			    let messenger_2 = '';
+			    let messenger_3 = '';
+			    let messenger_4 = '';
+			    let messages_0 = '';
+			    let messages_1 = '';
+			    let messages_2 = '';
+			    if (messaged_bottom[0])
+				    messenger_0 = JSON.parse(await messages.get_messenger(messaged_bottom[0], info_parse[0].user_ID));
+				if (messaged_bottom[1])
+			    	messenger_1 = JSON.parse(await messages.get_messenger(messaged_bottom[1], info_parse[0].user_ID));
+			    if (messaged_bottom[2])
+				    messenger_2 = JSON.parse(await messages.get_messenger(messaged_bottom[2], info_parse[0].user_ID));
+				if (messaged_bottom[3])
+				    messenger_3 = JSON.parse(await messages.get_messenger(messaged_bottom[2], info_parse[0].user_ID));
+				if (messaged_bottom[4])
+				    messenger_4 = JSON.parse(await messages.get_messenger(messaged_bottom[2], info_parse[0].user_ID));
+				if (messenger_0 != '')
+				    messages_0 = JSON.parse(await messages.messages(info_parse[0].user_ID, messenger_0[0].user_ID));
+				if (messenger_1 != '')
+			    	messages_1 = JSON.parse(await messages.messages(info_parse[0].user_ID, messenger_1[0].user_ID));
+			    if (messenger_2 != '')
+				    messages_2 = JSON.parse(await messages.messages(info_parse[0].user_ID, messenger_2[0].user_ID));
 
-	    	res.render('account', {info: info_parse[0],
-	    							interests: interests_parse,
-	    							new_notifications: new_notifications,
-	    							all_interests: all_interests_parse,
-	    							messaged_bottom: messaged_bottom,
-	    							messenger_0: messenger_0,
-	    							messenger_1: messenger_1,
-	    							messenger_2: messenger_2,
-	    							messages_0: messages_0,
-	    							messages_1: messages_1,
-	    							messages_2: messages_2
-	    						});
+		    	res.render('account', {info: info_parse[0],
+		    							interests: interests_parse,
+		    							new_notifications: new_notifications,
+		    							all_interests: all_interests_parse,
+		    							messaged_bottom: messaged_bottom,
+		    							messenger_0: messenger_0,
+		    							messenger_1: messenger_1,
+		    							messenger_2: messenger_2,
+		    							messages_0: messages_0,
+		    							messages_1: messages_1,
+		    							messages_2: messages_2
+		    						});
+		    }
 	    }
 	} else {
 	    res.render('connect', {user: 'true', password: 'true', creation: 'true'});
@@ -363,12 +368,12 @@ router.post('/change_infos', async function(req, res) {
 		res.redirect('/');
 	else {
 		let info_parse = JSON.parse(await user.recup_info(req.session.login));
-		if (info_parse[0].email == req.body.email && info_parse[0].login == req.body.login)
+		if ((info_parse[0].email == req.body.email || info_parse[0].insta != null) && info_parse[0].login == req.body.login)
 			await user.modif_infos_perso(req.body, req.session.login);
 		else {
 			let same_email = await user.email_exist(req.body);
 			let same_login = await user.login_exist(req.body);
-			if (info_parse[0].email != req.body.email && same_email != '1')
+			if ((info_parse[0].email != req.body.email && same_email != '1') && info_parse[0].insta == null)
 				alert('Cet email est déjà utilisé');
 			else if (info_parse[0].login != req.body.login && same_login != '1')
 				alert('Ce login est déjà utilisé');
