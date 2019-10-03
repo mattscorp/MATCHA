@@ -31,7 +31,7 @@ router.get('/notifications', async function(req, res) {
 	if (!req.session.login || req.session.login == '')
         res.redirect('/');
     else {
-        let info_parse = JSON.parse(await user.recup_info(req.session.login));
+        let info_parse = JSON.parse(await user.recup_info(JSON.parse(req.session.login)[0].uuid));
         // Profiles qui m'ont liké
         let like_me_parse = JSON.parse(await match.like_me_info(info_parse[0].user_ID));
         let like_me_profiles = [];

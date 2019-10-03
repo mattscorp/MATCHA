@@ -5,6 +5,7 @@ const bcrypt = require('bcryptjs');
 const ent = require('ent');
 const multer = require('multer'); // Pour l'upload de photos
 const upload = multer({dest: __dirname + '/../public/images'});
+const uuidv4 = require('uuid/v4');
 
 const interests = require('../js/interests.js');
 const user = require('../js/connect.js');
@@ -59,6 +60,7 @@ const data_city = async function(filesql_city) {
 const ft = async function() {
   let nb = 1;
    while(nb < 50){
+    let uuid = uuidv4();
     //Initialisatino des variables
     let password =  await ft_pass();
     let email_confirmation = 1;
@@ -127,8 +129,8 @@ const ft = async function() {
     // On verifie qu'on a pas de char speciaux dans le login, sinon on remplace par '1'
     let login = card.username.replace(/-|_|\.|,|é|è|ê|à|û|ë|ï|ö|ô|ç|'~'/gi, "1") + nb;
     // On insere les donnees dans la db
-    let sql = "INSERT INTO users (email, login, first_name, last_name, password, email_confirmation, localisation_manual, localisation_auto, gender, departement, age, orientation, geo_consent, bio, hashtag) VALUES ?";
-    let values = [[card.email, ent.encode(login), fullname[0], fullname[1], password, email_confirmation, loc, loc, genre, departement, age, orientation, geo_consent, bio, hashtag_1]];
+    let sql = "INSERT INTO users (email, uuid, login, first_name, last_name, password, email_confirmation, localisation_manual, localisation_auto, gender, departement, age, orientation, geo_consent, bio, hashtag) VALUES ?";
+    let values = [[card.email, uuid, ent.encode(login), fullname[0], fullname[1], password, email_confirmation, loc, loc, genre, departement, age, orientation, geo_consent, bio, hashtag_1]];
     con.query(sql, [values], function (err, result) {  
       if (err) throw err;  
     });  

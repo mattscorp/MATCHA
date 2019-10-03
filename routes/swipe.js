@@ -30,7 +30,7 @@ router.get('/swipe', async function (req, res) {
 	if (!req.session.login || req.session.login == '')
 		res.redirect('/');
 	else {
-    	let info_parse = JSON.parse(await user.recup_info(req.session.login));
+    	let info_parse = JSON.parse(await user.recup_info(JSON.parse(req.session.login)[0].uuid));
         // Profiles qui m'ont bloqué
         let block_me_parse = JSON.parse(await match.block_me_info(info_parse[0].user_ID));
         let block_me_profiles = [];
@@ -170,7 +170,7 @@ router.post('/swipe', async function(req, res) {
     if (!req.session.login || req.session.login == '')
         res.redirect('/');
     else {
-        let info_parse = JSON.parse(await user.recup_info(req.session.login));
+        let info_parse = JSON.parse(await user.recup_info(JSON.parse(req.session.login)[0].uuid));
         // Profiles qui m'ont bloqué
         let block_me_parse = JSON.parse(await match.block_me_info(info_parse[0].user_ID));
         let block_me_profiles = [];
@@ -257,7 +257,7 @@ router.post('/report_fake', async function(req, res) {
   if (!req.session.login || req.session.login == '')
         res.redirect('/');
     else {
-        let info_parse = JSON.parse(await user.recup_info(req.session.login));
+        let info_parse = JSON.parse(await user.recup_info(JSON.parse(req.session.login)[0].uuid));
         if (await swipe.report_fake(info_parse[0].user_ID, req.body.fake_ID) > 3)
             swipe.ban_fake(req.body.fake_ID);
         res.redirect('/match');
@@ -268,8 +268,8 @@ router.post('/like_profile', async function(req, res) {
     if (!req.session.login || req.session.login == '')
         res.redirect('/');
     else {
-        let info_parse = JSON.parse(await user.recup_info(req.session.login));
-        let info_parse_liked = JSON.parse(await user.recup_info(req.session.login));
+        let info_parse = JSON.parse(await user.recup_info(JSON.parse(req.session.login)[0].uuid));
+        let info_parse_liked = JSON.parse(await user.recup_info(JSON.parse(req.session.login)[0].uuid));
         swipe.like_profile(info_parse, req.body.submit, req.body.liked_ID);
         if (req.body.submit == 'Like') {
             notifications.notification(info_parse[0], req.body.liked_ID, 'like');
@@ -287,7 +287,7 @@ router.post('/visit', async function(req, res) {
     if (!req.session.login || req.session.login == '')
         res.redirect('/');
     else {
-        let info_parse = JSON.parse(await user.recup_info(req.session.login));
+        let info_parse = JSON.parse(await user.recup_info(JSON.parse(req.session.login)[0].uuid));
         await swipe.add_visit(info_parse[0].user_ID, req.body.visited_ID, info_parse[0].first_name);
         await notifications.notification(info_parse[0], req.body.visited_ID, 'visit');
         res.redirect('/swipe');

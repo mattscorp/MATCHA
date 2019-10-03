@@ -33,7 +33,7 @@ router.post('/new_message', async function(req, res) {
         res.redirect('/');
     else {
     	let backURL = req.header('Referer') || '/';
-        let info_parse = JSON.parse(await user.recup_info(req.session.login));
+        let info_parse = JSON.parse(await user.recup_info(JSON.parse(req.session.login)[0].uuid));
         notifications.notification(info_parse[0], req.body.recipient_ID, 'message')
 		await messages.new_message(req.body.sender_ID, req.body.recipient_ID, req.body.message);
 		res.redirect(backURL);
@@ -45,7 +45,7 @@ router.post('/report', async function(req, res) {
         res.redirect('/');
     else {
         let backURL = req.header('Referer') || '/';
-        let info_parse = JSON.parse(await user.recup_info(req.session.login));
+        let info_parse = JSON.parse(await user.recup_info(JSON.parse(req.session.login)[0].uuid));
         notifications.notification(info_parse[0], req.body.messaged_ID, 'report');
         messages.report_email(info_parse[0].user_ID, req.body.messaged_ID);
         res.redirect(backURL);
@@ -58,7 +58,7 @@ router.get('/see_messages', async function(req, res) {
         res.redirect('/');
     else {
     	// Infos de l'utilisateur
-        let info_parse = JSON.parse(await user.recup_info(req.session.login));
+        let info_parse = JSON.parse(await user.recup_info(JSON.parse(req.session.login)[0].uuid));
         // Infos de l'utilisateur
         let info_messaged_parse = JSON.parse(await user.recup_info(req.query.messaged_login));
         // Profiles qui m'ont bloqué
@@ -111,7 +111,7 @@ router.get('/messages', async function (req, res) {
         res.redirect('/');
     else {
     	// Infos de l'utilisateur
-        let info_parse = JSON.parse(await user.recup_info(req.session.login));
+        let info_parse = JSON.parse(await user.recup_info(JSON.parse(req.session.login)[0].uuid));
         // Profiles qui m'ont bloqué
         let block_me_parse = JSON.parse(await match.block_me_info(info_parse[0].user_ID));
         let block_me_profiles = [];
@@ -166,7 +166,7 @@ router.get('/messages', async function (req, res) {
         if (messenger_2 != '')
             messages_2 = JSON.parse(await messages.messages(info_parse[0].user_ID, messenger_2[0].user_ID));
 
-		res.render('messages', {login: req.session.login,
+		res.render('messages', {login: JSON.parse(req.session.login)[0].uuid,
 								infos: info_parse[0],
                                 info: info_parse[0],
 								like: like_profiles,

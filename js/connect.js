@@ -185,7 +185,7 @@ module.exports.mdp_strength = mdp_strength;
 // Reset password
 const reset_password = async function(email) {
   return new Promise((resolve, reject) => {
-    var uuid = uuidv4();
+    let uuid = uuidv4();
     const mailOptions = {
             from: 'matcha@matcha.com',
             to: email,
@@ -270,8 +270,8 @@ function add_user(info) {
   let saltRounds = 12;
     bcrypt.hash(ent.encode(info.mdp1), saltRounds, function (err,   hash) {
     if (err) throw err; 
-    let sql = "INSERT INTO users (email, login, first_name, last_name, password, email_confirmation) VALUES ?";
-  	let values = [[info.email, info.login, info.first_name, info.last_name, hash, uuid]];
+    let sql = "INSERT INTO users (email, uuid, login, first_name, last_name, password, email_confirmation) VALUES ?";
+  	let values = [[info.email, uuid, info.login, info.first_name, info.last_name, hash, uuid]];
   	con.query(sql, [values], function (err, result) {  
   	 if (err) throw err;
      // Ajout d'une colonne à la table 'interests'
@@ -351,7 +351,7 @@ async function is_connected(login) {
 module.exports.is_connected = is_connected;
 
 // Fonction pour ajouter les infos d'un utilisateur lors de sa première connection
-function add_infos(info, login) {
+function add_infos(info, uuid) {
   let iChars = "~`=[]\\{}|<>";
   let count = 0;
   for (var i = 0; i < info.bio.length; i++) {
@@ -359,23 +359,23 @@ function add_infos(info, login) {
        count++;
   }
   if (count == 0) {
-    let sql = "UPDATE users SET bio = ?, age = ?, gender = ?, orientation = ?, departement = ?, geo_consent = ? WHERE login = ? or insta = ?";
-    let values = [info.bio, ent.encode(info.age), ent.encode(info.gender), ent.encode(info.orientation), info.departement, ent.encode(info.geo_consent), ent.encode(login), login];
+    let sql = "UPDATE users SET bio = ?, age = ?, gender = ?, orientation = ?, departement = ?, geo_consent = ? WHERE uuid = ?";
+    let values = [info.bio, ent.encode(info.age), ent.encode(info.gender), ent.encode(info.orientation), info.departement, ent.encode(info.geo_consent), uuid];
     if(verif_add_infos(info) == 0){
       con.query(sql, values, function (err, result) {  
       	if (err) throw err;
       });
     }
     else
-      console.log('User: ' + login + ' ESSAI DE POURRIR LA BDD');
+      console.log('User: ' + uuid + ' ESSAI DE POURRIR LA BDD');
   }
   else
-    console.log('User: ' + login + ' ESSAI DE POURRIR LA BDD');
+    console.log('User: ' + uuid + ' ESSAI DE POURRIR LA BDD');
 }
 module.exports.add_infos = add_infos;
 
 // Fonction pour modifier les infos personnelles de l'utilisateur
-function modif_infos_perso(info, login) {
+function modif_infos_perso(info, uuid) {
   let iChars = "~`=[]\\{}|<>";
   let count = 0;
   for (var i = 0; i < info.bio.length; i++) {
@@ -383,18 +383,18 @@ function modif_infos_perso(info, login) {
        count++;
   }
   if (count == 0) {
-    let sql = "UPDATE users SET login = ?, first_name = ?, last_name = ?, email = ?, age = ?, gender = ?, orientation = ?, bio = ?, `departement` = ?, geo_consent = ? WHERE login = ? OR insta = ?"; 
-    let values = [ent.encode(info.login), ent.encode(info.first_name), ent.encode(info.last_name), info.email, ent.encode(info.age), ent.encode(info.gender), ent.encode(info.orientation), info.bio, info.departement, ent.encode(info.geo_consent), ent.encode(login), login];
+    let sql = "UPDATE users SET login = ?, first_name = ?, last_name = ?, email = ?, age = ?, gender = ?, orientation = ?, bio = ?, `departement` = ?, geo_consent = ? WHERE uuid = ?"; 
+    let values = [ent.encode(info.login), ent.encode(info.first_name), ent.encode(info.last_name), info.email, ent.encode(info.age), ent.encode(info.gender), ent.encode(info.orientation), info.bio, info.departement, ent.encode(info.geo_consent), uuid];
     if(verif_add_infos(info) == 0) {
       con.query(sql, values, function (err, result) {  
         if (err) throw err;  
       });  
     }
     else
-      console.log('User: ' + login + ' ESSAI DE POURRIR LA BDD');
+      console.log('User: ' + uuid + ' ESSAI DE POURRIR LA BDD');
   }
   else
-    console.log('User: ' + login + ' ESSAI DE POURRIR LA BDD');
+    console.log('User: ' + uuid + ' ESSAI DE POURRIR LA BDD');
 }
 module.exports.modif_infos_perso = modif_infos_perso;
 
@@ -430,9 +430,9 @@ module.exports.loadMime = loadMime;
 
 
 // Ajout du path de l'image_1 et utilisation de celle-ci comme photo de profil
-function add_image(infos, login) {
-	let sql = "UPDATE users SET image_1 = ?, profile_picture = image_1 WHERE login = ?";
-	  let values = ['/images/' + infos.filename, login];
+function add_image(infos, uuid) {
+	let sql = "UPDATE users SET image_1 = ?, profile_picture = image_1 WHERE uuid = ?";
+	  let values = ['/images/' + infos.filename, uuid];
 	con.query(sql, values, function (err, result) {  
 		if (err) throw err;  
 	});  
@@ -440,7 +440,7 @@ function add_image(infos, login) {
 module.exports.add_image = add_image;
 
 // Ajout d'une nouvelle photo de profil
-const add_new_image = async function(infos, login) {
+const add_new_image = async function(infos, uuid) {
   const user = require('./connect.js');
   const info_user = await user.recup_info(login);
   const info_parse = await JSON.parse(info_user);
@@ -453,8 +453,8 @@ const add_new_image = async function(infos, login) {
     num = '4';
   else if (info_parse[0].image_5 == null)
     num = '5';
-  const sql_req = "UPDATE users SET image_" + num + " = ? WHERE login = ?";
-  let values = ['/images/' + infos.filename, login];
+  const sql_req = "UPDATE users SET image_" + num + " = ? WHERE uuid = ?";
+  let values = ['/images/' + infos.filename, uuid];
   con.query(sql_req, values, function (err, result) {  
     if (err) throw err;  
   });  
@@ -462,7 +462,7 @@ const add_new_image = async function(infos, login) {
 module.exports.add_new_image = add_new_image;
 
 // Modification de la photo de profil
-const change_profile_picture = function(infos, login) {
+const change_profile_picture = function(infos, uuid) {
   var num = '1';
   if (infos.profile_picture == 'Photo 1')
     num = '1';
@@ -475,26 +475,26 @@ const change_profile_picture = function(infos, login) {
   else if (infos.profile_picture == 'Photo 5')
     num = '5';
   if(num >= 1 && num <= 5){
-    let sql = "UPDATE users SET profile_picture = image_" + num + " WHERE login = ?";
-    let values = [ent.encode(login)];
+    let sql = "UPDATE users SET profile_picture = image_" + num + " WHERE uuid = ?";
+    let values = [uuid];
     con.query(sql, values, function (err, result) {  
       if (err) throw err;  
     });
   }
   else
-  console.log('User: ' + login + ' ESSAI DE POURRIR LA BDD AVEC UN MAUVAIS CHIFFRE DE PHOTO'); 
+  console.log('User: ' + uuid + ' ESSAI DE POURRIR LA BDD AVEC UN MAUVAIS CHIFFRE DE PHOTO'); 
 }
 module.exports.change_profile_picture = change_profile_picture;
 
 // Suppression d'une image
-const delete_photo = async function(photo, login) {
+const delete_photo = async function(photo, uuid) {
   const user = require('./connect.js');
-  let sql = "UPDATE users SET image_" + photo + " = null WHERE login = ?";
-  let values = [ent.encode(login)];
+  let sql = "UPDATE users SET image_" + photo + " = null WHERE uuid = ?";
+  let values = [uuid];
   con.query(sql, values, function (err, result) {  
     if (err) throw err;  
   });
-  const info_user = await user.recup_info(ent.encode(login));
+  const info_user = await user.recup_info(uuid);
   const info_parse = await JSON.parse(info_user);
   var new_pp = '0';
   if (photo != '1' && info_parse[0].image_1 != null)
@@ -508,10 +508,10 @@ const delete_photo = async function(photo, login) {
   else if (photo != '5' && info_parse[0].image_5 != null)
     new_pp = 'Photo 5';
   if (new_pp != '0')
-    await user.change_profile_picture({profile_picture: new_pp}, login);
+    await user.change_profile_picture({profile_picture: new_pp}, uuid);
   else {
-    let sql1 = "UPDATE users SET profile_picture = null WHERE login = ?";
-    let values1 = [ent.encode(login)];
+    let sql1 = "UPDATE users SET profile_picture = null WHERE uuid = ?";
+    let values1 = [uuid];
     con.query(sql1, values1, function (err, result) {  
     if (err) throw err;  
   });
@@ -522,8 +522,8 @@ module.exports.delete_photo = delete_photo;
 // Validation de l'addresse email user
 const validation_mail = async function(login, uuid) {
 	return new Promise((resolve, reject) => {
-		let sql = "SELECT email_confirmation FROM users WHERE login = ?";
-	  	con.query(sql, [ent.encode(login)], function(err, result){
+		let sql = "SELECT email_confirmation FROM users WHERE uuid = ?";
+	  	con.query(sql, [uuid], function(err, result){
 	    	if(err) 
           throw err;
         else if (!result[0].email_confirmation || result[0].email_confirmation == '' || result[0].email_confirmation == null)
@@ -543,10 +543,29 @@ const validation_mail = async function(login, uuid) {
 module.exports.validation_mail = validation_mail;
 
 // Fonction pour recuperer les info utilisateur
-const recup_info = async function(login){
+const recup_info = async function(uuid){
  return new Promise((resolve, reject) =>{
-   let sql = "SELECT `user_ID`, `last_name`, `first_name`, `login`, `hashtag`, `insta`, `email`, `localisation_auto`, `localisation_manual`, `gender`, `orientation`, `age`, `bio`, `image_1`, `image_2`, `image_3`, `image_4`, `image_5`, `profile_picture`, `score`, `geo_consent`, `departement`, `email_confirmation` FROM users WHERE login = ? OR insta = ?";
-   con.query(sql, [ent.encode(login), login], function(err, result) {
+  console.log('recupt_info : ' + uuid);
+   let sql = "SELECT `user_ID`, `uuid`, `last_name`, `first_name`, `login`, `hashtag`, `insta`, `email`, `localisation_auto`, `localisation_manual`, `gender`, `orientation`, `age`, `bio`, `image_1`, `image_2`, `image_3`, `image_4`, `image_5`, `profile_picture`, `score`, `geo_consent`, `departement`, `email_confirmation` FROM users WHERE uuid = ?";
+   con.query(sql, [uuid], function(err, result) {
+     if(err) throw err;
+     if (result[0] == '')
+      resolve('1');
+     else {
+      console.log(result);
+      resolve(JSON.stringify(result));
+    }
+   })
+ });
+}
+module.exports.recup_info = recup_info;
+
+// Fonction pour recuperer l'uuid utilisateur
+const recup_info_uuid = async function(login){
+ return new Promise((resolve, reject) =>{
+   let sql = "SELECT `uuid` FROM users WHERE login = ?";
+   con.query(sql, [login], function(err, result) {
+    console.log(result);
      if(err) throw err;
      if (result[0] == '')
       resolve('1');
@@ -555,7 +574,7 @@ const recup_info = async function(login){
    })
  });
 }
-module.exports.recup_info = recup_info;
+module.exports.recup_info_uuid = recup_info_uuid;
 
 // Fonction pour recuperer les interests de l'utilisateur
 const recup_interests = async function(user_ID){
@@ -570,10 +589,10 @@ const recup_interests = async function(user_ID){
 module.exports.recup_interests = recup_interests;
 
 // Ajout des coordonnées à la BDD
-const add_coordinates = async function(infos, login) {
+const add_coordinates = async function(infos, uuid) {
   let geoloc = infos.geoplugin_latitude + ',' + infos.geoplugin_longitude;
-  let sql = "UPDATE users SET localisation_auto = '" + geoloc + "' WHERE login = ? OR insta = ?";
-  con.query(sql, [ent.encode(login), login], function(err, result) {
+  let sql = "UPDATE users SET localisation_auto = '" + geoloc + "' WHERE uuid = ?";
+  con.query(sql, [uuid], function(err, result) {
     if (err) throw err;
   });
 }
@@ -581,10 +600,10 @@ module.exports.add_coordinates = add_coordinates;
 
 
 // Ajout des coordonnées via navigateur à la BDD
-const add_coordinates_nav = async function(infos, login) {
+const add_coordinates_nav = async function(infos, uuid) {
   let geoloc = infos.latitude + ',' + infos.longitude;
-  let sql = "UPDATE users SET localisation_manual = '" + geoloc + "' WHERE login = ? OR insta = ?";
-  con.query(sql, [ent.encode(login), login], function(err, result) {
+  let sql = "UPDATE users SET localisation_manual = '" + geoloc + "' WHERE uuid = ?";
+  con.query(sql, [uuid], function(err, result) {
     if (err) throw err;
   });
 }

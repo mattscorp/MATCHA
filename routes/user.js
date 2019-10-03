@@ -35,7 +35,9 @@ const router = express.Router();
 // Chargement de la page index.html
 router.get('/', async function (req, res) {
  	if (req.session.login && req.session.login != '') {
-  		const info_parse = JSON.parse(await user.recup_info(req.session.login));
+ 		console.log(req.session.login);
+  		const info_parse = await user.recup_info(JSON.parse(req.session.login)[0].uuid);
+  		console.log('info : ' + info_parse);
   		if (info_parse[0] == '1') {
   			console.log(info_parse('1'));
   			req.session.login = '';
@@ -44,7 +46,7 @@ router.get('/', async function (req, res) {
   		else if (!info_parse[0].email_confirmation && info_parse[0].insta == null) {
 		  	if (info_parse[0].email_confirmation == 2) {
 		  		res.render('banned', {user_ID: info_parse[0].user_ID});
-		  	} else if (info_parse[0].email_confirmation == '' || info_parse[0].email_confirmation != 1) {
+		  	} else if (info_parse[0].email_confirmation == '' || info_parse[0].email_confirmation != '1') {
 		     	res.render('confirm_your_email');
 		    }
 		}
@@ -123,7 +125,7 @@ router.post('/geo', async function(req, res) {
 	if (!req.session.login || req.session.login == '')
 		res.redirect('/');
 	else {
-		user.add_coordinates(req.body, req.session.login);
+		user.add_coordinates(req.body, JSON.parse(req.session.login)[0].uuid);
 		res.redirect('/');
 	}
 })
@@ -133,7 +135,7 @@ router.post('/geo_nav', async function(req, res) {
 	if (!req.session.login || req.session.login == '')
 		res.redirect('/');
 	else {
-		user.add_coordinates_nav(req.body, req.session.login);
+		user.add_coordinates_nav(req.body, JSON.parse(req.session.login)[0].uuid);
 		res.redirect('/');
 	}
 })
@@ -154,9 +156,9 @@ router.get('/change_password', async function(req, res) {
 	if (!req.session.login || req.session.login == '')
 		res.redirect('/');
 	else {
-		let info_parse = JSON.parse(await user.recup_info(req.session.login));
+		let info_parse = JSON.parse(await user.recup_info(JSON.parse(req.session.login)[0].uuid));
 		let new_notifications = await notifications.notifications_number(info_parse[0].user_ID);
-	 	res.render('change_password', {login: req.session.login, new_notifications: new_notifications, mdp_strength: 'true', same_pass: 'true', old_password: 'true', success: 'true'});
+	 	res.render('change_password', {login: JSON.parse(req.session.login)[0].uuid, new_notifications: new_notifications, mdp_strength: 'true', same_pass: 'true', old_password: 'true', success: 'true'});
 	}
 })
 
@@ -164,17 +166,17 @@ router.post('/change_password', async function(req, res) {
 	if (!req.session.login || req.session.login == '')
 		res.redirect('/');
 	else {
-		let info_parse = JSON.parse(await user.recup_info(req.session.login));
+		let info_parse = JSON.parse(await user.recup_info(JSON.parse(req.session.login)[0].uuid));
 		let new_notifications = await notifications.notifications_number(info_parse[0].user_ID);
 		if (req.body.mdp2 != req.body.mdp3)
-			res.render('change_password', {login: req.session.login, new_notifications: new_notifications, mdp_strength: 'true', same_pass: 'false', old_password: 'true', success: 'true'});
+			res.render('change_password', {login: JSON.parse(req.session.login)[0].uuid, new_notifications: new_notifications, mdp_strength: 'true', same_pass: 'false', old_password: 'true', success: 'true'});
 		else if (await user.mdp_strength(req.body) == 0)
-			res.render('change_password', {login: req.session.login, new_notifications: new_notifications, mdp_strength: 'false', same_pass: 'true', old_password: 'true', success: 'true'});
+			res.render('change_password', {login: JSON.parse(req.session.login)[0].uuid, new_notifications: new_notifications, mdp_strength: 'false', same_pass: 'true', old_password: 'true', success: 'true'});
 		else if (await user.user_connect(req.body) == 1) {
 				await user.reset_password_new(info_parse[0].email, req.body.mdp2);
-				res.render('change_password', {login: req.session.login, new_notifications: new_notifications, mdp_strength: 'true', same_pass: 'true', old_password: 'true', success: 'false'});
+				res.render('change_password', {login: JSON.parse(req.session.login)[0].uuid, new_notifications: new_notifications, mdp_strength: 'true', same_pass: 'true', old_password: 'true', success: 'false'});
 		} else
-			res.render('change_password', {login: req.session.login, new_notifications: new_notifications, mdp_strength: 'true', same_pass: 'true', old_password: 'false', success: 'true'});
+			res.render('change_password', {login: JSON.parse(req.session.login)[0].uuid, new_notifications: new_notifications, mdp_strength: 'true', same_pass: 'true', old_password: 'false', success: 'true'});
 	}
 })
 
@@ -192,7 +194,7 @@ router.get('/disconnect', async function(req, res) {
 router.get('/creation', function (req, res) {
 	if (req.session.login && req.session.login != '')
 		res.redirect('/');
-	else 
+	else
 	 	res.render('create_account', {google:'true', mdp_strength: 'true', user_exist: 'true', email_exist: 'true', mdp_match: 'true', mdp_length: 'true', name: 'true', email: 'true', login:'true'});
 });
 
@@ -246,7 +248,8 @@ router.post('/connect', async function(req, res){
 		if (val_input == 1) {
 			const val_verif = await user.user_connect(req.body.user_connect);
 		if(val_verif === 1) {
-			req.session.login = req.body.user_connect.name;
+			let uuid_user = await user.recup_info_uuid(req.body.user_connect.name);
+			req.session.login = uuid_user;
 			res.redirect('/');
 		} else if (val_verif == 2)
 			res.render('connect', {user: 'false', password: 'true', creation: 'true'});
@@ -307,7 +310,7 @@ router.post('/creation', async function(req, res) {
 // Ajout des informations supplémentaires sur l'utilisateur
 router.post('/info_user', async function(req, res) {
 	if (req.session.login && req.session.login != '')
-		var update_infos = await user.add_infos(req.body, req.session.login);
+		var update_infos = await user.add_infos(req.body, JSON.parse(req.session.login)[0].uuid);
 	res.redirect('/');
 });
 
@@ -321,7 +324,7 @@ router.post('/profile_picture', upload.single('photo'), async function(req, res)
 			let file_data = await readFile("public/images/"+req.file.filename);
 			if (user.loadMime(file_data) == 1) {
 				if(req.file && req.file.size > 0) {
-					var add_image = await user.add_image(req.file, req.session.login);
+					var add_image = await user.add_image(req.file, JSON.parse(req.session.login)[0].uuid);
 					res.redirect('/');
 				}
 			} else {
@@ -344,7 +347,7 @@ router.post('/add_new_image', upload.single('photo'), async function(req, res) {
 		if(req.file && req.file.size > 0) {
 			let file_data = await readFile("public/images/"+req.file.filename);
 			if (user.loadMime(file_data) == 1){
-				var add_new_image = user.add_new_image(req.file, req.session.login);
+				var add_new_image = user.add_new_image(req.file, JSON.parse(req.session.login)[0].uuid);
 				res.redirect('/');
 			}
 			else {
@@ -363,7 +366,7 @@ router.post('/add_new_image', upload.single('photo'), async function(req, res) {
 // Modification de la profile picture
 router.post('/change_profile_picture', function(req, res) {
 	if (req.session.login && req.session.login != '')
-		var change_profile_picture = user.change_profile_picture(req.body, req.session.login);
+		var change_profile_picture = user.change_profile_picture(req.body, JSON.parse(req.session.login)[0].uuid);
 	res.redirect('/');
 });
 
@@ -372,9 +375,9 @@ router.post('/change_infos', async function(req, res) {
 	if (!req.session.login || req.session.login == '')
 		res.redirect('/');
 	else {
-		let info_parse = JSON.parse(await user.recup_info(req.session.login));
+		let info_parse = JSON.parse(await user.recup_info(JSON.parse(req.session.login)[0].uuid));
 		if ((info_parse[0].email == req.body.email || info_parse[0].insta != null) && info_parse[0].login == req.body.login)
-			await user.modif_infos_perso(req.body, req.session.login);
+			await user.modif_infos_perso(req.body, JSON.parse(req.session.login)[0].uuid);
 		else {
 			let same_email = await user.email_exist(req.body);
 			let same_login = await user.login_exist(req.body);
@@ -383,8 +386,7 @@ router.post('/change_infos', async function(req, res) {
 			else if (info_parse[0].login != req.body.login && same_login != '1')
 				alert('Ce login est déjà utilisé');
 			else {
-				await user.modif_infos_perso(req.body, req.session.login);
-				req.session.login = req.body.login;
+				await user.modif_infos_perso(req.body, JSON.parse(req.session.login)[0].uuid);
 			}
 		}
 		res.redirect('/');
@@ -402,7 +404,7 @@ router.post('/onbeforeunload', function(req, res) {
 // Suppression d'une image
 router.post('/delete_image', async function(req, res) {
 	if (req.session.login && req.session.login != '')
-		var delete_photo = await user.delete_photo(req.body.photo, req.session.login);
+		var delete_photo = await user.delete_photo(req.body.photo, JSON.parse(req.session.login)[0].uuid);
 	res.redirect('/');
 });
 
@@ -415,7 +417,7 @@ router.post('/new_topic', async function(req, res) {
 		else
 			new_topic = req.body.submit.split('#')[1].trim();
 		let topic_exists = await interests.topic_exists(new_topic);
-		let info_user = await user.recup_info(req.session.login);
+		let info_user = await user.recup_info(JSON.parse(req.session.login)[0].uuid);
 		let info_parse = JSON.parse(info_user);
 		let hashtag_nb = 0;
 		if (info_parse[0].hashtag != null && info_parse[0].hashtag != '')
@@ -467,7 +469,7 @@ router.post('/new_topic', async function(req, res) {
 // Suppression d'un centre d'intérêt
 router.post('/delete_interest', async function(req, res) {
 	if (req.session.login && req.session.login != '') {
-		var info_user = await user.recup_info(req.session.login);
+		var info_user = await user.recup_info(JSON.parse(req.session.login)[0].uuid);
 	    var info_parse = JSON.parse(info_user);
 		interests.delete_interest(req.body.topic, info_parse[0].user_ID);
 		res.redirect('/');

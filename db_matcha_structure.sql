@@ -74,7 +74,8 @@ CREATE TABLE IF NOT EXISTS `report` (
 
 
 CREATE TABLE IF NOT EXISTS `users` (
-  `user_ID` INT(11) NOT NULL PRIMARY KEY AUTO_INCREMENT, 
+  `user_ID` INT(11) NOT NULL PRIMARY KEY AUTO_INCREMENT,
+  `uuid` text,
   `last_name` varchar(255) DEFAULT NULL,
   `first_name` varchar(255) DEFAULT NULL,
   `login` varchar(100) DEFAULT NULL,

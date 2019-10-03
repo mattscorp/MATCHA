@@ -31,7 +31,7 @@ router.get('/match', async function(req, res) {
         res.redirect('/');
     else {
     	// Infos de l'utilisateur
-    	let info_parse = JSON.parse(await user.recup_info(req.session.login));
+    	let info_parse = JSON.parse(await user.recup_info(JSON.parse(req.session.login)[0].uuid));
     	// Profiles qui m'ont bloqué
     	let block_me_parse = JSON.parse(await match.block_me_info(info_parse[0].user_ID));
     	let block_me_profiles = [];
@@ -111,7 +111,7 @@ router.post('/unlike_block', async function(req, res) {
         res.redirect('/');
     else {
         let backURL = req.header('Referer') || '/';
-        let info_parse = JSON.parse(await user.recup_info(req.session.login));
+        let info_parse = JSON.parse(await user.recup_info(JSON.parse(req.session.login)[0].uuid));
         if (req.body.submit == "Unlike") {
             await match.unlike(info_parse[0].user_ID, req.body.liked_ID);
             notifications.notification(info_parse[0], req.body.liked_ID, 'unlike');
