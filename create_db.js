@@ -42,4 +42,5 @@ const create_db = async function(filesql) {
 }
 
 const created = create_db('./db_matcha_structure.sql');
+
 console.log("La db a bien été créée.");

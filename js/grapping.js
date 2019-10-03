@@ -14,6 +14,9 @@ const download = require('download');
 const http = require('http');
 const https = require('https');
 
+const fs = require('fs');
+const util = require('util');
+const readFile = util.promisify(fs.readFile);
 
 const faker = require('faker');
 faker.locale = "fr";
@@ -40,10 +43,22 @@ const ft_pass = async function(){
   });
 }
 
+const data_city = async function(filesql_city) {
+  let file_data_city = await readFile(filesql_city, 'utf8');
+  return new Promise((resolve, reject) => {
+    
+    const array_city_final = file_data_city.split('\n');
+   resolve(array_city_final);
+ });
+}
+
+
+
+
 //
 const ft = async function() {
   let nb = 1;
-   while(nb < 510){
+   while(nb < 10){
     //Initialisatino des variables
     let password =  await ft_pass();
     let email_confirmation = 1;
@@ -55,9 +70,10 @@ const ft = async function() {
       if(genre == 2)
         genre = 'Autre';
     let card = faker.helpers.createCard();
-    let departement = getRandomIntInclusive(1, 98);
+    
     let age = getRandomIntInclusive(18, 120);
     let orientation = getRandomIntInclusive(0, 3);
+    let id_ville = getRandomIntInclusive(1, 1773);
       if(orientation == 0)
         orientation = 'Bi';
       if(orientation == 1)
@@ -68,7 +84,16 @@ const ft = async function() {
         orientation = 'Autres';
     let fullname = card.name.split(' ');
     let geo_consent = 'Oui';
-    let loc = card.address.geo.lat + ',' + card.address.geo.lng;
+
+
+
+    const city_file = await data_city('./insert_fr_city.sql');
+
+    
+    // console.log(city_file[id_ville].split(', ')[18] + ',' + city_file[id_ville].split(', ')[19])
+    let departement = city_file[id_ville].split(', ')[0];
+    // console.log('dep => '+ departement);
+    let loc = city_file[id_ville].split(', ')[18] + ',' + city_file[id_ville].split(', ')[19]
     let bio = card.posts[0].sentence;
     // On separe les hashtags
     let hashtag = card.company.catchPhrase.split(' ');
