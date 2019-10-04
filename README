@@ -1,0 +1,10 @@
+# Creation de la DB #
+1. node create_db.js
+# Creation de la DB #
+2. node fill_db.js
+# Creation de la DB #
+3. node clear.js
+# Creation de la DB #
+4. node fill_interests.js
+# Creation de la DB #
+5. node app.js

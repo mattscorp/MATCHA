@@ -62,7 +62,7 @@ const data_city = async function(filesql_city) {
 //
 const ft = async function() {
   let nb = 1;
-   while(nb < 15){
+   while(nb < 51){
     let uuid = uuidv4();
     //Initialisatino des variables
     let password =  await ft_pass();
@@ -203,8 +203,8 @@ const ft = async function() {
               con.query(sql, [values], function(err, result) {
                 if (err)
                   throw err;
-                else
-                  interests.add_topic_user(ft_hashtag, nb1);
+                // else
+                //   interests.add_topic_user(ft_hashtag, nb1);
               });
           }
         }
@@ -228,23 +228,27 @@ const ft = async function() {
     download(picture, './public/images/' + nb).then(() => {
     });
 
-    const add_topic_async = function(nb_ok, hashtag_filtered_1) {
-      let sql3 = "ALTER TABLE interests ADD `" + nb_ok + "` INT NOT NULL DEFAULT 0";
-      con.query(sql3, function(err) {
-        let o = 1;
-        topic(hashtag_filtered_1[0].toLowerCase(), nb_ok);
-         console.log("user : " + nb_ok + " - hashtag : " + hashtag_filtered_1[0].toLowerCase());
-        while(hashtag_filtered_1[o])
-        {
-         console.log("user : " + nb_ok + " - hashtag : " + hashtag_filtered_1[o].toLowerCase());
+    const add_topic_async = async function(nb_ok, hashtag_filtered_1) {
+        let sql3 = "ALTER TABLE interests ADD `" + nb_ok + "` INT NOT NULL DEFAULT 0";
+        con.query(sql3, function(err, result) {
+          if (err)
+            throw err;
+          else {
+            let o = 1;
+            topic(hashtag_filtered_1[0].toLowerCase(), nb_ok);
+            console.log("user : " + nb_ok + " - hashtag : " + hashtag_filtered_1[0].toLowerCase());
+            while(hashtag_filtered_1[o])
+            {
+             console.log("user : " + nb_ok + " - hashtag : " + hashtag_filtered_1[o].toLowerCase());
 
-          topic(hashtag_filtered_1[o].toLowerCase(), nb_ok);
-          o++;
-        }
-      });
+              topic(hashtag_filtered_1[o].toLowerCase(), nb_ok);
+              o++;
+            }
+          }
+        });
     }
    
-  add_topic_async(nb, hashtag_filtered);
+  let nb_return = await add_topic_async(nb, hashtag_filtered);
   console.log(nb + ' : ajout de ' + login)
   nb++;
   }
