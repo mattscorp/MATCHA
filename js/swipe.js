@@ -141,8 +141,11 @@ const get_profiles_research = async function(user_ID, age_min, age_max, score, o
 			else
 		{
 			let loc = localisation.split(" ");
-			if(loc[0] == '')
+			if(loc[0] == ''){
+			// console.log("result ===> " + SON.stringify(result));
+
 				resolve(JSON.stringify(result));
+			}
 			loc[0] = parseInt(loc[0]);
 			if(info_parse[0].localisation_manual != null && info_parse[0].localisation_manual != '' && info_parse[0].localisation_manual != 'null' && info_parse[0].geo_consent == 'Oui')
 			{
@@ -158,11 +161,17 @@ const get_profiles_research = async function(user_ID, age_min, age_max, score, o
 			}
 			let i = 0;
 			while(result[i]) {
+				// console.log( 'distance recherche ===>' + loc[0]);
+
 				if(result[i].localisation_manual != null){ 
 					let coord_target = result[i].localisation_manual.split(",")
 					let lon_target = coord_target[1];
 					let lat_target = coord_target[0];
+					// console.log("lon_target ==> " + lon_target);
+			
 					let distance_between = distance(lat_searcher, lon_searcher, lat_target, lon_target, 'K');
+		// console.log("distance_between ==> " + distance_between);
+
 					if(distance_between >= loc[0])
 						delete result[i];
 				} else {
@@ -170,6 +179,8 @@ const get_profiles_research = async function(user_ID, age_min, age_max, score, o
 					let lon_target = coord_target[1];
 					let lat_target = coord_target[0];
 					let distance_between = distance(lat_searcher, lon_searcher, lat_target, lon_target, 'K');
+		// console.log("distance_between ==> " + distance_between);
+
 					if(distance_between >= loc[0])
 						delete result[i];
 				}
@@ -178,6 +189,7 @@ const get_profiles_research = async function(user_ID, age_min, age_max, score, o
 			var filtered = result.filter(function (el) {
 			  return el != null;
 			});
+			// console.log("filtered ===> " + JSON.stringify(filtered));
 			resolve(JSON.stringify(filtered));
 		}		
 		})
