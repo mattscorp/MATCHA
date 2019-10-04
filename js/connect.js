@@ -524,7 +524,6 @@ const validation_mail = async function(login, uuid) {
 	return new Promise((resolve, reject) => {
 		let sql = "SELECT email_confirmation FROM users WHERE login = ?";
 	  	con.query(sql, [ent.encode(login)], function(err, result){
-        console.log(result);
 	    	if(err) 
           throw err;
         else if (!result[0].email_confirmation || result[0].email_confirmation == '' || result[0].email_confirmation == null || result[0].email_confirmation == '1')
@@ -546,14 +545,12 @@ module.exports.validation_mail = validation_mail;
 // Fonction pour recuperer les info utilisateur
 const recup_info = async function(uuid){
  return new Promise((resolve, reject) =>{
-  console.log('recupt_info : ' + uuid);
    let sql = "SELECT `user_ID`, `uuid`, `last_name`, `first_name`, `login`, `hashtag`, `insta`, `email`, `localisation_auto`, `localisation_manual`, `gender`, `orientation`, `age`, `bio`, `image_1`, `image_2`, `image_3`, `image_4`, `image_5`, `profile_picture`, `score`, `geo_consent`, `departement`, `email_confirmation` FROM users WHERE uuid = ?";
    con.query(sql, [uuid], function(err, result) {
      if(err) throw err;
      if (result[0] == '')
       resolve('1');
      else {
-      console.log(result);
       resolve(JSON.stringify(result));
     }
    })
@@ -566,7 +563,6 @@ const recup_info_uuid = async function(login){
  return new Promise((resolve, reject) =>{
    let sql = "SELECT `uuid` FROM users WHERE login = ? OR insta = ?";
    con.query(sql, [login, login], function(err, result) {
-    console.log(result);
      if(err) throw err;
      if (result[0] == '')
       resolve('1');

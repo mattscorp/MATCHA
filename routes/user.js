@@ -240,7 +240,6 @@ router.post('/connect', async function(req, res){
 		if(val_verif === 1) {
 			let uuid_user = await user.recup_info_uuid(req.body.user_connect.name);
 			req.session.login = uuid_user;
-			console.log('utilsiateur connecte : ' + uuid_user);
 			res.redirect('/');
 		} else if (val_verif == 2)
 			res.render('connect', {user: 'false', password: 'true', creation: 'true'});
