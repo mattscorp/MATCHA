@@ -24,8 +24,11 @@ faker.locale = "fr";
 
 const db_connect = require('../db_connection.js');
 let con = db_connect.con;
+const interets = ["football", "psg", "asm", "basketball", "csgo", "leagueoflegend", "surf", "snowboard", "netflixandchill", "dance", "cinema", "voyage", "asie", "afrique", "amerique", "europe", "australie", "bali", "42", "code", "handball", "lecture", "tarentino", "tamaman", "tonpapa", "enfant", "bdsm", "bondage", "lyon", "marseille", "apple", "usa", "sport", "fitness", "boxe", "babyfoot", "pingpong", "shoping", "randonnees", "montagne", "mer", "matcha", "php", "chien", "chat"];
 
 //
+
+
 function getRandomIntInclusive(min, max) {
   min = Math.ceil(min);
   max = Math.floor(max);
@@ -59,7 +62,7 @@ const data_city = async function(filesql_city) {
 //
 const ft = async function() {
   let nb = 1;
-   while(nb < 50){
+   while(nb < 15){
     let uuid = uuidv4();
     //Initialisatino des variables
     let password =  await ft_pass();
@@ -97,6 +100,12 @@ const ft = async function() {
     // console.log('dep => '+ departement);
     let loc = city_file[id_ville].split(', ')[19].trim() + ',' + city_file[id_ville].split(', ')[18].trim()  ;
     let bio = card.posts[0].sentence;
+    
+
+
+// OLD hashtag
+
+/*
     // On separe les hashtags
     let hashtag = card.company.catchPhrase.split(' ');
     let y = 1;
@@ -126,6 +135,38 @@ const ft = async function() {
       }
       y++;
     }
+    */
+      let count_hash = 0;
+      let hashtag_1 = interets[getRandomIntInclusive(0, 44)];
+      while(count_hash < 5)
+      {
+        let hash_nb = getRandomIntInclusive(0, 44);
+        hashtag_1 = hashtag_1 + "," + interets[hash_nb];
+        count_hash++;
+      }
+      let count_clear = 0;
+      let raz = count_clear + 1;
+      hashtag_1 = hashtag_1.split(",");
+      while(hashtag_1[count_clear])
+      {
+        raz = count_clear + 1;
+        while(hashtag_1[raz])
+        {
+          if(hashtag_1[count_clear] !== hashtag_1[raz])
+          {
+            raz++;
+          }
+          else
+            hashtag_1[raz] = null;
+        }
+        count_clear++;
+      }
+      let filtered = hashtag_1.filter(function (el) {
+              return el != null;
+            });
+     hashtag_1 = filtered.join();
+
+
     // On verifie qu'on a pas de char speciaux dans le login, sinon on remplace par '1'
     let login = card.username.replace(/-|_|\.|,|é|è|ê|à|û|ë|ï|ö|ô|ç|'~'/gi, "1") + nb;
     // On insere les donnees dans la db
@@ -192,10 +233,10 @@ const ft = async function() {
       con.query(sql3, function(err) {
         let o = 1;
         topic(hashtag_filtered_1[0].toLowerCase(), nb_ok);
-        console.log("user : " + nb_ok + " - hashtag : " + hashtag_filtered_1[0].toLowerCase());
+         console.log("user : " + nb_ok + " - hashtag : " + hashtag_filtered_1[0].toLowerCase());
         while(hashtag_filtered_1[o])
         {
-        console.log("user : " + nb_ok + " - hashtag : " + hashtag_filtered_1[o].toLowerCase());
+         console.log("user : " + nb_ok + " - hashtag : " + hashtag_filtered_1[o].toLowerCase());
 
           topic(hashtag_filtered_1[o].toLowerCase(), nb_ok);
           o++;
@@ -209,4 +250,6 @@ const ft = async function() {
   }
 
 }
+
 module.exports.ft = ft;
+
