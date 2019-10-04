@@ -546,9 +546,25 @@ module.exports.validation_mail = validation_mail;
 // Fonction pour recuperer les info utilisateur
 const recup_info = async function(uuid){
  return new Promise((resolve, reject) =>{
-  console.log('recupt_info : ' + uuid);
    let sql = "SELECT `user_ID`, `uuid`, `last_name`, `first_name`, `login`, `hashtag`, `insta`, `email`, `localisation_auto`, `localisation_manual`, `gender`, `orientation`, `age`, `bio`, `image_1`, `image_2`, `image_3`, `image_4`, `image_5`, `profile_picture`, `score`, `geo_consent`, `departement`, `email_confirmation` FROM users WHERE uuid = ?";
    con.query(sql, [uuid], function(err, result) {
+     if(err) throw err;
+     if (result[0] == '')
+      resolve('1');
+     else {
+      resolve(JSON.stringify(result));
+    }
+   })
+ });
+}
+module.exports.recup_info = recup_info;
+
+
+// Fonction pour recuperer les info utilisateur
+const recup_info_id = async function(id){
+ return new Promise((resolve, reject) =>{
+   let sql = "SELECT `user_ID`, `uuid`, `last_name`, `first_name`, `login`, `hashtag`, `insta`, `email`, `localisation_auto`, `localisation_manual`, `gender`, `orientation`, `age`, `bio`, `image_1`, `image_2`, `image_3`, `image_4`, `image_5`, `profile_picture`, `score`, `geo_consent`, `departement`, `email_confirmation` FROM users WHERE user_ID = ?";
+   con.query(sql, [id], function(err, result) {
      if(err) throw err;
      if (result[0] == '')
       resolve('1');
@@ -559,14 +575,15 @@ const recup_info = async function(uuid){
    })
  });
 }
-module.exports.recup_info = recup_info;
+module.exports.recup_info_id = recup_info_id;
+
+
 
 // Fonction pour recuperer l'uuid utilisateur
 const recup_info_uuid = async function(login){
  return new Promise((resolve, reject) =>{
    let sql = "SELECT `uuid` FROM users WHERE login = ? OR insta = ?";
    con.query(sql, [login, login], function(err, result) {
-    console.log(result);
      if(err) throw err;
      if (result[0] == '')
       resolve('1');

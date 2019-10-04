@@ -268,8 +268,12 @@ router.post('/like_profile', async function(req, res) {
     if (!req.session.login || req.session.login == '')
         res.redirect('/');
     else {
-        let info_parse = JSON.parse(await user.recup_info(JSON.parse(req.session.login)[0].uuid));
-        let info_parse_liked = JSON.parse(await user.recup_info(JSON.parse(req.session.login)[0].uuid));
+        console.log("test = " + req.session.login);
+        const info_parse = JSON.parse(await user.recup_info(JSON.parse(req.session.login)[0].uuid));
+        console.log("info = " + info_parse[0].uuid);
+
+        let info_parse_liked = JSON.parse(await user.recup_info_id(req.body.liked_ID));
+        console.log("info_parse_liked = " + info_parse_liked[0].uuid);
         swipe.like_profile(info_parse, req.body.submit, req.body.liked_ID);
         if (req.body.submit == 'Like') {
             notifications.notification(info_parse[0], req.body.liked_ID, 'like');
