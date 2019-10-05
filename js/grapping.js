@@ -24,7 +24,7 @@ faker.locale = "fr";
 
 const db_connect = require('../db_connection.js');
 let con = db_connect.con;
-const interets = ["football", "psg", "asm", "basketball", "csgo", "leagueoflegend", "surf", "snowboard", "netflixandchill", "dance", "cinema", "voyage", "asie", "afrique", "amerique", "europe", "australie", "bali", "42", "code", "handball", "lecture", "tarentino", "tamaman", "tonpapa", "enfant", "bdsm", "bondage", "lyon", "marseille", "apple", "usa", "sport", "fitness", "boxe", "babyfoot", "pingpong", "shoping", "randonnees", "montagne", "mer", "matcha", "php", "chien", "chat"];
+const interets = ["football", "psg", "asm", "basketball", "csgo", "leagueoflegend", "surf", "snowboard", "netflixandchill", "dance", "cinema", "voyage", "asie", "afrique", "amerique", "europe", "australie", "bali", "42", "code", "handball", "lecture", "tarentino", "tamaman", "tonpapa", "enfant", "bdsm", "bondage", "lyon", "marseille", "apple", "usa", "sport", "fitness", "boxe", "babyfoot", "pingpong", "shopping", "randonnees", "montagne", "mer", "matcha", "php", "chien", "chat"];
 
 //
 
@@ -60,9 +60,9 @@ const data_city = async function(filesql_city) {
 
 
 //
-const ft = async function() {
+const ft = async function(nb_compte) {
   let nb = 1;
-   while(nb < 51){
+   while(nb <= nb_compte){
     let uuid = uuidv4();
     //Initialisatino des variables
     let password =  await ft_pass();
@@ -102,40 +102,6 @@ const ft = async function() {
     let bio = card.posts[0].sentence;
     
 
-
-// OLD hashtag
-
-/*
-    // On separe les hashtags
-    let hashtag = card.company.catchPhrase.split(' ');
-    let y = 1;
-    // On filtre les hashtag pour virer les char speciaux
-    let iChars = "~`!#$%^&*+=-[]\\';,/{}|\":<>?";
-    let count = 0;
-    for (var f = 0; f < hashtag[0].length; f++) {
-      if (iChars.indexOf(hashtag[0].charAt(f)) != -1)
-             count++;
-    }
-    let hashtag_1 = "";
-    if (count == 0)
-      hashtag_1 = hashtag[0].toLowerCase();
-    // On assemble les hashtags
-    while(hashtag[y])
-    {
-      count = 0;
-      for (var f = 0; f < hashtag[y].length; f++) {
-        if (iChars.indexOf(hashtag[y].charAt(f)) != -1)
-           count++;
-      }
-      if (count == 0) {
-        if (hashtag_1 != "")
-          hashtag_1 = hashtag_1 + ',' + hashtag[y].toLowerCase();
-        else
-          hashtag_1 = hashtag[y].toLowerCase();
-      }
-      y++;
-    }
-    */
       let count_hash = 0;
       let hashtag_1 = interets[getRandomIntInclusive(0, 44)];
       while(count_hash < 5)

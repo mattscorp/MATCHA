@@ -1,10 +1,24 @@
+#####################################################################
+############           Projet MATCHA @ 42_Paris 		 ############
+############             PVICTOR & MASCORPI              ############  
+############                   README                    ############
+#####################################################################
+
+
 # Creation de la DB #
-1. node create_db.js
-# Creation de la DB #
-2. node fill_db.js
-# Creation de la DB #
-3. node clear.js
-# Creation de la DB #
-4. node fill_interests.js
-# Creation de la DB #
-5. node app.js
+1. => ./node create_db.js
+
+# Generation des comptes de la DB #
+# Modifier dans fill_db.js la variable nombre_de_compte pour choisir le nombre de compte a mettre en BDD #
+2. => ./node fill_db.js
+
+
+# Netoyage #
+# Lancer cette comande afin de netoyer la base de donnees des eventuels doublons des interets #
+3. => /.node clear.js
+
+# Ajout des interets dans la tables interest #
+4. => /.node fill_interests.js
+
+# Lancement du serveur #
+5. => /.node app.js
