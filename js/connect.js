@@ -442,7 +442,7 @@ module.exports.add_image = add_image;
 // Ajout d'une nouvelle photo de profil
 const add_new_image = async function(infos, uuid) {
   const user = require('./connect.js');
-  const info_user = await user.recup_info(login);
+  const info_user = await user.recup_info(uuid);
   const info_parse = await JSON.parse(info_user);
   var num = '1';
   if (info_parse[0].image_2 == null)
