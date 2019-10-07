@@ -154,7 +154,7 @@
                     </select>
                     <input class="btn btn-dark" type="submit" value="Définir comme photo de profil">
                 </form>
-                <% if (info.image_1 == null || info.image_3 == null || info.image_3 == null || info.image_4 == null || info.image_5 == null) { %>
+                <% if (info.image_1 == null || info.image_2 == null || info.image_3 == null || info.image_4 == null || info.image_5 == null) { %>
                     <p>Ajouter une photo :</p>
                     <form action="add_new_image" method="post" enctype="multipart/form-data">
                         <input class="btn btn-outline-dark" required type="file" accept="image/png, image/jpeg" name="photo">
