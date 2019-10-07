@@ -5,20 +5,42 @@
 #####################################################################
 
 
-# Creation de la DB #
+						# Creation de la DB #
+
+# Modifier dans le fichier de_connection.js le : / Port du serveru #
+# SQL / User / Pqssword #
+
 1. => ./node create_db.js
 
-# Generation des comptes de la DB #
-# Modifier dans fill_db.js la variable nombre_de_compte pour choisir le nombre de compte a mettre en BDD #
+
+
+				## Generation des comptes de la DB ##
+
+# Modifier dans fill_db.js la variable nombre_de_compte pour #
+# choisir le nombre de compte a mettre en BDD #
+# Le mot de passe de chaque utilisateur est par defaut #
+#'paulVICTOR@42' pour le modifier aller dans js/grapping.js ligne 42#
+
 2. => ./node fill_db.js
 
 
-# Netoyage #
-# Lancer cette comande afin de netoyer la base de donnees des eventuels doublons des interets #
+
+							### Netoyage ###
+
+# Lancer cette comande afin de nettoyer la base de données des #
+# eventuels doublons des interêts #
+
 3. => /.node clear.js
 
-# Ajout des interets dans la tables interest #
+
+
+			#### Ajout des interêts dans la tables interest ####
+
 4. => /.node fill_interests.js
 
-# Lancement du serveur #
+
+					##### Lancement du serveur #####
+# Lancer la comande suivante afin de lancer le serveur, vous #
+# pouvez maintenant vous connecter sur http://localhost:8080 #
+
 5. => /.node app.js
