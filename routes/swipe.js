@@ -141,6 +141,8 @@ router.get('/swipe', async function (req, res) {
         if (messenger_2 != '')
             messages_2 = JSON.parse(await messages.messages(info_parse[0].user_ID, messenger_2[0].user_ID));
 
+
+
 		res.render('swipe', {infos: info_parse[0],
                             info: info_parse[0],
                             block_me: block_me_profiles,
@@ -191,11 +193,88 @@ router.post('/swipe', async function(req, res) {
         let all_interests = JSON.parse(await interests.recup_all_interests_swipe());
         let interest = "";
         let filtered = [];
+        
+
+//OLD CODE
+        // profiles_parse.forEach(function(item) {
+        //     if (item.email_confirmation == '1' &&  item.departement !== '' && item.departement !== '0' && item.profile_picture !== null) {
+        //         filtered.push(item);
+        //     }
+        // });
+
+
         profiles_parse.forEach(function(item) {
             if (item.email_confirmation == '1' &&  item.departement !== '' && item.departement !== '0' && item.profile_picture !== null) {
+                let score_algo = 0;
+                let i = 0;
+                // Calcul de la distance : -1 par km de distance
+                let coord_searcher = [];
+                let lon_searcher = "";
+                let lat_searcher = "";
+                if (info_parse[0].localisation_manual != null && info_parse[0].localisation_manual != '' && info_parse[0].localisation_manual != 'null' && info_parse[0].geo_consent == 'Oui') {
+                    coord_searcher = info_parse[0].localisation_manual.split(",");
+                    lon_searcher = coord_searcher[1];
+                    lat_searcher = coord_searcher[0];
+                } else {
+                    coord_searcher = info_parse[0].localisation_auto.split(",");
+                    lon_searcher = coord_searcher[1];
+                    lat_searcher = coord_searcher[0];
+                }
+                i = 0;
+                let coord_target = [];
+                let lon_target = "";
+                let lat_target = "";
+                let distance_between = 0;
+                if (item.localisation_manual != null && item.localisation_manual != '' && item.localisation_manual != 'null' && item.geo_consent == 'Oui') {
+                    coord_target = item.localisation_manual.split(",")
+                    lon_target = coord_target[1];
+                    lat_target = coord_target[0];
+                    distance_between = swipe.distance(lat_searcher, lon_searcher, lat_target, lon_target, 'K');
+                } else {
+                    coord_target = item.localisation_auto.split(",")
+                    lon_target = coord_target[1];
+                    lat_target = coord_target[0];
+                    distance_between = swipe.distance(lat_searcher, lon_searcher, lat_target, lon_target, 'K');
+                }
+                score_algo -= (distance_between / 10);
+
+                // Score de popularité : difference des deux scores / 10
+                if (item.score != null && info_parse[0].score != null) {
+                    if (item.score > info_parse[0].score)
+                        score_algo -= (item.score - info_parse[0].score) / 10;
+                    else
+                        score_algo -= (info_parse[0].score - item.score) / 10;
+                }
+
+                // Nombre de centres d'interet : on compte les centres d'interets communs, a chacun (n) on fait score += n (suite de fibonacci)
+                if (item.hashtag != '' && item.hashtag != null) {
+                    let interests_calc = item.hashtag.split(',');
+                    if (info_parse[0].hashtag != '' && info_parse[0].hashtag != null) {
+                        let interests_user = info_parse[0].hashtag.split(',');
+                        i = 0;
+                        interests_user.forEach(function(item) {
+                            if (interests_calc.includes(item)) {
+                                i++;
+                                score_algo += i;
+                            }
+                        });
+                    }
+                }
+                item.score_algo = score_algo;
                 filtered.push(item);
             }
         });
+        filtered.sort(function (a, b) {
+          return b.score_algo - a.score_algo;
+        });
+
+
+        
+
+
+
+
+
         if (req.body.submit == "&#xf12d;")
             interest = "";
         else if (req.body.submit != 'Rechercher')
@@ -228,6 +307,8 @@ router.post('/swipe', async function(req, res) {
             messages_1 = JSON.parse(await messages.messages(info_parse[0].user_ID, messenger_1[0].user_ID));
         if (messenger_2 != '')
             messages_2 = JSON.parse(await messages.messages(info_parse[0].user_ID, messenger_2[0].user_ID));
+        
+
         res.render('swipe', {infos: info_parse[0],
                             info: info_parse[0],
                             block_me: block_me_profiles,
