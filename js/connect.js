@@ -489,32 +489,34 @@ module.exports.change_profile_picture = change_profile_picture;
 // Suppression d'une image
 const delete_photo = async function(photo, uuid) {
   const user = require('./connect.js');
-  let sql = "UPDATE users SET image_" + photo + " = null WHERE uuid = ?";
-  let values = [uuid];
-  con.query(sql, values, function (err, result) {  
-    if (err) throw err;  
-  });
-  const info_user = await user.recup_info(uuid);
-  const info_parse = await JSON.parse(info_user);
-  var new_pp = '0';
-  if (photo != '1' && info_parse[0].image_1 != null)
-    new_pp = 'Photo 1';
-  else if (photo != '2' && info_parse[0].image_2 != null)
-    new_pp = 'Photo 2';
-  else if (photo != '3' && info_parse[0].image_3 != null)
-    new_pp = 'Photo 3';
-  else if (photo != '4' && info_parse[0].image_4 != null)
-    new_pp = 'Photo 4';
-  else if (photo != '5' && info_parse[0].image_5 != null)
-    new_pp = 'Photo 5';
-  if (new_pp != '0')
-    await user.change_profile_picture({profile_picture: new_pp}, uuid);
-  else {
-    let sql1 = "UPDATE users SET profile_picture = null WHERE uuid = ?";
-    let values1 = [uuid];
-    con.query(sql1, values1, function (err, result) {  
-    if (err) throw err;  
-  });
+  if(photo == '1' || photo == '2' || photo == '3' || photo == '4' || photo == '5'){
+    let sql = "UPDATE users SET image_" + photo + " = null WHERE uuid = ?";
+    let values = [uuid];
+    con.query(sql, values, function (err, result) {  
+      if (err) throw err;  
+    });
+    const info_user = await user.recup_info(uuid);
+    const info_parse = await JSON.parse(info_user);
+    var new_pp = '0';
+    if (photo != '1' && info_parse[0].image_1 != null)
+      new_pp = 'Photo 1';
+    else if (photo != '2' && info_parse[0].image_2 != null)
+      new_pp = 'Photo 2';
+    else if (photo != '3' && info_parse[0].image_3 != null)
+      new_pp = 'Photo 3';
+    else if (photo != '4' && info_parse[0].image_4 != null)
+      new_pp = 'Photo 4';
+    else if (photo != '5' && info_parse[0].image_5 != null)
+      new_pp = 'Photo 5';
+    if (new_pp != '0')
+      await user.change_profile_picture({profile_picture: new_pp}, uuid);
+    else {
+      let sql1 = "UPDATE users SET profile_picture = null WHERE uuid = ?";
+      let values1 = [uuid];
+      con.query(sql1, values1, function (err, result) {  
+      if (err) throw err;  
+    });
+    }
   }
 }
 module.exports.delete_photo = delete_photo;
