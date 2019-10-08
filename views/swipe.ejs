@@ -24,10 +24,10 @@
         <div id="0">
           <% include partials/nav %>
         </div>
-        <div class="border border-white rounded">
+        <div class="border rounded" id="match_swipe_sous_header" >
           <h1>Propositions pour <%= infos.first_name %></h1>
           <p>Votre orientation : <%= infos.orientation %></p>
-          <div class="recherche_swipe bg-light">
+          <div class="recherche_swipe">
             <form action="swipe" method="post" class="mx-auto">
               Age minimum
               <input class="btn btn-outline-dark btn-sm" type="number" name="age_min" min="18" max="119" value="<%= age_min %>">
