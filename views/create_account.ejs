@@ -14,6 +14,8 @@
         <!-- Latest compiled JavaScript -->
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
         <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+
+
     </head>
  
     <body>
@@ -22,7 +24,9 @@
                 <a class="navbar-brand" href="/">Matcha</a>
                 
             </nav>
+            <div  class="crea_account">
             <h1>Je crée mon compte</h1>
+            </div>
             <% if (user_exist == 'false') { %>
                 <div class="alert alert-danger alert-dismissible fade show">
                     <button type="button" class="close" data-dismiss="alert">&times;</button>
@@ -69,16 +73,27 @@
                     Cet mot de passe n'est pas assez sécurisé : ton mot de passe doit comporter au moins 8 caractères, donc au moins un chiffre, une majuscule, une minuscule et un caractère spécial parmi ceux-ci : $@$!%*#?&.
                 </div>
             <% } %>%>
-            <form method="post" action="creation">
-                <input class="form-control" required type="text" pattern="[A-Za-z0-9]+" name="user[first_name]" placeholder="Ton prénom"> <br>
-                <input class="form-control" required type="text" pattern="[A-Za-z0-9]+" name="user[last_name]" placeholder="Ton nom"> <br>
-                <input class="form-control" required type="text" pattern="[A-Za-z0-9]+" name="user[login]" placeholder="Ton pseudo"> <br>
-                <input class="form-control" required type="email" name="user[email]"placeholder="Ton email"> <br>
-                <input class="form-control" required type="password" name="user[mdp1]" placeholder="Ton mot de passe"> <br>
-                <input class="form-control" required type="password" name="user[mdp2]" placeholder="Verifie ton mot de passe"> <br>
-                <div class="g-recaptcha" data-sitekey='6LeYirsUAAAAAMxriXlFJF5NmeO4UhVuqMilURq9'></div>
+            <div class="row align-center">
+                <div class="col-sm-4"></div>
+                <div class="col-sm-4">
+                    <form method="post" action="creation">
+                <input class="form-control " required type="text" pattern="[A-Za-z0-9]+" name="user[first_name]" placeholder="Ton prénom"> <br>
+                <input class="form-control " required type="text" pattern="[A-Za-z0-9]+" name="user[last_name]" placeholder="Ton nom"> <br>
+                <input class="form-control " required type="text" pattern="[A-Za-z0-9]+" name="user[login]" placeholder="Ton pseudo"> <br>
+                <input class="form-control " required type="email" name="user[email]"placeholder="Ton email"> <br>
+                <input class="form-control " required type="password" name="user[mdp1]" placeholder="Ton mot de passe"> <br>
+                <input class="form-control " required type="password" name="user[mdp2]" placeholder="Verifie ton mot de passe"> <br>
+                <div class="g-recaptcha pb-3" data-sitekey='6LeYirsUAAAAAMxriXlFJF5NmeO4UhVuqMilURq9'>
+                    
+                </div>
+                <div class="pb-3">
                 <input class="btn btn-dark" type="submit" value="Créer mon compte">
-            </form>
+                </div>
+                </form>
+                </div>
+            </div>
+            
+
             <div class="progress">
                 <div class="progress-bar bg-danger progress-bar-striped progress-bar-animated" style="width:40%">Promis, dans deux minutes c'est fini...</div>
             </div>
