@@ -10,6 +10,7 @@ const mysql = require('mysql');
 const multer = require('multer'); // Pour l'upload de photos
 const upload = multer({dest: __dirname + '/../public/images'});
 const alert = require('alert-node');
+const JSAlert = require("js-alert");
 const fs = require('fs');
 const util = require('util');
 const readFile = util.promisify(fs.readFile);

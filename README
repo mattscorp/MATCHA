@@ -4,11 +4,16 @@
 ############                   README                    ############
 #####################################################################
 
+                            # PROLOGUE #
 
+# Vous devez avoir NodeJs installe ainsi qu'un serveur MySql #
+# fonctionnel #
+
+0. => ./npm install
                         # Creation de la DB #
 
 # Modifier dans le fichier de_connection.js le : / Port du serveru #
-# SQL / User / Pqssword #
+# SQL / User / Pqssword | Mettre ne route votre serveur MySql #
 
 1. => ./node create_db.js
 
