@@ -26,49 +26,87 @@
         </div>
         <div class="border rounded" id="match_swipe_sous_header" >
           <h1>Propositions pour <%= infos.first_name %></h1>
-          <p>Votre orientation : <%= infos.orientation %></p>
+          <p>Votre orientation : <%= infos.orientation %></p>  
           <div class="recherche_swipe">
-            <form action="swipe" method="post" class="mx-auto">
-              Age minimum
-              <input class="btn btn-outline-dark btn-sm" type="number" name="age_min" min="18" max="119" value="<%= age_min %>">
-              Age maximum
-              <input class="btn btn-outline-dark btn-sm" type="number" name="age_max" min="19" max="120" value="<%= age_max %>">
-              Sexe
-              <select class="btn btn-outline-dark btn-sm" name="orientation" size="1">
+          <form action="swipe" method="post" class="mx-auto">
+            <div class="row mt-3">
+                <div class="input_left col-sm-6 mb-2 pr-4">
+                  Age minimum
+                <input class=" btn btn-outline-dark btn-sm" type="number" name="age_min" min="18" max="119" value="<%= age_min %>">
+                </div>
+                <div class="input_right col-sm-6 mb-2 p-0">
+                Age maximum
+                <input class="btn btn-outline-dark btn-sm" type="number" name="age_max" min="19" max="120" value="<%= age_max %>">
+                </div>
+              </div>
+              <div class="row">
+                <div class=" input_left col-sm-6 mb-2 pr-4">
+                Sexe
+                <select class="btn btn-outline-dark btn-sm" name="orientation" size="1">
+                    <option></option>
+                    <option <% if (orientation == 'Femme') { %> selected="selected" <% }%> >Femme</option>
+                    <option <% if (orientation == 'Homme') { %> selected="selected" <% }%> >Homme</option>
+                    <option <% if (orientation == 'Autre') { %> selected="selected" <% }%> >Autre</option>
+                </select>
+                </div>
+                <div class=" input_right col-sm-6 mb-2 p-0">
+                Score de popularité min
+                <input class="btn btn-outline-dark btn-sm" type="number" name="score" min="0" max="100" value="<%= score %>">
+                  </div>
+              </div> 
+              <div class="row">
+                  
+                  
+                  <div class=" input_left col-sm-6 mb-2 pr-4">
+                Dans mon département uniquement :
+                <select class="btn btn-outline-dark btn-sm" name="departement">
+                  <option <% if (departement == 'Oui') { %> selected="selected" <% }%> >Oui</option>
+                  <option <% if (departement == 'Non') { %> selected="selected" <% }%> >Non</option>
+                </select>
+                </div>
+
+                <div class=" input_right col-sm-6 mb-2 p-0">
+                Distance max
+                <select class="btn btn-outline-dark btn-sm" name="localisation" size="1">
                   <option></option>
-                  <option <% if (orientation == 'Femme') { %> selected="selected" <% }%> >Femme</option>
-                  <option <% if (orientation == 'Homme') { %> selected="selected" <% }%> >Homme</option>
-                  <option <% if (orientation == 'Autre') { %> selected="selected" <% }%> >Autre</option>
-              </select>
-              <br/>
-              Score de popularité min
-              <input class="btn btn-outline-dark btn-sm" type="number" name="score" min="0" max="100" value="<%= score %>">
-              <br/>
-              Distance max
-              <select class="btn btn-outline-dark btn-sm" name="localisation" size="1">
-                <option></option>
-                <option <% if (localisation == '5 km') { %> selected="selected" <% }%> >5 km</option>
-                <option <% if (localisation == '10 km') { %> selected="selected" <% }%> >10 km</option>
-                <option <% if (localisation == '20 km') { %> selected="selected" <% }%> >20 km</option>
-                <option <% if (localisation == '50 km') { %> selected="selected" <% }%> >50 km</option>
-                <option <% if (localisation == '100 km') { %> selected="selected" <% }%> >100 km</option>
-              </select>
-              Dans mon département uniquement :
-              <select class="btn btn-outline-dark btn-sm" name="departement">
-                <option <% if (departement == 'Oui') { %> selected="selected" <% }%> >Oui</option>
-                <option <% if (departement == 'Non') { %> selected="selected" <% }%> >Non</option>
-              </select>
-              <br/>
-              Centre d'intérêt
-              <input class="btn btn-outline-dark btn-sm" type="text" name="interest" value="<%= interest %>">
-              <input class='fas fa-eraser' name="submit" type="submit" value="&#xf12d;">
-              <br/>
+                  <option <% if (localisation == '5 km') { %> selected="selected" <% }%> >5 km</option>
+                  <option <% if (localisation == '10 km') { %> selected="selected" <% }%> >10 km</option>
+                  <option <% if (localisation == '20 km') { %> selected="selected" <% }%> >20 km</option>
+                  <option <% if (localisation == '50 km') { %> selected="selected" <% }%> >50 km</option>
+                  <option <% if (localisation == '100 km') { %> selected="selected" <% }%> >100 km</option>
+                </select>
+                </div>
+
+              </div>
+              <div class="row centre_interest_swipe">
+                
+                <div class=" col-sm-12  mb-4">
+
+                Centre d'intérêt
+                <input class='fas fa-eraser' name="submit" type="submit" value="&#xf12d;">
+                <input class="btn btn-outline-dark btn-sm" type="text" name="interest" value="<%= interest %>">
+                  </div>
+
+              </div>
+                  
+              <div class="row centre_interest_swipe">
+                
+                <div class=" col-sm-12  mb-4">
+              
               <% all_interests.forEach(function(item) { %>
                 <input class="hashtag_submit text-primary" type="submit" name="submit" value="#<%= item.topic %>">
               <% }) %>
-              <br/>
+              </div>  
+            </div>
+            <div class="row centre_interest_swipe">
+                
+                <div class=" col-sm-12  mb-4">
               <input class="btn btn-dark" type="submit" name="submit" value="Rechercher">
+            </div>
+          </div>
             </form>
+            </div>
+            
           </div>
         </div>
         <div class="card-deck border border-white rounded">

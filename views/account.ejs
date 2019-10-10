@@ -42,33 +42,33 @@
                 <div class="col-sm-4 border border-white rounded">
                     <form action="change_infos" method="post">
                         <h2>Informations personnelles</h2>
-                        <p>Pseudo : </p>
-                        <input required type="text" pattern="[A-Za-z0-9]+" class="form-control" name="login" value="<%= info.login%>" />
-                        <p>Prénom : </p>
-                        <input required type="text" pattern="[A-Za-z0-9]+" class="form-control" name="first_name" value="<%= info.first_name%>" />
-                        <p>Nom : </p>
-                        <input required type="text" pattern="[A-Za-z0-9]+" class="form-control" name="last_name" value="<%= info.last_name%>" />
-                        <p>Email : </p>
-                        <input required type="email" class="form-control" name="email" value="<%= info.email%>" />
-                        <p>Age : </p>
-                        <input required type="number" class="form-control" min="18" max="120" name="age" value="<%= info.age%>" />
+                        <p class="pt-4 m-0">Pseudo : </p>
+                        <input required type="text" pattern="[A-Za-z0-9]+" class="form-control pb-2" name="login" value="<%= info.login%>" />
+                        <p class="pt-4 m-0">Prénom : </p>
+                        <input required type="text" pattern="[A-Za-z0-9]+" class="form-control pb-2" name="first_name" value="<%= info.first_name%>" />
+                        <p class="pt-4 m-0">Nom : </p>
+                        <input required type="text" pattern="[A-Za-z0-9]+" class="form-control pb-2" name="last_name" value="<%= info.last_name%>" />
+                        <p class="pt-4 m-0">Email : </p>
+                        <input required type="email" class="form-control pb-2" name="email" value="<%= info.email%>" />
+                        <p class="pt-4 m-0">Age : </p>
+                        <input required type="number" class="form-control pb-2" min="18" max="120" name="age" value="<%= info.age%>" />
                 </div>
                 <div class="col-sm-4 border border-white rounded">
                         <h2>Informations de dating</h2>
-                        <p>Genre : </p>
+                        <p class="pt-4 m-0">Genre : </p>
                         <select class="form-control "  name="gender" size="1">
                             <option <% if (info.gender == 'Femme') { %> selected="selected" <% }%> >Femme</option>
                             <option <% if (info.gender == 'Homme') { %> selected="selected" <% }%> >Homme</option>
                             <option <% if (info.gender == 'Autre') { %> selected="selected" <% }%> >Autre</option>
                         </select>
-                        <p>Orientation : </p>
+                        <p class="pt-4 m-0">Orientation : </p>
                         <select class="form-control" name="orientation" size="1">
                             <option <% if (info.orientation == 'Femmes') { %> selected="selected" <% }%> >Femmes</option>
                             <option <% if (info.orientation == 'Hommes') { %> selected="selected" <% }%> >Hommes</option>
                             <option <% if (info.orientation == 'Bi') { %> selected="selected" <% }%> >Bi</option>
                             <option <% if (info.orientation == 'Autres') { %> selected="selected" <% }%> >Autres</option>
                         </select>
-                        <p>Departement : </p>
+                        <p class="pt-4 m-0">Departement : </p>
                         <select class="form-control" class="form-control" required name="departement" size="1">
                             <option></option>
                             <% var i = 1; var j = 1;
@@ -94,27 +94,27 @@
                             <option <% if (info.departement == 974) { %> selected="selected" <% }%> >974</option>
                             <option <% if (info.departement == 976) { %> selected="selected" <% }%> >976</option>
                         </select>
-                        <p>Geolocalisation : </p>
+                        <p class="pt-4 m-0">Geolocalisation : </p>
                         <select name="geo_consent" size="1">
                             <option <% if (info.geo_consent == 'Oui') { %> selected="selected" <% }%> >Oui</option>
                             <option <% if (info.geo_consent == 'Non') { %> selected="selected" <% }%> >Non</option>
                         </select>
-                        <p>Bio : </p>
+                        <p class="pt-4 m-0">Bio : </p>
                         <textarea required class="form-control" type="text" name="bio"><%= info.bio %></textarea>
                         <br/>
                 </div>             
             </div>
             <div>
-                    <input class="btn btn-dark btn-block" type="submit" name="submit" value="Modifier mes informations" />
+                    <input class="mt-3 mb-2 btn btn-dark btn-block" type="submit" name="submit" value="Modifier mes informations" />
                 </form>
             </div>
             <div class="border border-white rounded">
                 <h2>Centres d'intérêts</h2>
                 <div>
                     <p>Tes centres d'intérêts :</p>
-                    <div class="d-inline-flex p-3 text-primary">
+                    <div class="row p-3 text-primary">
                     <% interests.forEach(function(elem) { %>
-                        <div class="p-2">
+                        <div class="p-2 col">
                             <form action="delete_interest" method="post" class=".form-inline">
                                 #<%= elem.topic %>
                                 <input type="hidden" name="topic" value="<%= elem.topic %>">
