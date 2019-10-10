@@ -155,10 +155,6 @@ router.get('/messages', async function (req, res) {
             messenger_1 = JSON.parse(await messages.get_messenger(messaged_bottom[1], info_parse[0].user_ID));
         if (messaged_bottom[2])
             messenger_2 = JSON.parse(await messages.get_messenger(messaged_bottom[2], info_parse[0].user_ID));
-        if (messaged_bottom[3])
-            messenger_3 = JSON.parse(await messages.get_messenger(messaged_bottom[2], info_parse[0].user_ID));
-        if (messaged_bottom[4])
-            messenger_4 = JSON.parse(await messages.get_messenger(messaged_bottom[2], info_parse[0].user_ID));
         if (messenger_0 != '')
             messages_0 = JSON.parse(await messages.messages(info_parse[0].user_ID, messenger_0[0].user_ID));
         if (messenger_1 != '')

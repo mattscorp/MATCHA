@@ -75,12 +75,41 @@ module.exports.get_messenger = get_messenger;
 
 const last_three_messages = async function(user_ID) {
 	return new Promise((resolve, reject) => {
-		let sql = "SELECT DISTINCT `date`, `recipient_ID`, `sender_ID` FROM `message` WHERE `recipient_ID` = ? OR `sender_ID` = ? ORDER BY `date` DESC LIMIT 5";
+		let sql = "SELECT * FROM `message` WHERE `recipient_ID` = ? OR `sender_ID` = ? ORDER BY `date` DESC LIMIT 5";
 		con.query(sql, [user_ID, user_ID], function(err, result) {
 			if (err)
 				throw err;
-			else
-				resolve(JSON.stringify(result));
+			else {
+				if (result[0]) {
+					let tab = [];
+					let i = 1;
+					if (result[0].sender_ID == user_ID)
+						tab.push(result[0].recipient_ID);
+					else
+						tab.push(result[0].sender_ID);
+					while (result[i]) {
+						if (result[i].sender_ID != user_ID) {
+							if (tab.includes(result[i].sender_ID)) {
+								delete result[i];
+							}
+							else
+								tab.push(result[i].sender_ID);
+						} else {
+							if (tab.includes(result[i].recipient_ID)) {
+								delete result[i];
+							}
+							else
+								tab.push(result[i].recipient_ID);
+						}
+						i++;
+					}
+					filtered = result.filter(function (el) {
+				  		return el != null;
+					});
+					resolve(JSON.stringify(filtered));
+				} else
+					resolve(JSON.stringify(result));
+			}
 		});
 	});
 }
