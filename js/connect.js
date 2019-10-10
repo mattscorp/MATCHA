@@ -570,7 +570,6 @@ const recup_info_id = async function(id){
      if (result[0] == '')
       resolve('1');
      else {
-      console.log(result);
       resolve(JSON.stringify(result));
     }
    })

@@ -62,14 +62,13 @@ router.get('/auth', async function(req, res) {
 		request(options, async function (error, response, body) {
 			if (!error && response.statusCode == 200) {
 				let insta_infos = JSON.parse(body);
-				console.log(body);
 				let uuid_user = uuidv4();
 				if (error)
 					throw error;
 				else if (insta_infos.user.is_business != false) {
 					alert("Tu ne peux pas utiliser un compte instagram d'entreprise");
 					res.redirect('/');
-				} else {console.log(insta_infos.user.id);
+				} else {
 					if (await ft_insta.login_exist(insta_infos.user.username) == '1') {
 						
 						// On cree l'utilisateur
@@ -101,7 +100,6 @@ router.get('/auth', async function(req, res) {
 						});
 					} else {
 						let uuid_user = await user.recup_info_uuid(insta_infos.user.id);
-						console.log(uuid_user);
 						req.session.login = uuid_user;
 						res.redirect('/');
 					}

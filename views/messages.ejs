@@ -3,7 +3,7 @@
     <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>Matcha - Conversations de <%= login %></title>
+        <title>Matcha - Conversations de <%= infos.first_name %></title>
         <!-- Latest compiled and minified CSS -->
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
         <!-- jQuery library -->
@@ -69,12 +69,12 @@
     </script>
     <script type="text/javascript">
     window.onbeforeunload = function(e) {
-        $.post('onbeforeunload', {user_login:'<%= login %>'});
+        $.post('onbeforeunload', {user_login:'<%= infos.login %>'});
     };
     </script>
     <script type="text/javascript">
     window.onload = function(e) {
-        $.post('onload', {user_login:'<%= login %>'});
+        $.post('onload', {user_login:'<%= infos.login %>'});
     };
     </script>
 </html>

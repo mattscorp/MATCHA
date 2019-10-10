@@ -1,7 +1,7 @@
 html, body {
     margin: 0;
     height: 100%;
-    font-family: Bookman Old Style;
+
 
 }
 
@@ -54,11 +54,13 @@ div#match_swipe_sous_header.border.rounded {
 }
 
 .modify_button {
+  background: rgba(255,255,255,0.2);
 	transition: box-shadow .3s;
 	max-width: 40px;
 }
 
 .modify_button:hover {
+  background: rgba(250,250,250,0.4);
 	box-shadow: 0 0 11px rgba(33,33,33,.2);
 }
 
