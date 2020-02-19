@@ -34,7 +34,7 @@ router.get('/insta_connect', async function(req, res) {
 	if (req.session.login && req.session.login != '') {
 		res.redirect('/');
 	} else {
-		let client_id =  '84b794a468e14a0fa921bafacead173c';
+		let client_id =  'cleint id';
 		let redirect_uri = 'http://localhost:8080/auth';
 		res.redirect('https://api.instagram.com/oauth/authorize/?client_id=' + client_id + '&redirect_uri=' + redirect_uri + '&response_type=code');
 	}
@@ -45,9 +45,9 @@ router.get('/auth', async function(req, res) {
 	if (req.session.login && req.session.login != '') {
 		res.redirect('/');
 	} else {
-		let client_id =  '84b794a468e14a0fa921bafacead173c';
+		let client_id =  'client id';
 		let redirect_uri = 'http://localhost:8080/auth';
-		let client_secret = '28c151c78c524c0fb7b6af4b74fc2b3b';
+		let client_secret = 'client_secret';
 		let options = {
 			url: 'https://api.instagram.com/oauth/access_token',
 			method: 'POST',
